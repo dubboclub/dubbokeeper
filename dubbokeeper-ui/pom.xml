@@ -11,5 +11,16 @@
 
     <artifactId>dubbokeeper-ui</artifactId>
     <packaging>war</packaging>
-    
+    <dependencies>
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>monitor</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>admin</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+    </dependencies>
 </project>
