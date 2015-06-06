@@ -1,0 +1,26 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><i class="icon-cloud"></i> {{application | uppercase}}消费服务列表</div>
+    <div class="panel-body">
+        <table class="table-striped table-hover table-condensed  table table-condensed">
+            <thead>
+            <tr>
+                <th class="text-center"><strong>#</strong></th>
+                <th class="text-center"><strong>服务名称</strong></th>
+                <th class="text-center"><strong>应用名称</strong></th>
+                <th class="text-center"><strong>应用所有者</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-show="!details||details.length<=0">
+                <td class="text-center text-warning" colspan="4">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
+            </tr>
+            <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' "   class="ng-animation">
+                <td class="text-center">{{$index+1}}</td>
+                <td class="text-center">{{detail.service}}</td>
+                <td class="text-center">{{detail.providerName}}</td>
+                <td class="text-center">{{detail.owner}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

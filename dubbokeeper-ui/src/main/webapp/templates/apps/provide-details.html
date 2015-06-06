@@ -1,0 +1,45 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><i class="icon-cloud"></i> {{application | uppercase}}提供服务列表</div>
+    <div class="panel-body">
+        <table class="table-striped table-hover table-condensed  table table-condensed">
+            <thead>
+            <tr>
+                <th class="text-center"><strong>#</strong></th>
+                <th class="text-center"><strong>服务名称</strong></th>
+                <th class="text-center"><strong>动态/静态</strong></th>
+                <th class="text-center"><strong>有效/无效</strong></th>
+                <th class="text-center"><strong>支持的协议</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-show="!details||details.length<=0">
+                <td class="text-center text-warning" colspan="5">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
+            </tr>
+            <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service'"   class="ng-animation">
+                <td class="text-center">{{$index+1}}</td>
+                <td class="text-center" data-toggle="modal" data-target=".view-parameters" style="cursor: pointer;" title="点击查看服务配置信息" ng-click="viewParameters(detail)">{{detail.service}}</td>
+                <td class="text-center">{{detail.dynamic?'动态':'静态'}}</td>
+                <td class="text-center">{{detail.enabled?'有效':'无效'}}</td>
+                <td class="text-center">{{detail.protocol}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<div class="modal fade view-parameters" tabindex="-1" role="dialog" aria-labelledby="parameters" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="parameters"><i class="icon-cog"></i> 服务参数信息<a class="anchorjs-link" href="#parameters"><span class="anchorjs-icon"></span></a></h4>
+            </div>
+            <div class="modal-body text-primary" style="word-wrap: break-word;word-break:break-all; font-size: 16px; ">
+                {{currentParameters}}
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

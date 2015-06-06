@@ -1,14 +1,74 @@
-var apps=angular.module("apps",[]);
+var apps=angular.module("apps",['ngAnimate','ngRoute']);
+apps.config(function($routeProvider){
+    $routeProvider.when("/",{
+        templateUrl:"templates/apps/application-table.html",
+        controller:"appTable"
+    }).when("/:application/nodes",{
+        templateUrl:"templates/apps/node-details.html",
+        controller:"nodesDetail"
+    }).when("/:application/consumes",{
+            templateUrl:"templates/apps/consume-details.html",
+            controller:"consumeDetail"
+        }).when("/:application/provides",{
+        templateUrl:"templates/apps/provide-details.html",
+        controller:"provideDetail"
+    }).otherwise("/");
+});
+apps.controller("nodesDetail",function($scope,$http,$routeParams){
+    $scope.details=[];
+    $scope.isEmpty=false;
+    $scope.application=$routeParams.application;
+    $http.post("app/"+$routeParams.application+"/nodes.htm").success(function(data){
+        $scope.details=data;
+        if(!data||data.length<=0){
+            $scope.isEmpty=true;
+        }
+    });
+});
+apps.controller("consumeDetail",function($scope,$http,$routeParams){
+    $scope.details=[];
+    $scope.isEmpty=false;
+    $scope.application=$routeParams.application;
+    $http.post("app/"+$routeParams.application+"/consumes.htm").success(function(data){
+        $scope.details=data;
+        if(!data||data.length<=0){
+            $scope.isEmpty=true;
+        }
+    });
+});
+apps.controller("provideDetail",function($scope,$http,$routeParams){
+    $scope.details=[];
+    $scope.isEmpty=false;
+    $scope.application=$routeParams.application;
+    $scope.currentParameters="";
+    $http.post("app/"+$routeParams.application+"/provides.htm").success(function(data){
+        $scope.details=data;
+        if(!data||data.length<=0){
+            $scope.isEmpty=true;
+        }
+    });
+    $scope.viewParameters=function(detail){
+        $scope.currentParameters=detail.parameters;
+        //$('.modal-dialog').modal('toggle');
+    }
+});
+
+
+apps.controller("appTable",function($scope,$http){
+    $scope.applications=[];
+    $scope.isEmpty=false;
+    $http.post("app/list.htm").success(function(data){
+        $scope.applications=data;
+        if(!data||data.length<0){
+            $scope.isEmpty=true;
+        }
+    });
+});
+/*
 apps.directive("appList",["$http",function($http){
     return {
         restrict:"E",
         templateUrl:"templates/apps/application-table.html",
-        controller:function($scope){
-            $scope.applications=[];
-            $http.post("app/list.htm").success(function(data){
-                $scope.applications=data;
-            });
-        },
-        controllerAs:"appList"
+        controller:"appTable"
     };
-}]);
+}]);*/

@@ -8,6 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/jquery-2.1.4.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/angular.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/angular-route.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/angular-animate.js"></script>
 <%--
 <script type="text/javascript" src="${pageContext.request.contextPath}/flat-ui/js/flat-ui.min.js"></script>--%>
 

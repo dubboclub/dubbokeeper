@@ -1,4 +1,3 @@
-
 <div class="panel panel-default">
     <div class="panel-heading"><i class="icon-cloud"></i> 应用列表</div>
     <div class="panel-body">
@@ -13,13 +12,26 @@
             </thead>
             <tbody>
             <tr ng-show="!applications||applications.length<=0">
-                <td class="text-center text-warning" colspan="3">努力加载中....</td>
+                <td class="text-center text-warning" colspan="4">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
             </tr>
-            <tr ng-show="applications&&applications.length>0" ng-repeat="app in applications">
-                <td class="text-center">{{$index+1}}</th>
-                <td class="text-center">{{app.application}}</th>
-                <td class="text-center">{{app.username}}</th>
-                <td class="text-center"><button class="btn btn-success"><i class="icon-eye-open"></i> 查看详情</button></td>
+            <tr ng-show="applications&&applications.length>0" ng-repeat="app in applications | orderBy : 'application'"
+                class="ng-animation">
+                <td class="text-center">{{$index+1}}</td>
+                <td class="text-center">{{app.application}}</td>
+                <td class="text-center">{{app.username}}</td>
+                <td class="text-right">
+                    <a href="#/{{app.application}}/nodes" style="text-underline: none;">
+                    <button class="btn btn-sm btn-success"><i class="icon-list-alt"></i> 节点列表</button>
+                </a>
+
+                    <a href="#/{{app.application}}/provides">
+                    <button class="btn btn-sm btn-info"><i class="icon-list-alt"></i> 服务列表</button>
+                </a>
+
+                    <a href="#/{{app.application}}/consumes">
+                    <button class="btn  btn-sm btn-warning"><i class="icon-list-alt"></i> 消费列表</button>
+                </a>
+                </td>
             </tr>
             </tbody>
         </table>

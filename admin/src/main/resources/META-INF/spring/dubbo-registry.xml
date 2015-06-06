@@ -18,6 +18,10 @@
         <property name="registryServerSync" ref="registryServerSync"/>
     </bean>
 
-    <bean class="com.dubboclub.admin.service.impl.ProviderServiceImpl" parent="abstractService"/>
-    <bean class="com.dubboclub.admin.service.impl.ApplicationServiceImpl" parent="abstractService"/>
+    <bean class="com.dubboclub.admin.service.impl.ProviderServiceImpl" id="providerService" parent="abstractService"/>
+    <bean class="com.dubboclub.admin.service.impl.ApplicationServiceImpl" parent="abstractService">
+        <property name="consumerService" ref="consumerService"/>
+        <property name="providerService" ref="providerService"/>
+    </bean>
+    <bean class="com.dubboclub.admin.service.impl.ConsumerServiceImpl" id="consumerService" parent="abstractService"/>
 </beans>

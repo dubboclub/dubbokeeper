@@ -14,5 +14,7 @@ public interface ProviderService {
     public List<Provider> listProviderByApplication(String appName);
 
 
+    public List<Provider> listProviderByService(String service);
+
 
 }

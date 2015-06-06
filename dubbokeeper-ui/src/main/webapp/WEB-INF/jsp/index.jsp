@@ -7,19 +7,18 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="common/header.jsp"%>
-<div class="container-fluid">
+<div class="container-fluid ">
     <div class="row">
-        <div class="col-md-4 col-lg-4 col-xs-4">
+        <div class="col-md-2 col-lg-2 col-xs-2">
             <div class="row">
                 <div class="col-md-12 col-lg-12 col-xs-12">
                     <menu-tpl></menu-tpl>
                 </div>
             </div>
-
         </div>
-        <div class="col-md-8 col-lg-8 col-xs-8">
+        <div class="col-md-10 col-lg-10 col-xs-10">
             <div class="row">
-                <div class="col-md-12 col-lg-12 col-xs-12" >
+                <div class="col-md-12 col-lg-12 col-xs-12" ng-view>
                     <app-list></app-list>
                 </div>
             </div>

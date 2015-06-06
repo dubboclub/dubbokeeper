@@ -1,6 +1,7 @@
 package com.dubboclub.admin.service;
 
 import com.dubboclub.admin.model.Application;
+import com.dubboclub.admin.model.Node;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
 public interface ApplicationService {
 
     public List<Application> getApplications();
+
+    public List<Node> getNodesByApplicationName(String appName);
 }

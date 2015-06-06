@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><i class="icon-cloud"></i> {{application | uppercase}}应用节点列表</div>
+    <div class="panel-body">
+        <table class="table-striped table-hover table-condensed  table table-condensed">
+            <thead>
+            <tr>
+                <th class="text-center"><strong>#</strong></th>
+                <th class="text-center"><strong>节点地址信息</strong></th>
+                <th class="text-center"><strong>节点类型</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr ng-show="!details||details.length<=0">
+                    <td class="text-center text-warning" colspan="3">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
+                </tr>
+                <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'nodeAddress'"   class="ng-animation">
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="text-center">{{detail.nodeAddress}}</td>
+                    <td class="text-center">{{detail.type==1?'提供者':'消费者'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
