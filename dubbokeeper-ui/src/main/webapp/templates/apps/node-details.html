@@ -1,5 +1,14 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><i class="icon-cloud"></i> {{application | uppercase}}应用节点列表</div>
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-10 col-lg-10 col-xs-10">
+                <i class="icon-cloud"></i> <span class="text-primary"><strong>{{application | uppercase}}</strong></span>应用节点列表
+            </div>
+            <div class="col-md-2 col-lg-2 col-xs-2">
+                <input type="text" class="form-control" ng-model="search" placeholder="输入节点地址">
+            </div>
+        </div>
+    </div>
     <div class="panel-body">
         <table class="table-striped table-hover table-condensed  table table-condensed">
             <thead>
@@ -13,7 +22,7 @@
                 <tr ng-show="!details||details.length<=0">
                     <td class="text-center text-warning" colspan="3">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
                 </tr>
-                <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'nodeAddress'"   class="ng-animation">
+                <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'nodeAddress' | filter:search"   class="ng-animation">
                     <td class="text-center">{{$index+1}}</td>
                     <td class="text-center">{{detail.nodeAddress}}</td>
                     <td class="text-center">{{detail.type==1?'提供者':'消费者'}}</td>

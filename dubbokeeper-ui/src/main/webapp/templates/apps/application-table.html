@@ -1,5 +1,14 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><i class="icon-cloud"></i> 应用列表</div>
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-10 col-lg-10 col-xs-10">
+                <i class="icon-cloud"></i> <span ng-show="isConsumer">依赖<strong class='text-primary'>{{service}}</strong>服务的</span>应用列表
+            </div>
+            <div class="col-md-2 col-lg-2 col-xs-2">
+                <input type="text" class="form-control" ng-model="search" placeholder="输入应用名">
+            </div>
+        </div>
+    </div>
     <div class="panel-body">
         <table class="table-striped table-hover table-condensed  table table-condensed">
             <thead>
@@ -7,30 +16,35 @@
                 <th class="text-center"><strong>#</strong></th>
                 <th class="text-center"><strong>应用名</strong></th>
                 <th class="text-center"><strong>拥有者</strong></th>
-                <th class="text-center"><strong>操作</strong></th>
+                <th class="text-center" ng-show="!isConsumer"><strong>操作</strong></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-show="!applications||applications.length<=0">
-                <td class="text-center text-warning" colspan="4">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
+                <td class="text-center text-warning" colspan="{{isConsumer?3:4}}">{{isEmpty?"未发现任何数据...":"努力加载中...."}}
+                </td>
             </tr>
-            <tr ng-show="applications&&applications.length>0" ng-repeat="app in applications | orderBy : 'application'"
+            <tr ng-show="applications&&applications.length>0" ng-repeat="app in applications | orderBy : 'application' | filter:search"
                 class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
                 <td class="text-center">{{app.application}}</td>
                 <td class="text-center">{{app.username}}</td>
-                <td class="text-right">
-                    <a href="#/{{app.application}}/nodes" style="text-underline: none;">
-                    <button class="btn btn-sm btn-success"><i class="icon-list-alt"></i> 节点列表</button>
-                </a>
+                <td class="text-right" ng-show="!isConsumer">
+                    <a href="#/{{app.application}}/nodes" style="text-underline: none;"
+                       title="{{app.application | uppercase}}应用部署在哪些节点上">
+                        <button class="btn btn-sm btn-success"><i class="icon-list-alt"></i> 节点列表</button>
+                    </a>
 
-                    <a href="#/{{app.application}}/provides">
-                    <button class="btn btn-sm btn-info"><i class="icon-list-alt"></i> 服务列表</button>
-                </a>
+                    <a href="#/{{app.application}}/provides" title="{{app.application | uppercase}}应用提供哪些服务">
+                        <button class="btn btn-sm btn-info"><i class="icon-list-alt"></i> 服务列表</button>
+                    </a>
 
-                    <a href="#/{{app.application}}/consumes">
-                    <button class="btn  btn-sm btn-warning"><i class="icon-list-alt"></i> 消费列表</button>
-                </a>
+                    <a href="#/{{app.application}}/consumes" title="{{app.application | uppercase}}应用依赖哪些接口">
+                        <button class="btn  btn-sm btn-warning"><i class="icon-list-alt"></i> 消费列表</button>
+                    </a>
+                    <a href="#/{{app.application}}/consumers" title="有谁依赖{{app.application | uppercase}}应用">
+                        <button class="btn  btn-sm btn-primary"><i class="icon-list-alt"></i> 依赖列表</button>
+                    </a>
                 </td>
             </tr>
             </tbody>

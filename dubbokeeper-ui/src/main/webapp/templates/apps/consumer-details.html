@@ -2,11 +2,10 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-10 col-lg-10 col-xs-10">
-                <i class="icon-cloud"></i> <span class="text-primary"><strong>{{application | uppercase}}</strong></span>消费服务列表
-
+                <i class="icon-cloud"></i> 依赖<span class="text-primary"><strong>{{application | uppercase}}</strong></span>应用列表
             </div>
             <div class="col-md-2 col-lg-2 col-xs-2">
-                <input type="text" class="form-control" ng-model="search" placeholder="输入服务名">
+                <input type="text" class="form-control" ng-model="search" placeholder="输入应用名">
             </div>
         </div>
     </div>
@@ -15,20 +14,24 @@
             <thead>
             <tr>
                 <th class="text-center"><strong>#</strong></th>
-                <th class="text-center"><strong>服务名称</strong></th>
                 <th class="text-center"><strong>应用名称</strong></th>
                 <th class="text-center"><strong>应用所有者</strong></th>
+                <th class="text-center"><strong>操作</strong></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-show="!details||details.length<=0">
                 <td class="text-center text-warning" colspan="4">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
             </tr>
-            <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' | filter:search"   class="ng-animation">
+            <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'application' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
-                <td class="text-center">{{detail.service}}</td>
-                <td class="text-center">{{detail.providerName}}</td>
-                <td class="text-center">{{detail.owner}}</td>
+                <td class="text-center">{{detail.application}}</td>
+                <td class="text-center">{{detail.username}}</td>
+                <td class="text-center">
+                    <a href="#/{{application}}/{{detail.application}}/consumes" title="消费了哪些服务">
+                        <button class="btn  btn-sm btn-info"><i class="icon-list-alt"></i> 依赖服务列表</button>
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>

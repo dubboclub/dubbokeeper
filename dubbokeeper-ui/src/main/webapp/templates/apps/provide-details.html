@@ -1,5 +1,14 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><i class="icon-cloud"></i> {{application | uppercase}}提供服务列表</div>
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-10 col-lg-10 col-xs-10">
+                <i class="icon-cloud"></i> <span ng-show="isForOneConsumer"><strong class="text-primary">{{consumer | uppercase}}</strong>应用依赖<strong class="text-primary">{{provider | uppercase}}</strong>应用的服务列表</span><span ng-show="!isForOneConsumer"><strong class="text-primary">{{application | uppercase}}</strong>提供服务列表</span>
+            </div>
+            <div class="col-md-2 col-lg-2 col-xs-2">
+                <input type="text" class="form-control" ng-model="search" placeholder="输入服务名">
+            </div>
+        </div>
+    </div>
     <div class="panel-body">
         <table class="table-striped table-hover table-condensed  table table-condensed">
             <thead>
@@ -9,18 +18,24 @@
                 <th class="text-center"><strong>动态/静态</strong></th>
                 <th class="text-center"><strong>有效/无效</strong></th>
                 <th class="text-center"><strong>支持的协议</strong></th>
+                <th class="text-center" ng-show="!isForOneConsumer">查看消费列表</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-show="!details||details.length<=0">
-                <td class="text-center text-warning" colspan="5">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
+                <td class="text-center text-warning" colspan="{{isForOneConsumer?5:6}}">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
             </tr>
-            <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service'"   class="ng-animation">
+            <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
-                <td class="text-center" data-toggle="modal" data-target=".view-parameters" style="cursor: pointer;" title="点击查看服务配置信息" ng-click="viewParameters(detail)">{{detail.service}}</td>
+                <td class="text-center" data-toggle="modal" data-target=".view-parameters" style="cursor: pointer;" title="{{isForOneConsumer?'点击查看消费端该服务配置信息':'点击查看服务配置信息'}}" ng-click="viewParameters(detail)">{{detail.service}}</td>
                 <td class="text-center">{{detail.dynamic?'动态':'静态'}}</td>
                 <td class="text-center">{{detail.enabled?'有效':'无效'}}</td>
                 <td class="text-center">{{detail.protocol}}</td>
+                <td class="text-center"  ng-show="!isForOneConsumer">
+                    <a href="#/{{detail.service}}/service-consumers" title="有哪些应用消费了{{detail.service}}服务">
+                        <button class="btn  btn-sm btn-danger"><i class="icon-list-alt"></i> 消费列表</button>
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>

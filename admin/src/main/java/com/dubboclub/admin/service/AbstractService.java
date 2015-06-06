@@ -1,8 +1,9 @@
 package com.dubboclub.admin.service;
 
 import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.StringUtils;
+import com.dubboclub.admin.model.BasicModel;
 import com.dubboclub.admin.sync.RegistryServerSync;
+import com.dubboclub.admin.sync.util.Pair;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -21,6 +22,22 @@ public abstract class AbstractService {
 
     protected ConcurrentMap<String, Map<Long, URL>> getServiceByCategory(String category){
         return registryServerSync.getRegistryCache().get(category);
+    }
+    //通过对某个目录下的数据定义过滤器，过滤出复核条件的数据
+    protected<T extends BasicModel> List<T>  filterCategoryData(ConvertURL2Entity<T> convertURLTOEntity,String category,String... params){
+        if(params.length>0&&params.length%2!=0){
+            throw  new IllegalArgumentException("filter params size must be paired");
+        }
+        Map<String,String> filter = new HashMap<String,String>();
+        for(int i=0;i<params.length;i=i+2){
+            filter.put(params[i],params[i+1]);
+        }
+        Collection<Map.Entry<Long,URL>> urls = filterCategoryData(filter,category);
+        List<T> entities = new ArrayList<T>();
+        for(Map.Entry<Long,URL> url:urls){
+            entities.add(convertURLTOEntity.convert(new Pair<Long, URL>(url)));
+        }
+        return entities;
     }
 
     protected Collection<Map.Entry<Long,URL>> filterCategoryData(Map<String,String> filter,String category){
@@ -52,6 +69,11 @@ public abstract class AbstractService {
         return matchedData;
     }
 
+
+    public interface ConvertURL2Entity<T extends BasicModel>{
+
+        public T convert(Pair<Long, URL> pair);
+    }
 
 
 }

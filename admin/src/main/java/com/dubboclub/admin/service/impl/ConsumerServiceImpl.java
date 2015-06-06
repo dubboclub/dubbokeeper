@@ -17,13 +17,31 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
 
     @Override
     public List<Consumer> listConsumerByApplication(String appName) {
-        Map<String,String> filter = new HashMap<String,String>();
-        filter.put(Constants.APPLICATION_KEY,appName);
-        Collection<Map.Entry<Long,URL>> urls = filterCategoryData(filter,Constants.CONSUMERS_CATEGORY);
-        List<Consumer> consumers = new ArrayList<Consumer>();
-        for(Map.Entry<Long,URL> url:urls){
-            consumers.add(SyncUtils.url2Consumer(new Pair<Long, URL>(url)));
-        }
-        return consumers;
+        return filterCategoryData(new ConvertURL2Entity<Consumer>() {
+            @Override
+            public Consumer convert(Pair<Long, URL> pair) {
+                return SyncUtils.url2Consumer(pair);
+            }
+        },Constants.CONSUMERS_CATEGORY,Constants.APPLICATION_KEY,appName);
+    }
+
+    @Override
+    public List<Consumer> listConsumerByService(String service) {
+        return filterCategoryData(new ConvertURL2Entity<Consumer>() {
+            @Override
+            public Consumer convert(Pair<Long, URL> pair) {
+                return SyncUtils.url2Consumer(pair);
+            }
+        },Constants.CONSUMERS_CATEGORY,Constants.INTERFACE_KEY,service);
+    }
+
+    @Override
+    public List<Consumer> listConsumerByConditions(String... conditions) {
+        return filterCategoryData(new ConvertURL2Entity<Consumer>() {
+            @Override
+            public Consumer convert(Pair<Long, URL> pair) {
+                return SyncUtils.url2Consumer(pair);
+            }
+        },Constants.CONSUMERS_CATEGORY,conditions);
     }
 }

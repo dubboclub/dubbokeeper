@@ -2,6 +2,7 @@ package com.dubboclub.admin.service.impl;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
+import com.dubboclub.admin.model.Consumer;
 import com.dubboclub.admin.model.Provider;
 import com.dubboclub.admin.service.AbstractService;
 import com.dubboclub.admin.service.ProviderService;
@@ -21,26 +22,32 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
 
     @Override
     public List<Provider> listProviderByApplication(String appName) {
-        Map<String,String> filter = new HashMap<String,String>();
-        filter.put(Constants.APPLICATION_KEY,appName);
-        Collection<Map.Entry<Long,URL>> urls = filterCategoryData(filter,Constants.PROVIDERS_CATEGORY);
-        List<Provider> providers = new ArrayList<Provider>();
-        for(Map.Entry<Long,URL> url:urls){
-            providers.add(SyncUtils.url2Provider(new Pair<Long, URL>(url)));
-        }
-        return providers;
+        return filterCategoryData(new ConvertURL2Entity<Provider>() {
+            @Override
+            public Provider convert(Pair<Long, URL> pair) {
+                return SyncUtils.url2Provider(pair);
+            }
+        },Constants.PROVIDERS_CATEGORY,Constants.APPLICATION_KEY,appName);
     }
 
     @Override
     public List<Provider> listProviderByService(String service) {
-        Map<String,String> filter = new HashMap<String,String>();
-        filter.put(Constants.INTERFACE_KEY,service);
-        Collection<Map.Entry<Long,URL>> urls = filterCategoryData(filter,Constants.PROVIDERS_CATEGORY);
-        List<Provider> providers = new ArrayList<Provider>();
-        for(Map.Entry<Long,URL> url:urls){
-            providers.add(SyncUtils.url2Provider(new Pair<Long, URL>(url)));
-        }
-        return providers;
+        return filterCategoryData(new ConvertURL2Entity<Provider>() {
+            @Override
+            public Provider convert(Pair<Long, URL> pair) {
+                return SyncUtils.url2Provider(pair);
+            }
+        },Constants.PROVIDERS_CATEGORY,Constants.INTERFACE_KEY,service);
+    }
+
+    @Override
+    public List<Provider> listProviderByConditions(String... conditions) {
+        return filterCategoryData(new ConvertURL2Entity<Provider>() {
+            @Override
+            public Provider convert(Pair<Long, URL> pair) {
+                return SyncUtils.url2Provider(pair);
+            }
+        },Constants.PROVIDERS_CATEGORY,conditions);
     }
 
 

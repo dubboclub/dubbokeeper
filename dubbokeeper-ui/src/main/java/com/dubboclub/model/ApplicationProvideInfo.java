@@ -92,4 +92,6 @@ public class ApplicationProvideInfo {
         result = 31 * result + (protocol != null ? protocol.hashCode() : 0);
         return result;
     }
+
+
 }

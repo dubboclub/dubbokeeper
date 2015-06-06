@@ -89,7 +89,7 @@ public class SyncUtils {
         c.setAddress(url.getHost());
         c.setApplication(url.getParameter(Constants.APPLICATION_KEY));
         c.setParameters(url.toParameterString());
-
+        c.setUsername(url.getParameter("owner"));
         return c;
     }
     
