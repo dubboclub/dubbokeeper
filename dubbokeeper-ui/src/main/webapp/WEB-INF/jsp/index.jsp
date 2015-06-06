@@ -7,13 +7,28 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="common/header.jsp"%>
-<div class="container" ng-app="indexApp" >
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-12 col-lg-12 col-xs-12" style="height: 550px;">
-            <app-list></app-list>
+        <div class="col-md-4 col-lg-4 col-xs-4">
+            <div class="row">
+                <div class="col-md-12 col-lg-12 col-xs-12">
+                    <menu-tpl></menu-tpl>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-8 col-lg-8 col-xs-8">
+            <div class="row">
+                <div class="col-md-12 col-lg-12 col-xs-12" >
+                    <app-list></app-list>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <%@include file="common/scripts.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/apps.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/head/head.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/menu/menu.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/index.js"></script>
 <%@include file="common/footer.jsp"%>

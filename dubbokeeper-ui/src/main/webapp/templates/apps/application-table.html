@@ -1,0 +1,27 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading"><i class="icon-cloud"></i> 应用列表</div>
+    <div class="panel-body">
+        <table class="table-striped table-hover table-condensed  table table-condensed">
+            <thead>
+            <tr>
+                <th class="text-center"><strong>#</strong></th>
+                <th class="text-center"><strong>应用名</strong></th>
+                <th class="text-center"><strong>拥有者</strong></th>
+                <th class="text-center"><strong>操作</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-show="!applications||applications.length<=0">
+                <td class="text-center text-warning" colspan="3">努力加载中....</td>
+            </tr>
+            <tr ng-show="applications&&applications.length>0" ng-repeat="app in applications">
+                <td class="text-center">{{$index+1}}</th>
+                <td class="text-center">{{app.application}}</th>
+                <td class="text-center">{{app.username}}</th>
+                <td class="text-center"><button class="btn btn-success"><i class="icon-eye-open"></i> 查看详情</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
