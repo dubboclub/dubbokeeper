@@ -26,6 +26,7 @@
     </div>
 </div>
 <%@include file="common/scripts.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/provider.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/apps.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/head/head.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/menu/menu.js"></script>

@@ -1,4 +1,4 @@
-var apps=angular.module("apps",['ngAnimate','ngRoute']);
+var apps=angular.module("apps",['ngAnimate','ngRoute','serviceProvider','queryFilter']);
 apps.config(function($routeProvider){
     $routeProvider.when("/",{
         templateUrl:"templates/apps/application-table.html",
@@ -26,26 +26,51 @@ apps.config(function($routeProvider){
 
 
 
-apps.controller("consumeServiceDetails",function($scope,$http,$routeParams){
+apps.controller("consumeServiceDetails",function($scope,$http,$routeParams,$queryFilter){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.provider=$routeParams.provider;
     $scope.consumer=$routeParams.consumer;
     $scope.isForOneConsumer=true;
+
     $http.post("app/"+$routeParams.provider+"/"+$routeParams.consumer+"/consumes.htm").success(function(data){
         $scope.details=data;
         if(!data||data.length<=0){
             $scope.isEmpty=true;
         }
+        $scope.originData=data;
     });
     $scope.currentParameters="";
     $scope.viewParameters=function(detail){
         $scope.currentParameters=detail.parameters;
         //$('.modal-dialog').modal('toggle');
     }
+
+    $scope.dynamicOptios=[{
+        val:true,
+        text:"动态"
+    },{
+        val:false,
+        text:"静态"
+    }];
+    $scope.enabledOptios=[{
+        val:true,
+        text:"已启用"
+    },{
+        val:false,
+        text:"已禁用"
+    }];
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.details=$queryFilter($scope.originData,$scope.query);
+    }
 });
 
-apps.controller("consumerDetail",function($scope,$http,$routeParams){
+apps.controller("consumerDetail",function($scope,$http,$routeParams,$queryFilter){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -54,16 +79,21 @@ apps.controller("consumerDetail",function($scope,$http,$routeParams){
         if(!data||data.length<=0){
             $scope.isEmpty=true;
         }
+        $scope.originData=data;
     });
-   /* $scope.currentParameters="";
-    $scope.viewParameters=function(detail){
-        $scope.currentParameters=detail.parameters;
-        //$('.modal-dialog').modal('toggle');
-    }*/
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.details=$queryFilter($scope.originData,$scope.query);
+    }
+
 });
 
 
-apps.controller("nodesDetail",function($scope,$http,$routeParams){
+apps.controller("nodesDetail",function($scope,$http,$routeParams,$queryFilter){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -72,9 +102,25 @@ apps.controller("nodesDetail",function($scope,$http,$routeParams){
         if(!data||data.length<=0){
             $scope.isEmpty=true;
         }
+        $scope.originData=data;
     });
+    $scope.typeOptions=[{
+        val:'1',
+        text:"提供者"
+    },{
+        val:'2',
+        text:"消费者"
+    }];
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.details=$queryFilter($scope.originData,$scope.query);
+    }
 });
-apps.controller("consumeDetail",function($scope,$http,$routeParams){
+apps.controller("consumeDetail",function($scope,$http,$routeParams,$queryFilter){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -83,9 +129,18 @@ apps.controller("consumeDetail",function($scope,$http,$routeParams){
         if(!data||data.length<=0){
             $scope.isEmpty=true;
         }
+        $scope.originData=data;
     });
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.details=$queryFilter($scope.originData,$scope.query);
+    }
 });
-apps.controller("provideDetail",function($scope,$http,$routeParams){
+apps.controller("provideDetail",function($scope,$http,$routeParams,$queryFilter){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -95,14 +150,37 @@ apps.controller("provideDetail",function($scope,$http,$routeParams){
         if(!data||data.length<=0){
             $scope.isEmpty=true;
         }
+        $scope.originData=data;
     });
     $scope.currentParameters="";
     $scope.viewParameters=function(detail){
         $scope.currentParameters=detail.parameters;
-        //$('.modal-dialog').modal('toggle');
+    }
+
+    $scope.dynamicOptios=[{
+        val:true,
+        text:"动态"
+    },{
+        val:false,
+        text:"静态"
+    }];
+    $scope.enabledOptios=[{
+        val:true,
+        text:"已启用"
+    },{
+        val:false,
+        text:"已禁用"
+    }];
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.details=$queryFilter($scope.originData,$scope.query);
     }
 });
-apps.controller("consumerAppTable",function($scope,$http,$routeParams){
+apps.controller("consumerAppTable",function($scope,$http,$routeParams,$queryFilter){
     $scope.applications=[];
     $scope.isEmpty=false;
     $scope.isConsumer=true;
@@ -112,10 +190,19 @@ apps.controller("consumerAppTable",function($scope,$http,$routeParams){
         if(!data||data.length<0){
             $scope.isEmpty=true;
         }
+        $scope.originData=data;
     });
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.applications=$queryFilter($scope.originData,$scope.query);
+    }
 });
 
-apps.controller("appTable",function($scope,$http){
+apps.controller("appTable",function($scope,$http,$queryFilter){
     $scope.applications=[];
     $scope.isEmpty=false;
     $http.post("app/list.htm").success(function(data){
@@ -123,6 +210,15 @@ apps.controller("appTable",function($scope,$http){
         if(!data||data.length<0){
             $scope.isEmpty=true;
         }
+        $scope.originData=data;
     });
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.applications=$queryFilter($scope.originData,$scope.query);
+    }
 });
 

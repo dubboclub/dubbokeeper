@@ -33,6 +33,15 @@
     a:focus, a:hover {
         text-decoration: none;
     }
+    .inner-form-element{
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 1px 2px;
+        font-size: 12px;
+    }
 </style>
 <body>
 <head-tpl></head-tpl>

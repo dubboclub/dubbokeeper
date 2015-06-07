@@ -1,28 +1,24 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="row">
-            <div class="col-md-10 col-lg-10 col-xs-10">
-                <i class="icon-cloud"></i> <span class="text-primary"><strong>{{application | uppercase}}</strong></span>消费服务列表
-
-            </div>
-            <div class="col-md-2 col-lg-2 col-xs-2">
-                <input type="text" class="form-control" ng-model="search" placeholder="输入服务名">
-            </div>
-        </div>
+        <i class="icon-cloud"></i> <span class="text-primary"><strong>{{application | uppercase}}</strong></span>消费服务列表
     </div>
     <div class="panel-body">
         <table class="table-striped table-hover table-condensed  table table-condensed">
             <thead>
             <tr>
                 <th class="text-center"><strong>#</strong></th>
-                <th class="text-center"><strong>服务名称</strong></th>
-                <th class="text-center"><strong>应用名称</strong></th>
+                <th class="text-center"><strong>服务名称</strong>
+                    <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.service" placeholder="输入服务名">
+                </th>
+                <th class="text-center"><strong>应用名称</strong>
+                    <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.providerName" placeholder="输入应用名">
+                </th>
                 <th class="text-center"><strong>应用所有者</strong></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-show="!details||details.length<=0">
-                <td class="text-center text-warning" colspan="4">{{isEmpty?"未发现任何数据...":"努力加载中...."}}</td>
+                <td class="text-center text-warning" colspan="4">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}</td>
             </tr>
             <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
