@@ -18,6 +18,7 @@
         <dubbo.version>2.5.3</dubbo.version>
         <spring_version>4.1.6.RELEASE</spring_version>
         <servlet_version>2.5</servlet_version>
+        <findbugs.excludeFilterFile>findbugs-exclude.xml</findbugs.excludeFilterFile>
     </properties>
     <dependencies>
         <dependency>
@@ -104,4 +105,18 @@
             <version>${spring_version}</version>
         </dependency>
     </dependencies>
+    <reporting>
+        <plugins>
+            <plugin>
+
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <xmlOutputDirectory>target/site</xmlOutputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

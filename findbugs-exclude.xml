@@ -1,0 +1,20 @@
+<FindBugsFilter>
+	<Match>
+			<!-- 
+			DM_DEFAULT_ENCODING：当调用string的getBytes方法返回字节数组时候，如果没有设置字符集则会出现这个警告
+			DMI_INVOKING_HASHCODE_ON_ARRAY：表示调用了数组对象的hashcode方法
+			EI_EXPOSE_REP：对私有属性的get方法的时候，直接返回私有属性对象，没有返回一个copy对象，为了防止外部内容对这个私有属性对象内部信息的修改
+			EI_EXPOSE_REP2：表述私有属性的set方法，警告外部可以通过set方法修改对象的私有属性
+			SE_BAD_FIELD:描述类实现了serializable接口，但是没有实现readObject和writeObject方法
+			 -->
+		 <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,DMI_INVOKING_HASHCODE_ON_ARRAY,SE_BAD_FIELD"></Bug>
+	</Match>
+	<!-- 当前这个方法是业务要求这样执行 -->
+	<!--<Match>
+		<Class name="classFullName"/>
+		<Method name="methodName"/>
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
+	</Match>
+	 -->
+
+</FindBugsFilter>
