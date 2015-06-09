@@ -48,7 +48,12 @@ public class Consumer extends BasicModel {
     
     private String statistics;    /* 服务调用统计信息 */
     
-    private Date collected;  /* 服务调用统计时间 */ 
+    private Date collected;  /* 服务调用统计时间 */
+
+    private String group;
+
+    private String version;
+
 
 	private Override override;
 
@@ -67,6 +72,23 @@ public class Consumer extends BasicModel {
 
     public Consumer(Long id) {
         super(id);
+    }
+
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public String getService() {

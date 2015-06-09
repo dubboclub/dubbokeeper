@@ -7,24 +7,30 @@
             <thead>
             <tr>
                 <th class="text-center"><strong>#</strong></th>
-                <th class="text-center"><strong>服务名称</strong>
+                <th class="text-left"><strong>服务名称</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.service" placeholder="输入服务名">
                 </th>
-                <th class="text-center"><strong>应用名称</strong>
+                <th class="text-left"><strong>服务版本</strong></th>
+                <th class="text-left"><strong>服务组</strong></th>
+                <th class="text-left"><strong>应用名称</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.providerName" placeholder="输入应用名">
                 </th>
-                <th class="text-center"><strong>应用所有者</strong></th>
+
+                <th class="text-left"><strong>应用所有者</strong></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-show="!details||details.length<=0">
-                <td class="text-center text-warning" colspan="4">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}</td>
+                <td class="text-center text-warning" colspan="6">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}</td>
             </tr>
             <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
-                <td class="text-center">{{detail.service}}</td>
-                <td class="text-center">{{detail.providerName}}</td>
-                <td class="text-center">{{detail.owner}}</td>
+                <td class="text-left" title="管理该服务的提供者"><a href="#/{{detail.service}}/providers">{{detail.service}}</a></td>
+                <td class="text-left"><span class="label {{!detail.version?'label-info':'label-success'}}">{{!detail.version?"所有版本":detail.version}}</span></td>
+                <td class="text-left"><span class="label {{!detail.group?'label-info':'label-success'}}">{{!detail.group?"所有组":detail.group}}</span></td>
+                <td class="text-left"><a href="#/{{detail.providerName}}/nodes" style="text-underline: none;"
+                                           title="{{detail.providerName | uppercase}}应用部署在哪些节点上">{{detail.providerName}}</a></td>
+                <td class="text-left">{{detail.owner}}</td>
             </tr>
             </tbody>
         </table>

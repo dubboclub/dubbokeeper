@@ -28,10 +28,7 @@
         padding-top: 70px;
     }
     *{
-        font-family: 幼圆,"Microsoft YaHei", Arial, Helvetica, sans-serif, "宋体";;
-    }
-    a:focus, a:hover {
-        text-decoration: none;
+        font-family: 幼圆,"Microsoft YaHei", Arial, Helvetica, sans-serif,"宋体";
     }
     .inner-form-element{
         color: #555;
@@ -41,6 +38,9 @@
         border-radius: 4px;
         padding: 1px 2px;
         font-size: 12px;
+    }
+    td{
+        font-size: 15px;
     }
 </style>
 <body>

@@ -23,6 +23,7 @@ public class ProviderController {
 
     @RequestMapping("/{service}/providers.htm")
     public @ResponseBody List<Provider> listProviderByService(@PathVariable("service") String service){
+
         return  providerService.listProviderByService(service);
     }
 

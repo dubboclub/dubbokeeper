@@ -6,14 +6,9 @@
         <table class="table-striped table-hover table-condensed  table table-condensed">
             <thead>
             <tr>
-                <th class="text-center"><strong>#</strong></th>
-                <th class="text-center"><strong>节点地址信息</strong>
+                <th class="text-center" style="width: 50%"><strong>#</strong></th>
+                <th class="text-left" style="width: 50%"><strong>节点地址信息</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.nodeAddress" placeholder="节点地址">
-                </th>
-                <th class="text-center"><strong>节点类型</strong>
-                    <select  ng-change="filter()" ng-model="query.type" class="inner-form-element" ng-options="o.val as o.text for o in typeOptions">
-                        <option value="">所有</option>
-                    </select>
                 </th>
             </tr>
             </thead>
@@ -23,8 +18,7 @@
                 </tr>
                 <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'nodeAddress' | filter:search"   class="ng-animation">
                     <td class="text-center">{{$index+1}}</td>
-                    <td class="text-center">{{detail.nodeAddress}}</td>
-                    <td class="text-center">{{detail.type==1?'提供者':'消费者'}}</td>
+                    <td class="text-left">{{detail.nodeAddress}}</td>
                 </tr>
             </tbody>
         </table>

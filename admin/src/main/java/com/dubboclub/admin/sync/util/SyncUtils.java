@@ -60,7 +60,8 @@ public class SyncUtils {
         p.setEnabled(url.getParameter(Constants.ENABLED_KEY, true));
         p.setWeight(url.getParameter(Constants.WEIGHT_KEY, Constants.DEFAULT_WEIGHT));
         p.setUsername(url.getParameter("owner"));
-
+        p.setGroup(url.getParameter(Constants.GROUP_KEY));
+        p.setVersion(url.getParameter(Constants.VERSION_KEY));
         return p;
     }
     
@@ -90,6 +91,8 @@ public class SyncUtils {
         c.setApplication(url.getParameter(Constants.APPLICATION_KEY));
         c.setParameters(url.toParameterString());
         c.setUsername(url.getParameter("owner"));
+        c.setGroup(url.getParameter(Constants.GROUP_KEY));
+        c.setVersion(url.getParameter(Constants.VERSION_KEY));
         return c;
     }
     

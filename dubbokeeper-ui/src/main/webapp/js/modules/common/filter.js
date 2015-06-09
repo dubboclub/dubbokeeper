@@ -10,6 +10,12 @@ queryFilter.$queryFilter=function(){
                 }
                 var itemValue=originData[i][key]+"";
                 var queryData = query[key]+"";
+                if(!itemValue){
+                    matched=false;
+                    break;
+                }
+                queryData=queryData.toUpperCase();
+                itemValue=itemValue.toUpperCase();
                 if(itemValue.indexOf(queryData)<0){
                     matched=false;
                     break;

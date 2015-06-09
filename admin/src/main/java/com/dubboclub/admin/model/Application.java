@@ -5,9 +5,21 @@ package com.dubboclub.admin.model;
  */
 public class Application {
 
+    public static final short PROVIDER=1,CONSUMER=2, PROVIDER_AND_CONSUMER =3;
+
     private String application; /* 应用名 */
 
     private String username;      /* 提供者用户名 */
+
+    private short type;
+
+    public short getType() {
+        return type;
+    }
+
+    public void setType(short type) {
+        this.type = type;
+    }
 
     public String getUsername() {
         return username;

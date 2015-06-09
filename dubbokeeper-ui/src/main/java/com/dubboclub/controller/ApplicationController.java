@@ -9,13 +9,13 @@ import com.dubboclub.admin.model.Provider;
 import com.dubboclub.admin.service.ApplicationService;
 import com.dubboclub.admin.service.ConsumerService;
 import com.dubboclub.admin.service.ProviderService;
-import com.dubboclub.model.ApplicationConsumeInfo;
-import com.dubboclub.model.ApplicationProvideInfo;
+import com.dubboclub.admin.sync.util.Tool;
+import com.dubboclub.model.AppConsumeInfo;
+import com.dubboclub.model.AppProvideInfo;
 import com.dubboclub.model.ConsumerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -51,12 +51,13 @@ public class ApplicationController {
 
     /**
      * 查询某个服务的消费者信息，从而可以确定该服务有多少消费者依赖它
-     * @param service
+     * @param id
      * @return
      */
-    @RequestMapping("/{service}/consumer-apps.htm")
-    public @ResponseBody List<Application> getConsumerAppByService(@PathVariable("service")String service ){
-        List<Consumer> consumers = consumerService.listConsumerByService(service);
+    @RequestMapping("/{id}/consumer-apps.htm")
+    public @ResponseBody List<Application> getConsumerAppByService(@PathVariable("id")long id ){
+        Provider provider = providerService.getProviderById(id);
+        List<Consumer> consumers = consumerService.listConsumerByConditions(Constants.INTERFACE_KEY,Tool.getInterface(provider.getService()),Constants.VERSION_KEY,Tool.getVersion(provider.getService()),Constants.GROUP_KEY,Tool.getGroup(provider.getService()));
         List<Application> applicationList = new ArrayList<Application>();
         List<String> containMark = new ArrayList<String>();
         for(Consumer consumer:consumers){
@@ -67,6 +68,11 @@ public class ApplicationController {
             Application application = new Application();
             application.setUsername(consumer.getUsername());
             application.setApplication(consumer.getApplication());
+            application.setType(Application.CONSUMER);
+            List<Provider> providers = providerService.listProviderByApplication(consumer.getApplication());
+            if(providers.size()>0){
+                application.setType(Application.PROVIDER_AND_CONSUMER);
+            }
             applicationList.add(application);
         }
         return applicationList;
@@ -88,9 +94,9 @@ public class ApplicationController {
      * @return
      */
     @RequestMapping("/{appName}/provides.htm")
-    public @ResponseBody  List<ApplicationProvideInfo> getProvides(@PathVariable("appName")String appName){
+    public @ResponseBody  List<AppProvideInfo> getProvides(@PathVariable("appName")String appName){
         List<Provider>  providers = providerService.listProviderByApplication(appName);
-        List<ApplicationProvideInfo> provideInfos = new ArrayList<ApplicationProvideInfo>();
+        List<AppProvideInfo> provideInfos = new ArrayList<AppProvideInfo>();
         List<String> containMark = new ArrayList<String>();
         StringBuffer protocolBuffer = new StringBuffer();
         for(Provider provider : providers){
@@ -98,17 +104,17 @@ public class ApplicationController {
                 continue;
             }
             containMark.add(provider.getService());
-            ApplicationProvideInfo provideInfo = new ApplicationProvideInfo();
-            provideInfo.setService(provider.getService());
-            provideInfo.setDynamic(provider.isDynamic());
-            provideInfo.setEnabled(provider.isEnabled());
-            provideInfo.setParameters(provider.getParameters());
-            provideInfo.setWeight(provider.getWeight());
-            List<Provider> providerList = providerService.listProviderByService(provider.getService());
+            AppProvideInfo provideInfo = new AppProvideInfo();
+            provideInfo.setService(Tool.getInterface(provider.getService()));
+            provideInfo.setVersion(provider.getVersion());
+            provideInfo.setGroup(provider.getGroup());
+            provideInfo.setId(provider.getId());
+            List<Provider> providerList  = providerService.listProviderByConditions(Constants.INTERFACE_KEY,provideInfo.getService(),Constants.GROUP_KEY,Tool.getGroup(provider.getService()),Constants.VERSION_KEY,Tool.getVersion(provider.getService()));
             for(Provider item:providerList){
                 URL url = URL.valueOf(item.getUrl());
                 protocolBuffer.append(url.getProtocol()).append(":").append(url.getPort()).append(",");
             }
+
             if(protocolBuffer.length()>0){
                 protocolBuffer.setLength(protocolBuffer.length()-1);
             }
@@ -125,13 +131,15 @@ public class ApplicationController {
      * @return
      */
     @RequestMapping("/{appName}/consumes.htm")
-    public @ResponseBody  List<ApplicationConsumeInfo> getConsumes(@PathVariable("appName")String appName){
-        List<ApplicationConsumeInfo> applicationConsumeInfos = new ArrayList<ApplicationConsumeInfo>();
+    public @ResponseBody  List<AppConsumeInfo> getConsumes(@PathVariable("appName")String appName){
+        List<AppConsumeInfo> applicationConsumeInfos = new ArrayList<AppConsumeInfo>();
         List<Consumer> consumers =  consumerService.listConsumerByApplication(appName);
         for(Consumer consumer:consumers){
-            ApplicationConsumeInfo consumeInfo = new ApplicationConsumeInfo();
-            consumeInfo.setService(consumer.getService());
+            AppConsumeInfo consumeInfo = new AppConsumeInfo();
+            consumeInfo.setService(Tool.getInterface(consumer.getService()));
             List<Provider> providers = providerService.listProviderByService(consumer.getService());
+            consumeInfo.setGroup(consumer.getGroup());
+            consumeInfo.setVersion(consumer.getVersion());
             if(providers.size()>0){
                 consumeInfo.setProviderName(providers. get(0).getApplication());
                 consumeInfo.setOwner(providers.get(0).getUsername());
@@ -177,8 +185,8 @@ public class ApplicationController {
      * @return
      */
     @RequestMapping("/{provider}/{consumer}/consumes.htm")
-    public @ResponseBody List<ApplicationProvideInfo> geConsumeServiceInfoByConsumerAndProvider(@PathVariable("provider")String provider,@PathVariable("consumer")String consumer){
-        List<ApplicationProvideInfo> provideInfos = new ArrayList<ApplicationProvideInfo>();
+    public @ResponseBody List<AppProvideInfo> geConsumeServiceInfoByConsumerAndProvider(@PathVariable("provider")String provider,@PathVariable("consumer")String consumer){
+        List<AppProvideInfo> provideInfos = new ArrayList<AppProvideInfo>();
         List<Consumer> consumers= consumerService.listConsumerByApplication(consumer);
         List<String> containMark = new ArrayList<String>();
         StringBuffer protocolBuffer = new StringBuffer();
@@ -189,13 +197,11 @@ public class ApplicationController {
             containMark.add(consumerEntity.getService());
             List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,consumerEntity.getService(),Constants.APPLICATION_KEY,provider);
             if(providers.size()>0){
-                ApplicationProvideInfo provideInfo = new ApplicationProvideInfo();
+                AppProvideInfo provideInfo = new AppProvideInfo();
                 Provider providerEntity = providers.get(0);
                 provideInfo.setService(providerEntity.getService());
-                provideInfo.setDynamic(providerEntity.isDynamic());
-                provideInfo.setEnabled(providerEntity.isEnabled());
-                provideInfo.setParameters(consumerEntity.getParameters());
-                provideInfo.setWeight(providerEntity.getWeight());
+                provideInfo.setVersion(providerEntity.getVersion());
+                provideInfo.setGroup(providerEntity.getGroup());
                 List<Provider> providerList = providerService.listProviderByService(providerEntity.getService());
                 for(Provider item:providerList){
                     URL url = URL.valueOf(item.getUrl());

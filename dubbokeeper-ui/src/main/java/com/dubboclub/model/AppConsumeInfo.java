@@ -4,13 +4,33 @@ package com.dubboclub.model;
  * Created by bieber on 2015/6/6.
  * 应用消费服务信息
  */
-public class ApplicationConsumeInfo {
+public class AppConsumeInfo {
 
     private String service;
 
     private String providerName;
 
     private String owner;
+
+    private String group;
+
+    private String version;
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public String getService() {
         return service;
@@ -41,11 +61,13 @@ public class ApplicationConsumeInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ApplicationConsumeInfo that = (ApplicationConsumeInfo) o;
+        AppConsumeInfo that = (AppConsumeInfo) o;
 
+        if (group != null ? !group.equals(that.group) : that.group != null) return false;
         if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
         if (providerName != null ? !providerName.equals(that.providerName) : that.providerName != null) return false;
         if (service != null ? !service.equals(that.service) : that.service != null) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
 
         return true;
     }
@@ -55,6 +77,8 @@ public class ApplicationConsumeInfo {
         int result = service != null ? service.hashCode() : 0;
         result = 31 * result + (providerName != null ? providerName.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (group != null ? group.hashCode() : 0);
+        result = 31 * result + (version != null ? version.hashCode() : 0);
         return result;
     }
 }

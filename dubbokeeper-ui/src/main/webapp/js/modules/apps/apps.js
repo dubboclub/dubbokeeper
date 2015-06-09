@@ -18,7 +18,7 @@ apps.config(function($routeProvider){
     }).when("/:provider/:consumer/consumes",{
         templateUrl:"templates/apps/provide-details.html",
         controller:"consumeServiceDetails"
-    }).when("/:service/service-consumers",{
+    }).when("/:service/:id/service-consumers",{
         templateUrl:"templates/apps/application-table.html",
         controller:"consumerAppTable"
     }).otherwise("/");
@@ -185,13 +185,23 @@ apps.controller("consumerAppTable",function($scope,$http,$routeParams,$queryFilt
     $scope.isEmpty=false;
     $scope.isConsumer=true;
     $scope.service=$routeParams.service;
-    $http.post("app/"+$routeParams.service+"/consumer-apps.htm").success(function(data){
+    $http.post("app/"+$routeParams.id+"/consumer-apps.htm").success(function(data){
         $scope.applications=data;
         if(!data||data.length<0){
             $scope.isEmpty=true;
         }
         $scope.originData=data;
     });
+    $scope.typeOptions=[{
+        val:1,
+        text:"P"
+    },{
+        val:2,
+        text:"C"
+    },{
+        val:3,
+        text:"P.AND.C"
+    }];
     $scope.query={};
     $scope.filter=function(){
         var filterResult=[];
@@ -213,6 +223,16 @@ apps.controller("appTable",function($scope,$http,$queryFilter){
         $scope.originData=data;
     });
     $scope.query={};
+    $scope.typeOptions=[{
+        val:1,
+        text:"P"
+    },{
+        val:2,
+        text:"C"
+    },{
+        val:3,
+        text:"P.AND.C"
+    }];
     $scope.filter=function(){
         var filterResult=[];
         if($scope.isEmpty){

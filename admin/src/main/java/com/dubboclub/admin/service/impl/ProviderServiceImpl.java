@@ -50,5 +50,14 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         },Constants.PROVIDERS_CATEGORY,conditions);
     }
 
+    @Override
+    public Provider getProviderById(long id) {
+        URL url = getOneById(Constants.PROVIDERS_CATEGORY,id);
+        if(url!=null){
+            return SyncUtils.url2Provider(new Pair<Long, URL>(id,url));
+        }
+        return null;
+    }
+
 
 }

@@ -19,5 +19,8 @@ public interface ProviderService {
     //通过多条件查询符合全部条件的提供者信息
     public List<Provider> listProviderByConditions(String...conditions);
 
+    //通过ID查询某个提供者
+    public Provider getProviderById(long id);
+
 
 }

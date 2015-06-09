@@ -7,10 +7,10 @@
             <thead>
             <tr>
                 <th class="text-center"><strong>#</strong></th>
-                <th class="text-center"><strong>应用名称</strong>
+                <th class="text-left"><strong>应用名称</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.application" placeholder="输入应用名">
                 </th>
-                <th class="text-center"><strong>应用所有者</strong>
+                <th class="text-left"><strong>应用所有者</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.username" placeholder="输入应用所有者">
                 </th>
                 <th class="text-center"><strong>操作</strong></th>
@@ -22,11 +22,12 @@
             </tr>
             <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'application' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
-                <td class="text-center">{{detail.application}}</td>
-                <td class="text-center">{{detail.username}}</td>
+                <td class="text-left"><a href="#/{{detail.application}}/nodes" style="text-underline: none;"
+                                           title="{{detail.application | uppercase}}应用部署在哪些节点上">{{detail.application}}</a></td>
+                <td class="text-left">{{detail.username}}</td>
                 <td class="text-center">
-                    <a href="#/{{application}}/{{detail.application}}/consumes" title="消费了哪些服务">
-                        <button class="btn  btn-sm btn-info"><i class="icon-list-alt"></i> 依赖服务列表</button>
+                    <a href="#/{{application}}/{{detail.application}}/consumes" title="该应用的订阅服务列表">
+                        <i class="glyphicon glyphicon-pushpin"></i>
                     </a>
                 </td>
             </tr>

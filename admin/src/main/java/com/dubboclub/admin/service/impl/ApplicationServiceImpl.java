@@ -37,6 +37,7 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
                     Application application = new Application();
                     application.setApplication(url.getValue().getParameter(Constants.APPLICATION_KEY));
                     application.setUsername(url.getValue().getParameter("owner"));
+                    application.setType(Application.PROVIDER);
                     if(!applications.contains(application)){
                         applications.add(application);
                     }
@@ -52,7 +53,13 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
                     application.setApplication(url.getValue().getParameter(Constants.APPLICATION_KEY));
                     application.setUsername(url.getValue().getParameter("owner"));
                     if(!applications.contains(application)){
+                        application.setType(Application.CONSUMER);
                         applications.add(application);
+                    }else{
+                        application=applications.get(applications.indexOf(application));
+                        if(application.getType()==Application.PROVIDER){
+                            application.setType(Application.PROVIDER_AND_CONSUMER);
+                        }
                     }
                     break;
                 }
@@ -68,7 +75,6 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
         List<Node> nodes = new ArrayList<Node>();
         for(Provider provider:providers){
             Node node = new Node();
-            node.setType(Node.PROVIDER_TYPE);
             node.setNodeAddress(provider.getAddress());
             node.setId(provider.getId());
             if(!nodes.contains(node)){
@@ -77,7 +83,6 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
         }
         for(Consumer consumer:consumers){
             Node node = new Node();
-            node.setType(Node.CONSUMER_TYPE);
             node.setNodeAddress(consumer.getAddress());
             node.setId(consumer.getId());
             if(!nodes.contains(node)){

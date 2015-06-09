@@ -1,6 +1,7 @@
 package com.dubboclub.admin.service;
 
 import com.alibaba.dubbo.common.URL;
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dubboclub.admin.model.BasicModel;
 import com.dubboclub.admin.sync.RegistryServerSync;
 import com.dubboclub.admin.sync.util.Pair;
@@ -23,6 +24,17 @@ public abstract class AbstractService {
     protected ConcurrentMap<String, Map<Long, URL>> getServiceByCategory(String category){
         return registryServerSync.getRegistryCache().get(category);
     }
+
+    protected URL getOneById(String category,long id){
+        ConcurrentMap<String, Map<Long, URL>>  categoryMap = registryServerSync.getRegistryCache().get(category);
+        for(Map.Entry<String, Map<Long, URL>> entry:categoryMap.entrySet()){
+            if(entry.getValue().containsKey(id)){
+                return entry.getValue().get(id);
+            }
+        }
+        return null;
+    }
+
     //通过对某个目录下的数据定义过滤器，过滤出复核条件的数据
     protected<T extends BasicModel> List<T>  filterCategoryData(ConvertURL2Entity<T> convertURLTOEntity,String category,String... params){
         if(params.length>0&&params.length%2!=0){
@@ -54,10 +66,15 @@ public abstract class AbstractService {
                     if(parameters!=null){
                         boolean matched=true;
                         for(Map.Entry<String,String> filterEntry:filter.entrySet()){
-                           if(!parameters.containsKey(filterEntry.getKey())||!filterEntry.getValue().equals(parameters.get(filterEntry.getKey()))){
-                               matched=false;
-                               break;
-                           }
+                            if(!parameters.containsKey(filterEntry.getKey())&&StringUtils.isEmpty(filterEntry.getValue())){
+                                continue;
+                            }else if(parameters.containsKey(filterEntry.getKey())&&!parameters.get(filterEntry.getKey()).equals(filterEntry.getValue())){
+                                matched=false;
+                                break;
+                            }else if(!StringUtils.isEmpty(filterEntry.getValue())&&!filterEntry.getValue().equals(parameters.get(filterEntry.getKey()))){
+                                matched=false;
+                                break;
+                            }
                         }
                         if(matched){
                             matchedData.add(entry);
