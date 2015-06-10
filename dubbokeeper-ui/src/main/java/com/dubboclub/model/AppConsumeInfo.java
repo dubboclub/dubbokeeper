@@ -15,6 +15,17 @@ public class AppConsumeInfo {
     private String group;
 
     private String version;
+    
+    
+    private int providerCount;
+
+    public int getProviderCount() {
+        return providerCount;
+    }
+
+    public void setProviderCount(int providerCount) {
+        this.providerCount = providerCount;
+    }
 
     public String getGroup() {
         return group;

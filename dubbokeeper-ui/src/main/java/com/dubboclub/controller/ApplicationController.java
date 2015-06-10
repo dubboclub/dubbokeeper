@@ -137,15 +137,16 @@ public class ApplicationController {
         for(Consumer consumer:consumers){
             AppConsumeInfo consumeInfo = new AppConsumeInfo();
             consumeInfo.setService(Tool.getInterface(consumer.getService()));
-            List<Provider> providers = providerService.listProviderByService(consumer.getService());
             consumeInfo.setGroup(consumer.getGroup());
             consumeInfo.setVersion(consumer.getVersion());
+            List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumer.getService()),Constants.VERSION_KEY,Tool.getVersion(consumer.getService()),Constants.GROUP_KEY,Tool.getGroup(consumer.getService()));
             if(providers.size()>0){
                 consumeInfo.setProviderName(providers. get(0).getApplication());
                 consumeInfo.setOwner(providers.get(0).getUsername());
-                if(!applicationConsumeInfos.contains(consumeInfo)){
-                    applicationConsumeInfos.add(consumeInfo);
-                }
+                consumeInfo.setProviderCount(providers.size());
+            }
+            if(!applicationConsumeInfos.contains(consumeInfo)){
+                applicationConsumeInfos.add(consumeInfo);
             }
         }
         return applicationConsumeInfos;
