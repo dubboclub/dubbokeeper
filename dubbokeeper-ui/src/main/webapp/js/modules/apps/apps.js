@@ -1,4 +1,4 @@
-var apps=angular.module("apps",['ngAnimate','ngRoute','serviceProvider','queryFilter']);
+var apps=angular.module("apps",['ngAnimate','ngRoute','serviceProvider','queryFilter','breadCrumb']);
 apps.config(function($routeProvider){
     $routeProvider.when("/",{
         templateUrl:"templates/apps/application-table.html",
@@ -26,13 +26,14 @@ apps.config(function($routeProvider){
 
 
 
-apps.controller("consumeServiceDetails",function($scope,$http,$routeParams,$queryFilter){
+apps.controller("consumeServiceDetails",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
+
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.provider=$routeParams.provider;
     $scope.consumer=$routeParams.consumer;
     $scope.isForOneConsumer=true;
-
+    $breadcrumb.pushCrumb($scope.consumer,"查看应用"+$scope.consumer+"依赖"+$scope.provider+"应用的服务列表","consumeServiceDetails");
     $http.post("app/"+$routeParams.provider+"/"+$routeParams.consumer+"/consumes.htm").success(function(data){
         $scope.details=data;
         if(!data||data.length<=0){
@@ -70,10 +71,11 @@ apps.controller("consumeServiceDetails",function($scope,$http,$routeParams,$quer
     }
 });
 
-apps.controller("consumerDetail",function($scope,$http,$routeParams,$queryFilter){
+apps.controller("consumerDetail",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
+    $breadcrumb.pushCrumb($scope.application,"查看依赖"+$scope.application+"应用列表","consumerDetail");
     $http.post("app/"+$routeParams.application+"/consumers.htm").success(function(data){
         $scope.details=data;
         if(!data||data.length<=0){
@@ -93,10 +95,11 @@ apps.controller("consumerDetail",function($scope,$http,$routeParams,$queryFilter
 });
 
 
-apps.controller("nodesDetail",function($scope,$http,$routeParams,$queryFilter){
+apps.controller("nodesDetail",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
+    $breadcrumb.pushCrumb($scope.application,"查看"+$scope.application+"应用节点列表","nodesDetail");
     $http.post("app/"+$routeParams.application+"/nodes.htm").success(function(data){
         $scope.details=data;
         if(!data||data.length<=0){
@@ -120,10 +123,11 @@ apps.controller("nodesDetail",function($scope,$http,$routeParams,$queryFilter){
         $scope.details=$queryFilter($scope.originData,$scope.query);
     }
 });
-apps.controller("consumeDetail",function($scope,$http,$routeParams,$queryFilter){
+apps.controller("consumeDetail",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
+    $breadcrumb.pushCrumb($scope.application,"查看"+$scope.application+"消费服务列表","consumeDetail");
     $http.post("app/"+$routeParams.application+"/consumes.htm").success(function(data){
         $scope.details=data;
         if(!data||data.length<=0){
@@ -140,11 +144,11 @@ apps.controller("consumeDetail",function($scope,$http,$routeParams,$queryFilter)
         $scope.details=$queryFilter($scope.originData,$scope.query);
     }
 });
-apps.controller("provideDetail",function($scope,$http,$routeParams,$queryFilter){
+apps.controller("provideDetail",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
-
+    $breadcrumb.pushCrumb($scope.application,"查看"+$scope.application+"提供服务列表","provideDetail");
     $http.post("app/"+$routeParams.application+"/provides.htm").success(function(data){
         $scope.details=data;
         if(!data||data.length<=0){
@@ -180,11 +184,13 @@ apps.controller("provideDetail",function($scope,$http,$routeParams,$queryFilter)
         $scope.details=$queryFilter($scope.originData,$scope.query);
     }
 });
-apps.controller("consumerAppTable",function($scope,$http,$routeParams,$queryFilter){
+apps.controller("consumerAppTable",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
+
     $scope.applications=[];
     $scope.isEmpty=false;
     $scope.isConsumer=true;
     $scope.service=$routeParams.service;
+    $breadcrumb.pushCrumb($scope.service,"查看依赖"+$scope.service+"服务的应用列表","consumerAppTable");
     $http.post("app/"+$routeParams.id+"/consumer-apps.htm").success(function(data){
         $scope.applications=data;
         if(!data||data.length<0){
@@ -212,9 +218,10 @@ apps.controller("consumerAppTable",function($scope,$http,$routeParams,$queryFilt
     }
 });
 
-apps.controller("appTable",function($scope,$http,$queryFilter){
+apps.controller("appTable",function($scope,$http,$queryFilter,$breadcrumb){
     $scope.applications=[];
     $scope.isEmpty=false;
+    $breadcrumb.pushCrumb("应用列表","查看应用列表","appTable");
     $http.post("app/list.htm").success(function(data){
         $scope.applications=data;
         if(!data||data.length<0){

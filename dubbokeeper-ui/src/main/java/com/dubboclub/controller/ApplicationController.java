@@ -137,7 +137,7 @@ public class ApplicationController {
         for(Consumer consumer:consumers){
             AppConsumeInfo consumeInfo = new AppConsumeInfo();
             consumeInfo.setService(Tool.getInterface(consumer.getService()));
-            List<Provider> providers = providerService.listProviderByService(consumer.getService());
+            List<Provider> providers = providerService.listProviderByService(Tool.getInterface(consumer.getService()));
             consumeInfo.setGroup(consumer.getGroup());
             consumeInfo.setVersion(consumer.getVersion());
             if(providers.size()>0){

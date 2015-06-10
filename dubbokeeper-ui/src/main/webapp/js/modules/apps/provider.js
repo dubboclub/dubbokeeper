@@ -1,4 +1,4 @@
-var serviceProvider=angular.module("serviceProvider",['ngAnimate','ngRoute','queryFilter']);
+var serviceProvider=angular.module("serviceProvider",['ngAnimate','ngRoute','queryFilter','breadCrumb']);
 
 serviceProvider.config(function($routeProvider){
     $routeProvider.when("/:service/providers",{
@@ -8,7 +8,7 @@ serviceProvider.config(function($routeProvider){
 });
 
 
-serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter){
+serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.service=$routeParams.service;
@@ -27,6 +27,7 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
         val:false,
         text:"已禁用"
     }];
+    $breadcrumb.pushCrumb($scope.service,"查看服务"+$scope.service+"提供者列表","serviceProviders");
     $http.post("provider/"+$routeParams.service+"/providers.htm").success(function(data){
         $scope.details=data;
         if(!data||data.length<=0){
