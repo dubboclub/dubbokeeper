@@ -137,9 +137,11 @@ public class ApplicationController {
         for(Consumer consumer:consumers){
             AppConsumeInfo consumeInfo = new AppConsumeInfo();
             consumeInfo.setService(Tool.getInterface(consumer.getService()));
-            List<Provider> providers = providerService.listProviderByService(Tool.getInterface(consumer.getService()));
+            List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumer.getService()),Constants.GROUP_KEY,Tool.getGroup(consumer.getService()),Constants.VERSION_KEY,Tool.getVersion(consumer.getService()));
             consumeInfo.setGroup(consumer.getGroup());
             consumeInfo.setVersion(consumer.getVersion());
+            String accessProtocol = Tool.convertParametersMap(consumer.getParameters()).get(Constants.PROTOCOL_KEY);
+            consumeInfo.setAccessProtocol(accessProtocol);
             if(providers.size()>0){
                 consumeInfo.setProviderName(providers. get(0).getApplication());
                 consumeInfo.setOwner(providers.get(0).getUsername());

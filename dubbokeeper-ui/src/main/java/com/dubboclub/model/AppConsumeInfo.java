@@ -16,8 +16,13 @@ public class AppConsumeInfo {
 
     private String version;
     
+    private String accessProtocol;
     
     private int providerCount;
+
+    public void setAccessProtocol(String accessProtocol) {
+        this.accessProtocol = accessProtocol;
+    }
 
     public int getProviderCount() {
         return providerCount;
