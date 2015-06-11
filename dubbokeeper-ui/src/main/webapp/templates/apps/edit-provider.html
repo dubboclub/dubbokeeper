@@ -1,0 +1,120 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-cloud"></i> <span>编辑服务<strong class='text-primary'>{{service}}</strong>提供者</span>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <form name="providerForm">
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>服务地址：</label>
+                            <span style="word-break: break-all;word-wrap: break-word;">{{provider.url+"?"+provider.parameters}}</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>所属应用：</label>
+                            {{provider.application}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>应用所有者：</label>
+                            {{provider.username}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>接口名称：</label>
+                            {{parameters.interface}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>方法列表：</label>
+                            {{parameters.methods}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>版本：</label>
+                            <span class="label {{!parameters.version?'label-info':'label-success'}}">{{!parameters.version?"默认版本":parameters.version}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>分组：</label>
+                            <span class="label {{!parameters.group?'label-info':'label-success'}}">{{!parameters.group?"默认组":parameters.group}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>使用的Dubbo版本：</label>
+                            {{parameters.dubbo}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>时间戳：</label>
+                            {{parameters.timestamp | date :"yyyy-MM-dd HH:mm:ss"}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <label>类型：</label>
+                            <span class='{{provider.dynamic?"text-primary":"text-danger"}}'>{{provider.dynamic?"动态":"静态"}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group form-inline">
+                            <label>状态：</label>
+                            <select ng-model="parameters.enabled" class="form-control input-sm" ng-options="o.val as o.text for o in enabledOptios"   ng-change="filter()">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <div class="form-group form-inline">
+                            <label>权重：</label>
+                            <input ng-model="parameters.weight" integer required type="number" name="weight" class="form-control input-sm " value="{{parameters.weight}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-xs-3 col-lg-3 col-sm-3">
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="update()"  ng-disabled="providerForm.$invalid" >保存</button>
+                    </div>
+                    <div class="col-md-9 col-xs-9 col-lg-9 col-sm-9">
+
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

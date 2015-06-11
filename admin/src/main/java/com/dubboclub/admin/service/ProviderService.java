@@ -22,5 +22,8 @@ public interface ProviderService {
     //通过ID查询某个提供者
     public Provider getProviderById(long id);
 
+    //更新提供者配置信息
+    public void updateProvider(Provider newProvider);
+
 
 }

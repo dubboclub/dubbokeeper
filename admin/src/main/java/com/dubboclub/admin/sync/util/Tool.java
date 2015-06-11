@@ -14,20 +14,7 @@ public class Tool {
     
     
     public static Map<String,String> convertParametersMap(String params){
-        String[] parts = params.split("\\&");
-        Map<String,String> parameters = new HashMap<String, String>();
-        for (String part : parts) {
-            part = part.trim();
-            if (part.length() > 0) {
-                int j = part.indexOf('=');
-                if (j >= 0) {
-                    parameters.put(part.substring(0, j), part.substring(j + 1));
-                } else {
-                    parameters.put(part, part);
-                }
-            }
-        }
-        return parameters;
+        return StringUtils.parseQueryString(params);
     }
 
     //serviceKey=group/interface:version

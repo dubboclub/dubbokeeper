@@ -3,6 +3,8 @@
         <i class="icon-cloud"></i> <span ng-show="isForOneConsumer"><strong class="text-primary">{{consumer | uppercase}}</strong>应用依赖<strong class="text-primary">{{provider | uppercase}}</strong>应用的服务列表</span><span ng-show="!isForOneConsumer"><strong class="text-primary">{{application | uppercase}}</strong>提供服务列表</span>
     </div>
     <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
         <table class="table-striped table-hover table-condensed  table table-condensed">
             <thead>
             <tr>
@@ -36,6 +38,7 @@
             </tr>
             </tbody>
         </table>
+                </div>
     </div>
 </div>
 

@@ -59,5 +59,12 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return null;
     }
 
+    @Override
+    public void updateProvider(Provider newProvider) {
+        URL oldURL = getOneById(Constants.PROVIDERS_CATEGORY,newProvider.getId());
+        URL newURL = SyncUtils.provider2URL(newProvider);
+        update(oldURL,newURL);
+    }
+
 
 }

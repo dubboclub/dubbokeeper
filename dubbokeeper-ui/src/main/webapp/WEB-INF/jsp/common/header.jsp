@@ -26,9 +26,10 @@
 <style>
     body{
         padding-top: 70px;
+        font-size: 13px;
     }
     *{
-        font-family: 幼圆,"Microsoft YaHei", Arial, Helvetica, sans-serif,"宋体";
+        font-family: "Microsoft YaHei","宋体", Arial, Helvetica, sans-serif;
     }
     .inner-form-element{
         color: #555;
@@ -39,8 +40,17 @@
         padding: 1px 2px;
         font-size: 12px;
     }
-    td{
-        font-size: 15px;
+   .app-container{
+       font-size: 12px;
+   }
+    .app-container td{
+        font-size: 12px;
+    }
+    .app-container th{
+        font-size: 12px;
+    }
+    .app-container a{
+        font-size: 12px;
     }
 </style>
 <body>

@@ -3,45 +3,66 @@
         <i class="icon-cloud"></i> <span>服务<strong class='text-primary'>{{service}}</strong>提供者列表</span>
     </div>
     <div class="panel-body">
-        <table class="table-striped table-hover table-condensed  table table-condensed">
-            <thead>
-            <tr>
-                <th class="text-center"><strong>#</strong></th>
-                <th class="text-left"><strong>机器IP</strong>
-                    <input type="text" class="inner-form-element" ng-model="query.address" ng-change="filter()" placeholder="输入机器IP">
-                </th>
-                <th class="text-left"><strong>权重</strong></th>
-                <th class="text-left"><strong>类型</strong>
-                <select ng-model="query.dynamic" class="inner-form-element" ng-options="o.val as o.text for o in dynamicOptios" ng-change="filter()">
-                    <option value="" selected="selected">所有</option>
-                </select>
-                </th>
-                <th class="text-left"><strong>状态</strong>
-                    <select ng-model="query.enabled" class="inner-form-element" ng-options="o.val as o.text for o in enabledOptios" ng-change="filter()">
-                        <option value="" selected="selected">所有</option>
-                    </select>
-                </th>
-                <th class="text-left"><strong>操作</strong></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-show="!details||details.length<=0">
-                <td class="text-center text-warning" colspan="6">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}
-                </td>
-            </tr>
-            <tr ng-show="details&&details.length>0" ng-repeat="provider in details | orderBy : 'address' | filter:search"
-                class="ng-animation">
-                <td class="text-center">{{$index+1}}</td>
-                <td class="text-left">{{provider.address}}</td>
-                <td class="text-left">{{provider.weight}}</td>
-                <td class="text-left">{{provider.dynamic?'动态':'静态'}}</td>
-                <td class="text-left">{{provider.enabled?'已启用':'已禁用'}}</td>
-                <td class="text-left">
+        <div class="row" style="margin-top: 5px;margin-bottom: 8px;">
+            <div class="col-md-7 col-xs-7 col-lg-7 col-sm-7">
+                <a href="#/"><i class="icon-arrow-down" title="批量半权"></i> 批量半权 </a>&nbsp;| &nbsp;
+                <a href="#/"><i class="icon-arrow-up" title="批量倍权"></i> 批量倍权 </a>&nbsp;| &nbsp;
+                <a href="#/"><i class="glyphicon glyphicon-ok" title="批量启用"></i> 批量启用 </a>&nbsp;| &nbsp;
+                <a href="#/"><i class="glyphicon glyphicon-trash" title="批量删除"></i> 批量删除 </a>&nbsp;| &nbsp;
+                <a href="#/"><i class="glyphicon glyphicon-ban-circle" title="批量禁用"></i> 批量禁用 </a>
+            </div>
+            <div class="col-md-5 col-xs-5 col-lg-5 col-sm-5">
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <table class="table-striped table-hover table-condensed  table table-condensed">
+                    <thead>
+                    <tr>
+                        <th class="text-center"><strong><input type="checkbox" ng-click="select()" class="selector" title="全选"/></strong></th>
+                        <th class="text-left"><strong>机器IP</strong>
+                            <input type="text" class="inner-form-element" ng-model="query.address" ng-change="filter()" placeholder="输入机器IP">
+                        </th>
+                        <th class="text-left"><strong>权重</strong></th>
+                        <th class="text-left"><strong>类型</strong>
+                            <select ng-model="query.dynamic" class="inner-form-element" ng-options="o.val as o.text for o in dynamicOptios" ng-change="filter()">
+                                <option value="" selected="selected">所有</option>
+                            </select>
+                        </th>
+                        <th class="text-left"><strong>状态</strong>
+                            <select ng-model="query.enabled" class="inner-form-element" ng-options="o.val as o.text for o in enabledOptios" ng-change="filter()">
+                                <option value="" selected="selected">所有</option>
+                            </select>
+                        </th>
+                        <th class="text-left"><strong>操作</strong></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-show="!details||details.length<=0">
+                        <td class="text-center text-warning" colspan="6">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}
+                        </td>
+                    </tr>
+                    <tr ng-show="details&&details.length>0" ng-repeat="provider in details | orderBy : 'address' | filter:search"
+                        class="ng-animation">
+                        <td class="text-center"><input type="checkbox"></td>
+                        <td class="text-left">{{provider.address}}</td>
+                        <td class="text-left">{{provider.weight}}</td>
+                        <td class="text-left"> <span class='{{provider.dynamic?"text-primary":"text-danger"}}'>{{provider.dynamic?"动态":"静态"}}</span></td>
+                        <td class="text-left"> <span class='{{provider.enabled?"text-primary":"text-danger"}}'>{{provider.enabled?"已启用":"禁用"}}</span></td>
+                        <td class="text-left">
+                            <a href="#/edit/{{service}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a> &nbsp;| &nbsp;
+                            <a href="#/"><i class="icon-arrow-down" title="半权"></i> </a> &nbsp;| &nbsp;
+                            <a href="#/"><i class="icon-arrow-up" title="倍权"></i> </a> &nbsp;| &nbsp;
+                            <a href="#/"><i class="glyphicon glyphicon-ok" title="启用"></i> </a> &nbsp;| &nbsp;
+                            <a href="#/"><i class="glyphicon glyphicon-trash" title="删除"></i> </a> &nbsp;| &nbsp;
+                            <a href="#/"><i class="glyphicon glyphicon-ban-circle" title="禁用"></i> </a>
 
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-                </td>
-            </tr>
-            </tbody>
-        </table>
     </div>
 </div>

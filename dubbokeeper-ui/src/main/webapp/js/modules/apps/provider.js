@@ -4,8 +4,38 @@ serviceProvider.config(function($routeProvider){
     $routeProvider.when("/:service/providers",{
         templateUrl:"templates/apps/service-providers.html",
         controller:"serviceProviders"
+    }).when("/edit/:service/:address/:id/provider",{
+        templateUrl:"templates/apps/edit-provider.html",
+        controller:"editProvider"
     }).otherwise("/");
 });
+
+
+serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb){
+    $scope.provider={};
+    $scope.service=$routeParams.service;
+    $breadcrumb.pushCrumb($routeParams.address,"编辑服务"+$routeParams.service+"提供者","editProvider");
+    $scope.enabledOptios=[{
+        val:true,
+        text:"启用"
+    },{
+        val:false,
+        text:"禁用"
+    }];
+    $http.post("provider/"+$routeParams.id+"/provider-detail.htm").success(function(data){
+        $scope.provider=data;
+        $scope.parameters=queryString2Object(data.parameters);
+        $scope.parameters.enabled=data.enabled;
+        $scope.parameters.weight=data.weight;
+    });
+    $scope.update=function(){
+        $http.post("provider/edit-provider.htm","parameters="+object2QueryString($scope.parameters)+"&id="+$routeParams.id,{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}}).success(function(data){
+           console.log(data);
+        });
+    }
+
+});
+
 
 
 serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
@@ -42,5 +72,16 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
             return ;
         }
         $scope.details=$queryFilter($scope.originData,$scope.query);
+    }
+    $scope.select=function(){
+        var selectAll = $(".selector").get(0).checked;
+        $("input[type='checkbox']").each(function(){
+            if(selectAll){
+                this.checked=true;
+            }else{
+                this.checked=false;
+            }
+
+        });
     }
 });

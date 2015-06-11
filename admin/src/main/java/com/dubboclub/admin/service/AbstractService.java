@@ -16,6 +16,18 @@ public abstract class AbstractService {
 
     private RegistryServerSync registryServerSync;
 
+    protected void update(URL oldURL,URL newURL){
+        registryServerSync.update(oldURL,newURL);
+    }
+
+    protected void delete(URL url){
+        registryServerSync.unregister(url);
+    }
+
+    protected void add(URL url){
+        registryServerSync.register(url);
+    }
+
 
     public void setRegistryServerSync(RegistryServerSync registryServerSync) {
         this.registryServerSync = registryServerSync;

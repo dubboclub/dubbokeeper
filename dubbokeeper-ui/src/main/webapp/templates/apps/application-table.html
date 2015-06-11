@@ -3,6 +3,8 @@
         <i class="icon-cloud"></i> <span ng-show="isConsumer">依赖<strong class='text-primary'>{{service}}</strong>服务的</span>应用列表
     </div>
     <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
         <table class="table-striped table-hover table-condensed  table table-condensed">
             <thead>
             <tr>
@@ -37,14 +39,14 @@
                        title="部署节点列表">
                         <i class="icon-desktop"></i>
                     </a>
-                    &nbsp;
+                    &nbsp;| &nbsp;
                     <a href="#/{{app.application}}/provides" class="link" title="该应用的发布服务列表">
                         <i class="glyphicon glyphicon-share"></i>
                     </a>
-                    &nbsp;
+                    &nbsp;| &nbsp;
                     <a href="#/{{app.application}}/consumes" class="link" title="该应用的订阅服务列表">
                         <i class="glyphicon glyphicon-pushpin"></i>
-                    </a>&nbsp;
+                    </a> &nbsp;| &nbsp;
                     <a href="#/{{app.application}}/consumers" class="link" title="该应用的上层应用（依赖该应用的上层应用）">
                         <i class=" icon-sitemap"></i>
                     </a>
@@ -52,5 +54,7 @@
             </tr>
             </tbody>
         </table>
+                </div>
+            </div>
     </div>
 </div>

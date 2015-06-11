@@ -69,6 +69,19 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
         registryService.subscribe(SUBSCRIBE, this);
     }
 
+    public void update(URL oldURL,URL newURL){
+        registryService.unregister(oldURL);
+        registryService.register(newURL);
+    }
+
+    public void unregister(URL url){
+        registryService.unregister(url);
+    }
+
+    public void register(URL url){
+        registryService.register(url);
+    }
+
     public void destroy() throws Exception {
         registryService.unsubscribe(SUBSCRIBE, this);
     }

@@ -12,6 +12,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/angular-animate.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/angular-cookies.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/filter.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/util.js"></script>
 <%--
 <script type="text/javascript" src="${pageContext.request.contextPath}/flat-ui/js/flat-ui.min.js"></script>--%>
 

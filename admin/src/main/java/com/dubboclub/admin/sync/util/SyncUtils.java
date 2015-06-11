@@ -37,6 +37,14 @@ public class SyncUtils {
     
     public static final String ID_FILTER_KEY = ".id";
 
+    public static URL provider2URL(Provider provider){
+        URL url = URL.valueOf(provider.getUrl());
+        url=url.addParameterString(provider.getParameters());
+        return url;
+    }
+
+
+
     public static Provider url2Provider(Pair<Long, URL> pair) {
     	if (pair == null) {
     		return null;
