@@ -1,17 +1,32 @@
 var serviceProvider=angular.module("serviceProvider",['ngAnimate','ngRoute','queryFilter','breadCrumb']);
 
 serviceProvider.config(function($routeProvider){
-    $routeProvider.when("/:service/providers",{
+    $routeProvider.when("/:service/:id/providers",{
         templateUrl:"templates/apps/service-providers.html",
         controller:"serviceProviders"
     }).when("/edit/:service/:address/:id/provider",{
         templateUrl:"templates/apps/edit-provider.html",
         controller:"editProvider"
+    }).when("/view/:service/:address/:id/detail",{
+        templateUrl:"templates/apps/view-provider.html",
+        controller:"viewProvider"
+    }).when("/operation/:type/:service/:address/:id/provider",{
+        templateUrl:"templates/apps/edit-provider.html",
+        controller:"operateProvider"
     }).otherwise("/");
 });
-
-
-serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb){
+serviceProvider.controller("viewProvider",function($scope,$http,$routeParams,$breadcrumb){
+    $scope.provider={};
+    $scope.service=$routeParams.service;
+    $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.service+"提供者明细","viewProvider");
+    $http.post("provider/"+$routeParams.id+"/provider-detail.htm").success(function(data){
+        $scope.provider=data;
+        $scope.parameters=queryString2Object(data.parameters);
+        $scope.parameters.enabled=data.enabled;
+        $scope.parameters.weight=data.weight;
+    });
+});
+serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb,$dialog){
     $scope.provider={};
     $scope.service=$routeParams.service;
     $breadcrumb.pushCrumb($routeParams.address,"编辑服务"+$routeParams.service+"提供者","editProvider");
@@ -29,16 +44,25 @@ serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$br
         $scope.parameters.weight=data.weight;
     });
     $scope.update=function(){
-        $http.post("provider/edit-provider.htm","parameters="+object2QueryString($scope.parameters)+"&id="+$routeParams.id,{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}}).success(function(data){
-           console.log(data);
-        });
+        $dialog.confirm({content:"确认提交修改内容？",callback:function(){
+            $http.post("provider/edit-provider.htm","parameters="+object2QueryString($scope.parameters)+"&id="+$routeParams.id,{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}}).success(function(data){
+                if(data.result==ajaxResultStatu.SUCCESS){
+                    $dialog.info({content:"成功更新"+$scope.service+"服务信息！"});
+                }else{
+                    $dialog.info({content:"更新"+$scope.service+"服务信息失败！"});
+                }
+            }).error(function(error){
+                console.log(error);
+                $dialog.info({content:"后端系统出现异常，请稍后再试！"});
+            });
+        }})
     }
 
 });
 
 
 
-serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb){
+serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$location){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.service=$routeParams.service;
@@ -58,20 +82,67 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
         text:"已禁用"
     }];
     $breadcrumb.pushCrumb($scope.service,"查看服务"+$scope.service+"提供者列表","serviceProviders");
-    $http.post("provider/"+$routeParams.service+"/providers.htm").success(function(data){
-        $scope.details=data;
-        if(!data||data.length<=0){
-            $scope.isEmpty=true;
-        }
-        $scope.originData= $scope.details;
-    });
-
+    var refreshData = function(){
+        $http.post("provider/"+$routeParams.id+"/providers.htm").success(function(data){
+            $scope.details=data;
+            if(!data||data.length<=0){
+                $scope.isEmpty=true;
+            }
+            $scope.originData= $scope.details;
+        });
+    }
+    refreshData();
     $scope.filter=function(){
         var filterResult=[];
         if($scope.isEmpty){
             return ;
         }
         $scope.details=$queryFilter($scope.originData,$scope.query);
+    }
+    $scope.operation=function(type,provider){
+        var submit = function(){
+            $http.post("provider/"+provider.id+"/"+type+"/operate.htm").success(function(data){
+                if(data.result==ajaxResultStatu.SUCCESS){
+                    $dialog.info({content:"成功更新"+$scope.service+"服务信息！",callback:refreshData});
+                }else{
+                    $dialog.info({content:data.memo});
+                }
+            }).error(function(error){
+                console.log(error);
+                $dialog.info({content:"后端系统出现异常，请稍后再试！",size:'small'});
+            });
+        };
+        $dialog.confirm({content:"确认进行此操作？",size:'small',callback: function () {
+            submit();
+        }});
+    }
+    $scope.batchOperation=function(type){
+        var selected=[];
+        $("tbody tr input[type='checkbox']").each(function(){
+            if(this.checked){
+                selected.push(this.value);
+            }
+        });
+        if(selected.length<=0){
+            $dialog.alert({content:"请选择操作数据！",size:'small'});
+            return;
+        }
+        var submit=function(){
+            $http.post("provider/"+type+"/batch-operate.htm","ids="+selected.join(","),{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}}).success(function(data){
+                if(data.result==ajaxResultStatu.SUCCESS){
+                    $dialog.info({content:"成功更新"+$scope.service+"服务信息！",callback:refreshData});
+                    $("thead tr input[type='checkbox']")[0].checked=false;
+                }else{
+                    $dialog.info({content:data.memo});
+                }
+            }).error(function(error){
+                console.log(error);
+                $dialog.info({content:"后端系统出现异常，请稍后再试！",size:'small'});
+            });
+        };
+        $dialog.confirm({content:"确认进行此操作？",size:'small',callback: function () {
+            submit();
+        }});
     }
     $scope.select=function(){
         var selectAll = $(".selector").get(0).checked;

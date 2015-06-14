@@ -17,14 +17,14 @@ package com.dubboclub.admin.sync.util;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
+import com.alibaba.dubbo.common.extension.ExtensionLoader;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.dubbo.rpc.cluster.Configurator;
+import com.alibaba.dubbo.rpc.cluster.ConfiguratorFactory;
 import com.dubboclub.admin.model.*;
 import com.dubboclub.admin.model.Override;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ding.lid
@@ -37,13 +37,45 @@ public class SyncUtils {
     
     public static final String ID_FILTER_KEY = ".id";
 
+
+
+    private static final ConfiguratorFactory configuratorFactory = ExtensionLoader.getExtensionLoader(ConfiguratorFactory.class).getAdaptiveExtension();
+
+    public static String generateServiceKey(URL url){
+        String inf = url.getServiceInterface();
+        if (inf == null) return null;
+        StringBuilder buf = new StringBuilder();
+        String group = url.getParameter(Constants.GROUP_KEY);
+        if (group != null&&!Constants.ANY_VALUE.equals(group)&& group.length() > 0) {
+            buf.append(group).append("/");
+        }
+        buf.append(inf);
+        String version = url.getParameter(Constants.VERSION_KEY);
+        if (version != null&&!Constants.ANY_VALUE.equals(version) && version.length() > 0) {
+            buf.append(":").append(version);
+        }
+        return buf.toString();
+    }
+
     public static URL provider2URL(Provider provider){
         URL url = URL.valueOf(provider.getUrl());
         url=url.addParameterString(provider.getParameters());
         return url;
     }
 
+    public static Configurator toConfigurators(URL url){
+        if (Constants.EMPTY_PROTOCOL.equals(url.getProtocol())) {
+            return null;
+        }
+        Map<String,String> override = new HashMap<String, String>(url.getParameters());
+        //override 上的anyhost可能是自动添加的，不能影响改变url判断
+        override.remove(Constants.ANYHOST_KEY);
+        if (override.size() == 0){
+            return null;
+        }
+        return configuratorFactory.getConfigurator(url);
 
+    }
 
     public static Provider url2Provider(Pair<Long, URL> pair) {
     	if (pair == null) {
@@ -58,7 +90,7 @@ public class SyncUtils {
 
         Provider p = new Provider();
         p.setId(id);
-        p.setService(url.getServiceKey());
+        p.setService(generateServiceKey(url));
         p.setAddress(url.getAddress());
         p.setApplication(url.getParameter(Constants.APPLICATION_KEY));
         p.setUrl(url.toIdentityString());
@@ -66,7 +98,11 @@ public class SyncUtils {
 
         p.setDynamic(url.getParameter("dynamic", true));
         p.setEnabled(url.getParameter(Constants.ENABLED_KEY, true));
-        p.setWeight(url.getParameter(Constants.WEIGHT_KEY, Constants.DEFAULT_WEIGHT));
+        if(!url.getParameters().containsKey(Constants.WEIGHT_KEY)){
+            p.setWeight(Constants.DEFAULT_WEIGHT);
+        }else{
+            p.setWeight("null".equals(url.getParameter(Constants.WEIGHT_KEY))?Constants.DEFAULT_WEIGHT:Integer.parseInt(url.getParameter(Constants.WEIGHT_KEY)));
+        }
         p.setUsername(url.getParameter("owner"));
         p.setGroup(url.getParameter(Constants.GROUP_KEY));
         p.setVersion(url.getParameter(Constants.VERSION_KEY));
@@ -94,7 +130,7 @@ public class SyncUtils {
 
         Consumer c = new Consumer();
         c.setId(id);
-        c.setService(url.getServiceKey());
+        c.setService(generateServiceKey(url));
         c.setAddress(url.getHost());
         c.setApplication(url.getParameter(Constants.APPLICATION_KEY));
         c.setParameters(url.toParameterString());
@@ -127,7 +163,7 @@ public class SyncUtils {
         Route r = new Route();
         r.setId(id);
         r.setName(url.getParameter("name"));
-        r.setService(url.getServiceKey());
+        r.setService(generateServiceKey(url));
         r.setPriority(url.getParameter(Constants.PRIORITY_KEY, 0));
         r.setEnabled(url.getParameter(Constants.ENABLED_KEY, true));
         r.setForce(url.getParameter(Constants.FORCE_KEY, false));
@@ -160,7 +196,7 @@ public class SyncUtils {
 
         Map<String, String> parameters = new HashMap<String, String>(url.getParameters());
 
-        o.setService(url.getServiceKey());
+        o.setService(generateServiceKey(url));
         parameters.remove(Constants.INTERFACE_KEY);
         parameters.remove(Constants.GROUP_KEY);
         parameters.remove(Constants.VERSION_KEY);

@@ -26,7 +26,9 @@
         </div>
     </div>
 </div>
+<dialog-tpl></dialog-tpl>
 <%@include file="common/scripts.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/dialog.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/breadcrumb/breadcrumb.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/provider.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/apps.js"></script>

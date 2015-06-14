@@ -16,3 +16,6 @@ window.object2QueryString=function(obj){
     queryStr=queryStr.substring(0,queryStr.length-1);
     return encodeURIComponent(queryStr);
 }
+window.ajaxResultStatu={};
+window.ajaxResultStatu.SUCCESS=0;
+window.ajaxResultStatu.FAILED=1;

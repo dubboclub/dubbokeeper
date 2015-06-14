@@ -19,11 +19,23 @@ public interface ProviderService {
     //通过多条件查询符合全部条件的提供者信息
     public List<Provider> listProviderByConditions(String...conditions);
 
+    //根据服务的唯一表示查找提供者，group/interfaceName:version
+    public List<Provider> listProviderByServiceKey(String serviceKey);
+
     //通过ID查询某个提供者
     public Provider getProviderById(long id);
 
     //更新提供者配置信息
     public void updateProvider(Provider newProvider);
+
+    //将某个提供者置为无效
+    public void disable(Long id);
+    //将某个提供者置为有效
+    public void enable(Long id);
+    //将某个提供者权重设置为之前的半
+    public void halfWeight(Long id);
+    //将某个提供者的权重设置为之前的两倍
+    public void doubleWeight(Long id);
 
 
 }
