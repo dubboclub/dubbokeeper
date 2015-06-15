@@ -1,4 +1,4 @@
-package com.dubboclub.controller;
+package com.dubboclub.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

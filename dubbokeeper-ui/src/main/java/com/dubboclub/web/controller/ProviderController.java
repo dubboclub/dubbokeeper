@@ -1,15 +1,19 @@
-package com.dubboclub.controller;
+package com.dubboclub.web.controller;
 
 import com.alibaba.dubbo.common.Constants;
 import com.dubboclub.admin.model.Provider;
 import com.dubboclub.admin.service.ProviderService;
-import com.dubboclub.model.BasicResponse;
+import com.dubboclub.admin.sync.util.Tool;
+import com.dubboclub.web.model.BasicResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bieber on 2015/6/7.
@@ -22,10 +26,9 @@ public class ProviderController {
     private ProviderService providerService;
 
 
-    @RequestMapping("/{id}/providers.htm")
-    public @ResponseBody List<Provider> listProviderByService(@PathVariable("id") Long id){
-        Provider provider = providerService.getProviderById(id);
-        return  providerService.listProviderByServiceKey(provider.getService());
+    @RequestMapping("/{service}/providers.htm")
+    public @ResponseBody List<Provider> listProviderByService(@RequestParam("serviceKey") String serviceKey) throws UnsupportedEncodingException {
+        return  providerService.listProviderByServiceKey(serviceKey);
     }
 
 
@@ -41,6 +44,9 @@ public class ProviderController {
         basicResponse.setResult(BasicResponse.SUCCESS);
         Provider provider =providerService.getProviderById(id);
         provider.setParameters(parameters);
+        Map<String,String> params = Tool.convertParametersMap(provider.getParameters());
+        provider.setEnabled(Boolean.parseBoolean(params.get(Constants.ENABLED_KEY)));
+        provider.setWeight(Integer.parseInt(params.get(Constants.WEIGHT_KEY)));
         providerService.updateProvider(provider);
         return basicResponse;
     }
@@ -54,11 +60,13 @@ public class ProviderController {
         }else if("enable".equals(type)){
             providerService.enable(id);
         }else if("delete".equals(type)){
-
+            providerService.delete(id);
         }else if("halfWeight".equals(type)){
             providerService.halfWeight(id);
         }else if("doubleWeight".equals(type)){
             providerService.doubleWeight(id);
+        }else if("copy".equals(type)){
+            providerService.copy(id);
         }
         return basicResponse;
     }
@@ -78,7 +86,9 @@ public class ProviderController {
                 providerService.enable(Long.parseLong(id));
             }
         }else if("delete".equals(type)){
-
+            for(String id:idArray){
+               providerService.delete(Long.parseLong(id));
+            }
         }else if("halfWeight".equals(type)){
             for(String id:idArray){
                 providerService.halfWeight(Long.parseLong(id));

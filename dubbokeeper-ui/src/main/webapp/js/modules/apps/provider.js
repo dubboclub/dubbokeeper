@@ -1,7 +1,7 @@
 var serviceProvider=angular.module("serviceProvider",['ngAnimate','ngRoute','queryFilter','breadCrumb']);
 
 serviceProvider.config(function($routeProvider){
-    $routeProvider.when("/:service/:id/providers",{
+    $routeProvider.when("/:serviceKey/:service/providers",{
         templateUrl:"templates/apps/service-providers.html",
         controller:"serviceProviders"
     }).when("/edit/:service/:address/:id/provider",{
@@ -15,18 +15,18 @@ serviceProvider.config(function($routeProvider){
         controller:"operateProvider"
     }).otherwise("/");
 });
-serviceProvider.controller("viewProvider",function($scope,$http,$routeParams,$breadcrumb){
+serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routeParams,$breadcrumb,$httpWrapper){
     $scope.provider={};
     $scope.service=$routeParams.service;
     $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.service+"提供者明细","viewProvider");
-    $http.post("provider/"+$routeParams.id+"/provider-detail.htm").success(function(data){
+    $httpWrapper.post({url:"provider/"+$routeParams.id+"/provider-detail.htm",success:function(data){
         $scope.provider=data;
         $scope.parameters=queryString2Object(data.parameters);
         $scope.parameters.enabled=data.enabled;
         $scope.parameters.weight=data.weight;
-    });
+    }})
 });
-serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb,$dialog){
+serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb,$dialog,$httpWrapper){
     $scope.provider={};
     $scope.service=$routeParams.service;
     $breadcrumb.pushCrumb($routeParams.address,"编辑服务"+$routeParams.service+"提供者","editProvider");
@@ -37,23 +37,24 @@ serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$br
         val:false,
         text:"禁用"
     }];
-    $http.post("provider/"+$routeParams.id+"/provider-detail.htm").success(function(data){
-        $scope.provider=data;
-        $scope.parameters=queryString2Object(data.parameters);
-        $scope.parameters.enabled=data.enabled;
-        $scope.parameters.weight=data.weight;
+    $httpWrapper.post({
+        url:"provider/"+$routeParams.id+"/provider-detail.htm",
+        success: function (data) {
+            $scope.provider=data;
+            $scope.parameters=queryString2Object(data.parameters);
+            $scope.parameters.enabled=data.enabled;
+            $scope.parameters.weight=data.weight;
+        }
     });
     $scope.update=function(){
         $dialog.confirm({content:"确认提交修改内容？",callback:function(){
-            $http.post("provider/edit-provider.htm","parameters="+object2QueryString($scope.parameters)+"&id="+$routeParams.id,{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}}).success(function(data){
-                if(data.result==ajaxResultStatu.SUCCESS){
+            $httpWrapper.post({
+                url:"provider/edit-provider.htm",
+                data:"parameters="+object2QueryString($scope.parameters)+"&id="+$routeParams.id,
+                config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
+                success:function(data){
                     $dialog.info({content:"成功更新"+$scope.service+"服务信息！"});
-                }else{
-                    $dialog.info({content:"更新"+$scope.service+"服务信息失败！"});
                 }
-            }).error(function(error){
-                console.log(error);
-                $dialog.info({content:"后端系统出现异常，请稍后再试！"});
             });
         }})
     }
@@ -62,7 +63,7 @@ serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$br
 
 
 
-serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$location){
+serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$httpWrapper){
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.service=$routeParams.service;
@@ -83,12 +84,17 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
     }];
     $breadcrumb.pushCrumb($scope.service,"查看服务"+$scope.service+"提供者列表","serviceProviders");
     var refreshData = function(){
-        $http.post("provider/"+$routeParams.id+"/providers.htm").success(function(data){
-            $scope.details=data;
-            if(!data||data.length<=0){
-                $scope.isEmpty=true;
+        $httpWrapper.post({
+            url:"provider/"+$routeParams.service+"/providers.htm",
+            data:"serviceKey="+$routeParams.serviceKey,
+            config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
+            success:function(data){
+                $scope.details=data;
+                if(!data||data.length<=0){
+                    $scope.isEmpty=true;
+                }
+                $scope.originData= $scope.details;
             }
-            $scope.originData= $scope.details;
         });
     }
     refreshData();
@@ -101,15 +107,11 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
     }
     $scope.operation=function(type,provider){
         var submit = function(){
-            $http.post("provider/"+provider.id+"/"+type+"/operate.htm").success(function(data){
-                if(data.result==ajaxResultStatu.SUCCESS){
+            $httpWrapper.post({
+                url:"provider/"+provider.id+"/"+type+"/operate.htm",
+                success:function(data){
                     $dialog.info({content:"成功更新"+$scope.service+"服务信息！",callback:refreshData});
-                }else{
-                    $dialog.info({content:data.memo});
                 }
-            }).error(function(error){
-                console.log(error);
-                $dialog.info({content:"后端系统出现异常，请稍后再试！",size:'small'});
             });
         };
         $dialog.confirm({content:"确认进行此操作？",size:'small',callback: function () {
@@ -128,16 +130,14 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
             return;
         }
         var submit=function(){
-            $http.post("provider/"+type+"/batch-operate.htm","ids="+selected.join(","),{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}}).success(function(data){
-                if(data.result==ajaxResultStatu.SUCCESS){
+            $httpWrapper.post({
+                url:"provider/"+type+"/batch-operate.htm",
+                data:"ids="+selected.join(","),
+                config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
+                success:function(){
                     $dialog.info({content:"成功更新"+$scope.service+"服务信息！",callback:refreshData});
                     $("thead tr input[type='checkbox']")[0].checked=false;
-                }else{
-                    $dialog.info({content:data.memo});
                 }
-            }).error(function(error){
-                console.log(error);
-                $dialog.info({content:"后端系统出现异常，请稍后再试！",size:'small'});
             });
         };
         $dialog.confirm({content:"确认进行此操作？",size:'small',callback: function () {

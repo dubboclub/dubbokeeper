@@ -1,10 +1,10 @@
-package com.dubboclub.model;
+package com.dubboclub.web.model;
 
 /**
  * Created by bieber on 2015/6/6.
  * 消费者信息
  */
-public class ConsumerInfo {
+public class ConsumerInfo extends BasicResponse{
 
     private String application;
 

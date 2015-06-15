@@ -60,6 +60,9 @@ public class SyncUtils {
     public static URL provider2URL(Provider provider){
         URL url = URL.valueOf(provider.getUrl());
         url=url.addParameterString(provider.getParameters());
+        url = url.addParameter(Constants.WEIGHT_KEY,provider.getWeight());
+        url=url.addParameter(Constants.ENABLED_KEY,provider.isEnabled());
+        url=url.addParameter(Constants.DYNAMIC_KEY,provider.isDynamic());
         return url;
     }
 

@@ -36,6 +36,10 @@ public interface ProviderService {
     public void halfWeight(Long id);
     //将某个提供者的权重设置为之前的两倍
     public void doubleWeight(Long id);
+    //删除某个服务提供方
+    public void delete(Long id);
+    //基于某个服务提供方复制另一个服务提供方
+    public void copy(Long id);
 
 
 }

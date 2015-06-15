@@ -20,9 +20,25 @@ dialog.controller("dialogCtl",function($scope,$dialog,$location){
 dialog.$dialog=function(){
 
     var Dialog=function(){
+        this.status=0;
+        var me= this;
+        this.first=true;
+    }
+    Dialog.prototype._bindHidden=function(){
+        if(this.first){
+            var me=this;
+            $('#dialog-modal').on("hidden.bs.modal",function(){
+                if(me.hiddenAction){
+                    me.hiddenAction();
+                    me.hiddenAction=undefined;
+                }
+            });
+            this.first=false;
+        }
+
     }
     Dialog.prototype.info=function(options){
-        $('#dialog-modal').modal('hide');
+        this._bindHidden();
         this.scope.dialogParams.type='info';
         this.scope.dialogParams.content=options.content;
         this.scope.dialogParams.size= options.size?options.size:"normal";
@@ -32,10 +48,11 @@ dialog.$dialog=function(){
         this.scope.dialogParams.confirmContent="确定";
         this.scope.dialogParams.confirmLink=options.confirmLink;
         this.boundOk=options.callback;
+        this.status=1;
         $('#dialog-modal').modal('show');
     };
     Dialog.prototype.confirm=function(options){
-        $('#dialog-modal').modal('hide');
+        this._bindHidden();
         this.scope.dialogParams.type="confirm";
         this.scope.dialogParams.content=options.content;
         this.scope.dialogParams.size= options.size?options.size:"normal";
@@ -45,10 +62,11 @@ dialog.$dialog=function(){
         this.scope.dialogParams.confirmContent="确定";
         this.scope.dialogParams.confirmLink=options.confirmLink;
         this.boundOk=options.callback;
+        this.status=1;
         $('#dialog-modal').modal('show');
     };
     Dialog.prototype.alert=function(options){
-        $('#dialog-modal').modal('hide');
+        this._bindHidden();
         this.scope.dialogParams.type='alert';
         this.scope.dialogParams.content=options.content;
         this.scope.dialogParams.size= options.size?options.size:"normal";
@@ -58,20 +76,21 @@ dialog.$dialog=function(){
         this.scope.dialogParams.confirmContent="确定";
         this.scope.dialogParams.confirmLink=options.confirmLink;
         this.boundOk=options.callback;
+        this.status=1;
         $('#dialog-modal').modal('show');
     }
 
     Dialog.prototype.cancel=function(){
         $('#dialog-modal').modal('hide');
         if(this.boundCancel){
-            this.boundCancel();
+            this.hiddenAction=this.boundCancel;
         }
     }
 
     Dialog.prototype.ok=function(){
         $('#dialog-modal').modal('hide');
         if(this.boundOk){
-            this.boundOk();
+            this.hiddenAction=this.boundOk;
         }
     }
 

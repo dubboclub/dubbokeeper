@@ -9,9 +9,9 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean class="com.dubboclub.utils.ContextHolder"/>
+    <bean class="com.dubboclub.web.utils.ContextHolder"/>
 
-    <bean class="com.dubboclub.properties.DubboKeeperConfigurer">
+    <bean class="com.dubboclub.web.properties.DubboKeeperConfigurer">
         <property name="locations">
             <value>
                 classpath*:/dubbo.properties

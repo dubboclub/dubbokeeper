@@ -47,7 +47,11 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
     public List<Provider> listProviderByConditions(String... conditions) {
         return filterCategoryData(new ConvertURL2Entity<Provider>() {
             public Provider convert(Pair<Long, URL> pair) {
-                return overrideService.configProvider(SyncUtils.url2Provider(pair));
+                Provider provider = SyncUtils.url2Provider(pair);
+                if(provider.isDynamic()){
+                    return overrideService.configProvider(provider);
+                }
+                return provider;
             }
         },Constants.PROVIDERS_CATEGORY,conditions);
     }
@@ -60,7 +64,13 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
     public Provider getProviderById(long id) {
         URL url = getOneById(Constants.PROVIDERS_CATEGORY,id);
         if(url!=null){
-            return overrideService.configProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id, url)));
+            Provider provider = SyncUtils.url2Provider(new Pair<Long, URL>(id, url));
+            if(provider.isDynamic()){
+                return overrideService.configProvider(provider);
+            }else{
+                return provider;
+            }
+
         }
         return null;
     }
@@ -114,33 +124,76 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
     @java.lang.Override
     public void disable(Long id) {
         Provider provider = getProviderById(id);
-        URL url = overrideService.configProviderURL(provider);
-        url=url.addParameter(Constants.ENABLED_KEY, false);
-        updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
+        if(provider.isDynamic()){
+            URL url = overrideService.configProviderURL(provider);
+            url=url.addParameter(Constants.ENABLED_KEY, false);
+            updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
+        }else{
+            provider.setEnabled(false);
+            updateProvider(provider);
+        }
+
     }
 
     @java.lang.Override
     public void enable(Long id) {
         Provider provider = getProviderById(id);
-        URL url = overrideService.configProviderURL(provider);
-        url=url.addParameter(Constants.ENABLED_KEY, true);
-        updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
+        if(provider.isDynamic()){
+            URL url = overrideService.configProviderURL(provider);
+            url=url.addParameter(Constants.ENABLED_KEY, true);
+            updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
+        }else{
+            provider.setEnabled(true);
+            updateProvider(provider);
+        }
+
     }
 
     @java.lang.Override
     public void halfWeight(Long id) {
         Provider provider = getProviderById(id);
-        URL url = overrideService.configProviderURL(provider);
-        url=url.addParameter(Constants.WEIGHT_KEY, (int)(url.getParameter(Constants.WEIGHT_KEY,Constants.DEFAULT_WEIGHT)/2));
-        updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
+        if(provider.isDynamic()){
+            URL url = overrideService.configProviderURL(provider);
+            url=url.addParameter(Constants.WEIGHT_KEY, (int)(url.getParameter(Constants.WEIGHT_KEY,Constants.DEFAULT_WEIGHT)/2));
+            updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
+        }else{
+            provider.setWeight(provider.getWeight()/2);
+            updateProvider(provider);
+        }
+
     }
 
     @java.lang.Override
     public void doubleWeight(Long id) {
         Provider provider = getProviderById(id);
-        URL url = overrideService.configProviderURL(provider);
-        url=url.addParameter(Constants.WEIGHT_KEY,  url.getParameter(Constants.WEIGHT_KEY,Constants.DEFAULT_WEIGHT)*2);
-        updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
+        if(provider.isDynamic()){
+            URL url = overrideService.configProviderURL(provider);
+            url=url.addParameter(Constants.WEIGHT_KEY,  url.getParameter(Constants.WEIGHT_KEY,Constants.DEFAULT_WEIGHT)*2);
+            updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
+        }else{
+            provider.setWeight(provider.getWeight()*2);
+            updateProvider(provider);
+        }
+
+    }
+
+    @java.lang.Override
+    public void delete(Long id) {
+        Provider provider =  getProviderById(id);
+        if(!provider.isDynamic()){
+            delete(SyncUtils.provider2URL(provider));
+        }
+    }
+
+    @java.lang.Override
+    public void copy(Long id) {
+        Provider provider = getProviderById(id);
+        if(provider.isDynamic()){
+            provider.setDynamic(false);
+            provider.setEnabled(false);
+        }
+        URL url = SyncUtils.provider2URL(provider);
+        add(url);
     }
 
     public void setOverrideService(OverrideService overrideService) {
