@@ -1,0 +1,17 @@
+<div class="modal fade" id="dialog-modal">
+    <div class="modal-dialog {{dialogParams.size=='small'?'modal-sm':(dialogParams.size=='large'?'modal-lg':'')}}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="glyphicon {{dialogParams.type=='info'?'glyphicon-info-sign':(dialogParams.type=='confirm'?'glyphicon-question-sign':'glyphicon-alert')}}"></i> {{dialogParams.title}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{dialogParams.content}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-show="dialogParams.cancleBtn" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">{{dialogParams.cancelContent?dialogParams.cancelContent:'取消'}}</button>
+                <a href="{{dialogParams.confirmLink?('#'+dialogParams.confirmLink):'javascript:void(0);'}}" ng-show="dialogParams.confirmBtn"><button type="button" class="btn btn-primary" ng-click="ok()" >{{dialogParams.confirmContent?dialogParams.confirmContent:'确认'}}</button></a>
+            </div>
+        </div>
+    </div>
+</div>

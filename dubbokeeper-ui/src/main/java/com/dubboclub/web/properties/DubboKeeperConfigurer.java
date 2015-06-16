@@ -1,6 +1,6 @@
-package com.dubboclub.properties;
+package com.dubboclub.web.properties;
 
-import com.dubboclub.utils.ConfigUtils;
+import com.dubboclub.web.utils.ConfigUtils;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 import java.io.IOException;

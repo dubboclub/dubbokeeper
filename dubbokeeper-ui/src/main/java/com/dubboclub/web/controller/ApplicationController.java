@@ -1,4 +1,4 @@
-package com.dubboclub.controller;
+package com.dubboclub.web.controller;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
@@ -10,15 +10,17 @@ import com.dubboclub.admin.service.ApplicationService;
 import com.dubboclub.admin.service.ConsumerService;
 import com.dubboclub.admin.service.ProviderService;
 import com.dubboclub.admin.sync.util.Tool;
-import com.dubboclub.model.AppConsumeInfo;
-import com.dubboclub.model.AppProvideInfo;
-import com.dubboclub.model.ConsumerInfo;
+import com.dubboclub.web.model.AppConsumeInfo;
+import com.dubboclub.web.model.AppProvideInfo;
+import com.dubboclub.web.model.ConsumerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +96,7 @@ public class ApplicationController {
      * @return
      */
     @RequestMapping("/{appName}/provides.htm")
-    public @ResponseBody  List<AppProvideInfo> getProvides(@PathVariable("appName")String appName){
+    public @ResponseBody  List<AppProvideInfo> getProvides(@PathVariable("appName")String appName) throws UnsupportedEncodingException {
         List<Provider>  providers = providerService.listProviderByApplication(appName);
         List<AppProvideInfo> provideInfos = new ArrayList<AppProvideInfo>();
         List<String> containMark = new ArrayList<String>();
@@ -105,6 +107,7 @@ public class ApplicationController {
             }
             containMark.add(provider.getService());
             AppProvideInfo provideInfo = new AppProvideInfo();
+            provideInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(provider.getService(),"UTF-8"),"UTF-8"));
             provideInfo.setService(Tool.getInterface(provider.getService()));
             provideInfo.setVersion(provider.getVersion());
             provideInfo.setGroup(provider.getGroup());

@@ -63,7 +63,11 @@ public class Override extends BasicModel{
 
     
     public void setParams(String params) {
-        this.params = params;
+        if(StringUtils.isEmpty(this.params)){
+            this.params = params;
+        }else{
+            this.params +="&"+params;
+        }
     }
 
     

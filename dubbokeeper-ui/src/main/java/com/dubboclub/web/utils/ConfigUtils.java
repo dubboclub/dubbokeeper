@@ -1,4 +1,4 @@
-package com.dubboclub.utils;
+package com.dubboclub.web.utils;
 
 import org.apache.commons.lang.StringUtils;
 

@@ -1,10 +1,10 @@
-package com.dubboclub.model;
+package com.dubboclub.web.model;
 
 /**
  * Created by bieber on 2015/6/6.
  * 应用提供的服务信息
  */
-public class AppProvideInfo {
+public class AppProvideInfo extends BasicResponse{
 
     private String service;
 
@@ -14,7 +14,17 @@ public class AppProvideInfo {
 
     private String protocol;
 
+    private String serviceKey;
+
     private long id;
+
+    public String getServiceKey() {
+        return serviceKey;
+    }
+
+    public void setServiceKey(String serviceKey) {
+        this.serviceKey = serviceKey;
+    }
 
     public long getId() {
         return id;

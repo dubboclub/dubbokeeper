@@ -1,5 +1,6 @@
 package com.dubboclub.admin.service;
 
+import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dubboclub.admin.model.BasicModel;
@@ -15,6 +16,18 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class AbstractService {
 
     private RegistryServerSync registryServerSync;
+
+    protected void update(URL oldURL,URL newURL){
+        registryServerSync.update(oldURL,newURL);
+    }
+
+    protected void delete(URL url){
+        registryServerSync.unregister(url);
+    }
+
+    protected void add(URL url){
+        registryServerSync.register(url);
+    }
 
 
     public void setRegistryServerSync(RegistryServerSync registryServerSync) {
@@ -32,7 +45,7 @@ public abstract class AbstractService {
                 return entry.getValue().get(id);
             }
         }
-        return null;
+        throw new IllegalStateException("data had changed!");
     }
 
     //通过对某个目录下的数据定义过滤器，过滤出复核条件的数据
@@ -47,7 +60,11 @@ public abstract class AbstractService {
         Collection<Map.Entry<Long,URL>> urls = filterCategoryData(filter,category);
         List<T> entities = new ArrayList<T>();
         for(Map.Entry<Long,URL> url:urls){
-            entities.add(convertURLTOEntity.convert(new Pair<Long, URL>(url)));
+            T item =convertURLTOEntity.convert(new Pair<Long, URL>(url));
+            if(item==null){
+                continue;
+            }
+            entities.add(item);
         }
         return entities;
     }
@@ -66,12 +83,18 @@ public abstract class AbstractService {
                     if(parameters!=null){
                         boolean matched=true;
                         for(Map.Entry<String,String> filterEntry:filter.entrySet()){
-                            if(!parameters.containsKey(filterEntry.getKey())&&StringUtils.isEmpty(filterEntry.getValue())){
+                            String filterValue = filterEntry.getValue();
+                            String paramValue = parameters.get(filterEntry.getKey());
+                            if(Constants.ANY_VALUE.equals(paramValue)){
+                                parameters=null;
+                            }
+
+                            if(StringUtils.isEmpty(paramValue)&&StringUtils.isEmpty(filterValue)){
                                 continue;
-                            }else if(parameters.containsKey(filterEntry.getKey())&&!parameters.get(filterEntry.getKey()).equals(filterEntry.getValue())){
+                            }else if(!StringUtils.isEmpty(paramValue)&&!paramValue.equals(filterValue)){
                                 matched=false;
                                 break;
-                            }else if(!StringUtils.isEmpty(filterEntry.getValue())&&!filterEntry.getValue().equals(parameters.get(filterEntry.getKey()))){
+                            }else if(!StringUtils.isEmpty(filterValue)&&!filterValue.equals(paramValue)) {
                                 matched=false;
                                 break;
                             }

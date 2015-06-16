@@ -3,6 +3,8 @@
         <i class="icon-cloud"></i> <span ng-show="isForOneConsumer"><strong class="text-primary">{{consumer | uppercase}}</strong>应用依赖<strong class="text-primary">{{provider | uppercase}}</strong>应用的服务列表</span><span ng-show="!isForOneConsumer"><strong class="text-primary">{{application | uppercase}}</strong>提供服务列表</span>
     </div>
     <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
         <table class="table-striped table-hover table-condensed  table table-condensed">
             <thead>
             <tr>
@@ -24,7 +26,7 @@
             </tr>
             <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
-                <td class="text-left" title="管理该服务的提供者"><a href="#/{{detail.service}}/providers">{{detail.service}}</a></td>
+                <td class="text-left" title="管理该服务的提供者"><a href="#/{{detail.serviceKey}}/{{detail.service}}/providers">{{detail.service}}</a></td>
                 <td class="text-left"><span class="label {{!detail.version?'label-info':'label-success'}}">{{!detail.version?"默认版本":detail.version}}</span></td>
                 <td class="text-left"><span class="label {{!detail.group?'label-info':'label-success'}}">{{!detail.group?"默认组":detail.group}}</span></td>
                 <td class="text-left">{{detail.protocol}}</td>
@@ -36,6 +38,7 @@
             </tr>
             </tbody>
         </table>
+                </div>
     </div>
 </div>
 

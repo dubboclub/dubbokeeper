@@ -1,4 +1,4 @@
-package com.dubboclub.utils;
+package com.dubboclub.web.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

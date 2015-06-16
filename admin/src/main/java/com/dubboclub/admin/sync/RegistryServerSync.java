@@ -23,6 +23,7 @@ import com.alibaba.dubbo.common.utils.NetUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.registry.NotifyListener;
 import com.alibaba.dubbo.registry.RegistryService;
+import com.dubboclub.admin.sync.util.SyncUtils;
 import com.dubboclub.admin.sync.util.Tool;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -69,10 +70,24 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
         registryService.subscribe(SUBSCRIBE, this);
     }
 
+    public void update(URL oldURL,URL newURL){
+        registryService.unregister(oldURL);
+        registryService.register(newURL);
+    }
+
+    public void unregister(URL url){
+        registryService.unregister(url);
+    }
+
+    public void register(URL url){
+        registryService.register(url);
+    }
+
     public void destroy() throws Exception {
         registryService.unsubscribe(SUBSCRIBE, this);
     }
-    
+
+
     // 收到的通知对于 ，同一种类型数据（override、subcribe、route、其它是Provider），同一个服务的数据是全量的
     public void notify(List<URL> urls) {
         if(urls == null || urls.isEmpty()) {
@@ -106,7 +121,7 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
                     services = new HashMap<String, Map<Long,URL>>();
                     categories.put(category, services);
                 }
-                String service = url.getServiceKey();
+                String service = SyncUtils.generateServiceKey(url);
                 Map<Long, URL> ids = services.get(service);
                 if(ids == null) {
                     ids = new HashMap<Long, URL>();
