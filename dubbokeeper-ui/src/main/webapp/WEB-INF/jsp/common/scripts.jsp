@@ -17,3 +17,4 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/flat-ui/js/flat-ui.min.js"></script>--%>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/bootstrap.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/echarts-all.js"></script>

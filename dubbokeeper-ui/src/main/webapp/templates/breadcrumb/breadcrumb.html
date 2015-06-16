@@ -1,7 +1,6 @@
 <div class="row">
     <div class="col-md-12 col-lg-12 col-xs-12">
         <ol class="breadcrumb">
-            <li><a href="#/">Home</a></li>
             <li  ng-repeat="item in items" class="{{$index+1==items.length?'active':''}}">
                 <a href="#{{item.url}}" title="{{item.tip}}" ng-show="$index<items.length-1">{{item.name}}</a>
                 <span ng-show="$index+1==items.length"  title="{{item.tip}}">{{item.name}}</span>

@@ -66,8 +66,13 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
     }
     
     public void afterPropertiesSet() throws Exception {
-        logger.info("Init Dubbo Admin Sync Cache...");
-        registryService.subscribe(SUBSCRIBE, this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                logger.info("Init Dubbo Admin Sync Cache...");
+                registryService.subscribe(SUBSCRIBE, RegistryServerSync.this);
+            }
+        },"SUBSCRIBE-ADMIN-THREAD").start();
     }
 
     public void update(URL oldURL,URL newURL){

@@ -1,6 +1,6 @@
 var apps=angular.module("apps",['ngAnimate','ngRoute','serviceProvider','queryFilter','breadCrumb']);
 apps.config(function($routeProvider){
-    $routeProvider.when("/",{
+    $routeProvider.when("/apps",{
         templateUrl:"templates/apps/application-table.html",
         controller:"appTable"
     }).when("/:application/nodes",{
