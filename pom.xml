@@ -19,6 +19,7 @@
         <spring_version>4.1.6.RELEASE</spring_version>
         <servlet_version>2.5</servlet_version>
         <findbugs.excludeFilterFile>findbugs-exclude.xml</findbugs.excludeFilterFile>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
         <dependency>
