@@ -6,8 +6,9 @@ statistics.config(function($routeProvider){
         controller:"statisticsIndex"
     });
 });
-statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb){
+statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb,$menu){
     $breadcrumb.pushCrumb("Home","首页","statisticsIndex");
+    $menu.switchMenu(menu.HOME);
     $httpWrapper.post({
         url:"loadAppsType.htm",
         success:function(data){
@@ -23,7 +24,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                 legend: {
                     orient : 'vertical',
                     x : 'left',
-                    data:['P','C','P-C']
+                    data:['P.AND.C','P','C']
                 },
                 toolbox: {
                     show : true,
@@ -54,7 +55,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                         data:[
                             {value:data.integerList[0], name:'P'},
                             {value:data.integerList[1], name:'C'},
-                            {value:data.integerList[2], name:'P-C'}
+                            {value:data.integerList[2], name:'P.AND.C'}
                         ]
                     }
                 ]

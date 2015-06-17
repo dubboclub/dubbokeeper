@@ -15,7 +15,8 @@ serviceProvider.config(function($routeProvider){
         controller:"operateProvider"
     }).otherwise("/");
 });
-serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routeParams,$breadcrumb,$httpWrapper){
+serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routeParams,$breadcrumb,$httpWrapper,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.provider={};
     $scope.service=$routeParams.service;
     $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.service+"提供者明细","viewProvider");
@@ -26,7 +27,8 @@ serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routePar
         $scope.parameters.weight=data.weight;
     }})
 });
-serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb,$dialog,$httpWrapper){
+serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb,$dialog,$httpWrapper,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.provider={};
     $scope.service=$routeParams.service;
     $breadcrumb.pushCrumb($routeParams.address,"编辑服务"+$routeParams.service+"提供者","editProvider");
@@ -63,7 +65,8 @@ serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$br
 
 
 
-serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$httpWrapper){
+serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$httpWrapper,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.service=$routeParams.service;

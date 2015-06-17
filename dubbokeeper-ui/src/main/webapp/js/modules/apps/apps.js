@@ -25,9 +25,8 @@ apps.config(function($routeProvider){
 });
 
 
-
-apps.controller("consumeServiceDetails",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb){
-
+apps.controller("consumeServiceDetails",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.provider=$routeParams.provider;
@@ -74,7 +73,8 @@ apps.controller("consumeServiceDetails",function($scope,$httpWrapper,$routeParam
     }
 });
 
-apps.controller("consumerDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb){
+apps.controller("consumerDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -101,7 +101,8 @@ apps.controller("consumerDetail",function($scope,$httpWrapper,$routeParams,$quer
 });
 
 
-apps.controller("nodesDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb){
+apps.controller("nodesDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -132,7 +133,8 @@ apps.controller("nodesDetail",function($scope,$httpWrapper,$routeParams,$queryFi
         $scope.details=$queryFilter($scope.originData,$scope.query);
     }
 });
-apps.controller("consumeDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb){
+apps.controller("consumeDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -156,7 +158,8 @@ apps.controller("consumeDetail",function($scope,$httpWrapper,$routeParams,$query
         $scope.details=$queryFilter($scope.originData,$scope.query);
     }
 });
-apps.controller("provideDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb){
+apps.controller("provideDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -199,8 +202,8 @@ apps.controller("provideDetail",function($scope,$httpWrapper,$routeParams,$query
         $scope.details=$queryFilter($scope.originData,$scope.query);
     }
 });
-apps.controller("consumerAppTable",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb){
-
+apps.controller("consumerAppTable",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.applications=[];
     $scope.isEmpty=false;
     $scope.isConsumer=true;
@@ -236,7 +239,8 @@ apps.controller("consumerAppTable",function($scope,$httpWrapper,$routeParams,$qu
     }
 });
 
-apps.controller("appTable",function($scope,$httpWrapper,$queryFilter,$breadcrumb){
+apps.controller("appTable",function($scope,$httpWrapper,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu(menu.APPS);
     $scope.applications=[];
     $scope.isEmpty=false;
     $breadcrumb.pushCrumb("应用列表","查看应用列表","appTable");
