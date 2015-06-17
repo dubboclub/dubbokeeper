@@ -27,7 +27,7 @@
             </tr>
             <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
-                <td class="text-left" title="管理该服务的提供者"><a href="#/{{detail.service}}/providers">{{(detail.accessProtocol?detail.accessProtocol:"allprotocol")+"//"+detail.service}}</a></td>
+                <td class="text-left" title="管理该服务的提供者"><a href="#/{{detail.serviceKey}}/{{detail.service}}/providers">{{(detail.accessProtocol?detail.accessProtocol:"allprotocol")+"//"+detail.service}}</a></td>
                 <td class="text-left"><span class="label {{!detail.version?'label-info':'label-success'}}">{{!detail.version?"所有版本":detail.version}}</span></td>
                 <td class="text-left"><span class="label {{!detail.group?'label-info':'label-success'}}">{{!detail.group?"所有组":detail.group}}</span></td>
                 <td class="text-left"><a href="#/{{detail.providerName}}/nodes" style="text-underline: none;"

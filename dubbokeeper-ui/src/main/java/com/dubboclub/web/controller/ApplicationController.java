@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bieber on 2015/6/4.
@@ -140,10 +141,13 @@ public class ApplicationController {
         for(Consumer consumer:consumers){
             AppConsumeInfo consumeInfo = new AppConsumeInfo();
             consumeInfo.setService(Tool.getInterface(consumer.getService()));
+            consumeInfo.setServiceKey(consumer.getService());
             List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumer.getService()),Constants.GROUP_KEY,Tool.getGroup(consumer.getService()),Constants.VERSION_KEY,Tool.getVersion(consumer.getService()));
             consumeInfo.setGroup(consumer.getGroup());
             consumeInfo.setVersion(consumer.getVersion());
-            String accessProtocol = Tool.convertParametersMap(consumer.getParameters()).get(Constants.PROTOCOL_KEY);
+            Map<String,String> params = Tool.convertParametersMap(consumer.getParameters());
+            String accessProtocol = params.get(Constants.PROTOCOL_KEY);
+            
             consumeInfo.setAccessProtocol(accessProtocol);
             if(providers.size()>0){
                 consumeInfo.setProviderName(providers. get(0).getApplication());

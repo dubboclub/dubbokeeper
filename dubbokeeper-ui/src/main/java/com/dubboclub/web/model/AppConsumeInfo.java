@@ -7,6 +7,8 @@ package com.dubboclub.web.model;
 public class AppConsumeInfo extends BasicResponse{
 
     private String service;
+    
+    private String serviceKey;
 
     private String providerName;
 
@@ -15,10 +17,20 @@ public class AppConsumeInfo extends BasicResponse{
     private String group;
 
     private String version;
-    
     private String accessProtocol;
-    
     private int providerCount;
+
+    public String getAccessProtocol() {
+        return accessProtocol;
+    }
+    
+    public String getServiceKey() {
+        return serviceKey;
+    }
+
+    public void setServiceKey(String serviceKey) {
+        this.serviceKey = serviceKey;
+    }
 
     public void setAccessProtocol(String accessProtocol) {
         this.accessProtocol = accessProtocol;
