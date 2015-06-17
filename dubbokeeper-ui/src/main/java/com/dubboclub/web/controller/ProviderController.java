@@ -1,19 +1,26 @@
 package com.dubboclub.web.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.dubbo.common.Constants;
+import com.alibaba.dubbo.common.utils.ConfigUtils;
 import com.dubboclub.admin.model.Provider;
 import com.dubboclub.admin.service.ProviderService;
 import com.dubboclub.admin.sync.util.Tool;
 import com.dubboclub.web.model.BasicResponse;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.List;
-import java.util.Map;
+import com.dubboclub.web.properties.DubboKeeperConfigurer;
 
 /**
  * Created by bieber on 2015/6/7.
@@ -29,6 +36,14 @@ public class ProviderController {
     @RequestMapping("/{service}/providers.htm")
     public @ResponseBody List<Provider> listProviderByService(@RequestParam("serviceKey") String serviceKey) throws UnsupportedEncodingException {
         return  providerService.listProviderByServiceKey(serviceKey);
+    }
+    
+    @RequestMapping("/{service}/service-readme.htm")
+    public @ResponseBody Map<String,Object> seriveReadMe(@RequestParam("serviceKey") String serviceKey) throws UnsupportedEncodingException {
+    	Map<String,Object> re = new HashMap<String, Object>();
+    	re.put("providers", providerService.listProviderByServiceKey(serviceKey));
+    	re.put("registry", ConfigUtils.getProperty("dubbo.registry.address"));
+    	return re;
     }
 
 
