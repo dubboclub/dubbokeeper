@@ -23,6 +23,15 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
 
     private OverrideService overrideService;
 
+    @java.lang.Override
+    public List<Provider> listAllProvider() {
+        return filterCategoryData(new ConvertURL2Entity<Provider>() {
+            public Provider convert(Pair<Long, URL> pair) {
+                return SyncUtils.url2Provider(pair);
+            }
+        },Constants.PROVIDERS_CATEGORY);
+    }
+
     public List<Provider> listProviderByApplication(String appName) {
         return filterCategoryData(new ConvertURL2Entity<Provider>() {
             public Provider convert(Pair<Long, URL> pair) {

@@ -1,11 +1,27 @@
 <div class="row">
-    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4" id="statisticsAppsTypes" style="height: 200px;">
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="{{currentTab=='apps'?'active':''}}" ng-click="switchTab('apps')"><a href="#/">应用信息</a></li>
+            <li role="presentation" class="{{currentTab=='service'?'active':''}}" ng-click="switchTab('service')"><a href="#/">服务信息</a></li>
+            <li role="presentation" class="{{currentTab=='dependencies'?'active':''}}" ng-click="switchTab('dependencies')"><a href="#/">依赖关系图</a></li>
+        </ul>
+    </div>
+</div>
+<div class="row" ng-show="currentTab=='apps'">
+    <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" id="statisticsAppsTypes" style="height: 400px;">
 
     </div>
-    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+    <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" id="statisticsServiceProtocol" style="height: 400px;">
 
     </div>
-    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+</div>
+<div class="row" ng-show="currentTab=='service'">
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" id="serviceStatus" style="height: 400px;">
+
+    </div>
+</div>
+<div class="row" ng-show="currentTab=='dependencies'">
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" id="dependencies" style="height: 400px;">
 
     </div>
 </div>

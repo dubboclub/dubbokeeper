@@ -2,6 +2,7 @@ package com.dubboclub.admin.service.impl;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
+import com.alibaba.dubbo.monitor.MonitorService;
 import com.dubboclub.admin.model.Application;
 import com.dubboclub.admin.model.Consumer;
 import com.dubboclub.admin.model.Node;
@@ -49,6 +50,9 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
             for(Map.Entry<String, Map<Long, URL>> oneService:consumers.entrySet()){
                 Map<Long, URL> urls = oneService.getValue();
                 for(Map.Entry<Long,URL> url:urls.entrySet()){
+                    if(url.getValue().getParameter(Constants.INTERFACE_KEY).equals(MonitorService.class.getName())){
+                        continue;
+                    }
                     Application application = new Application();
                     application.setApplication(url.getValue().getParameter(Constants.APPLICATION_KEY));
                     application.setUsername(url.getValue().getParameter("owner"));

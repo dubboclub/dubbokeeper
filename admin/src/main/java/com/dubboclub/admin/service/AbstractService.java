@@ -50,7 +50,7 @@ public abstract class AbstractService {
 
     //通过对某个目录下的数据定义过滤器，过滤出复核条件的数据
     protected<T extends BasicModel> List<T>  filterCategoryData(ConvertURL2Entity<T> convertURLTOEntity,String category,String... params){
-        if(params.length>0&&params.length%2!=0){
+        if(params.length%2!=0){
             throw  new IllegalArgumentException("filter params size must be paired");
         }
         Map<String,String> filter = new HashMap<String,String>();
