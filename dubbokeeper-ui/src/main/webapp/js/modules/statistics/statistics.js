@@ -110,8 +110,75 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                 });
                 break;
             }
+            case 'nodes':{
+                $httpWrapper.post({
+                    url:"loadAppNodes.htm",
+                    success:function(data){
+                        require( [
+                            'echarts',
+                            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+                            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+                        ], function (echarts) {
+                            require(['echarts/theme/macarons'], function(curTheme){
+                                var xAxisData=[];
+                                var nodes=[];
+                                for(var key in data){
+                                    xAxisData.push(key);
+                                    nodes.push(data[key]);
+                                }
+                                var option = {
+                                    title : {
+                                        text: '应用部署节点统计',
+                                        subtext: '来自注册中心'
+                                    },
+                                    tooltip : {
+                                        trigger: 'axis'
+                                    },
+                                    legend: {
+                                        data:['部署节点数']
+                                    },
+                                    toolbox: {
+                                        show : true,
+                                        feature : {
+                                            magicType : {show: true, type: ['line', 'bar']},
+                                            restore : {show: true},
+                                            saveAsImage : {show: true}
+                                        }
+                                    },
+                                    calculable : true,
+                                    xAxis : [
+                                        {
+                                            type : 'category',
+                                            data : xAxisData
+                                        }
+                                    ],
+                                    yAxis : [
+                                        {
+                                            type : 'value'
+                                        }
+                                    ],
+                                    series : [
+                                        {
+                                            name:'部署节点数',
+                                            type:'bar',
+                                            data:nodes
+                                        }
+                                    ]
+                                };
+                                var myChart = echarts.init(document.getElementById('nodes'));
+                                myChart.setTheme(curTheme)
+                                myChart.setOption(option);
+                                var ecConfig = require('echarts/config');
+                                myChart.on(ecConfig.EVENT.CLICK, function (params) {
+                                    location.hash="#/"+params.name+"/nodes";
+                                });
+                            });
+                        });
+                    }
+                });
+                break;
+            }
             case 'service':{
-
                 $httpWrapper.post({
                     url:"loadAppServices.htm",
                     success:function(data){
@@ -176,6 +243,14 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                 var myChart = echarts.init(document.getElementById('serviceStatus'));
                                 myChart.setTheme(curTheme)
                                 myChart.setOption(option);
+                                var ecConfig = require('echarts/config');
+                                myChart.on(ecConfig.EVENT.CLICK, function (params) {
+                                    if(params.seriesIndex==0){
+                                        location.hash="#/"+params.name+"/provides";
+                                    }else{
+                                        location.hash="#/"+params.name+"/consumes";
+                                    }
+                                })
                             });
                         });
                     }

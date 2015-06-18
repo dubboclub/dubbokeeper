@@ -3,6 +3,7 @@
         <ul class="nav nav-tabs">
             <li role="presentation" class="{{currentTab=='apps'?'active':''}}" ng-click="switchTab('apps')"><a href="#/">应用信息</a></li>
             <li role="presentation" class="{{currentTab=='service'?'active':''}}" ng-click="switchTab('service')"><a href="#/">服务信息</a></li>
+            <li role="presentation" class="{{currentTab=='nodes'?'active':''}}" ng-click="switchTab('nodes')"><a href="#/">应用部署节点信息</a></li>
             <li role="presentation" class="{{currentTab=='dependencies'?'active':''}}" ng-click="switchTab('dependencies')"><a href="#/">依赖关系图</a></li>
         </ul>
     </div>
@@ -22,6 +23,11 @@
 </div>
 <div class="row" ng-show="currentTab=='dependencies'">
     <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" id="dependencies" style="height: 600px;">
+
+    </div>
+</div>
+<div class="row" ng-show="currentTab=='nodes'">
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" id="nodes" style="height: 400px;">
 
     </div>
 </div>

@@ -3,6 +3,7 @@ package com.dubboclub.web.controller;
 import com.alibaba.dubbo.common.URL;
 import com.dubboclub.admin.model.Application;
 import com.dubboclub.admin.model.Consumer;
+import com.dubboclub.admin.model.Node;
 import com.dubboclub.admin.model.Provider;
 import com.dubboclub.admin.service.ApplicationService;
 import com.dubboclub.admin.service.ConsumerService;
@@ -81,14 +82,37 @@ public class IndexController {
         Map< String,List<Integer>> statistics =  new HashMap<String, List<Integer>>();
         for(Application application:applications){
             List<Integer> data = new ArrayList<Integer>();
-            data.add(providerService.listProviderByApplication(application.getApplication()).size());
-            data.add(consumerService.listConsumerByApplication(application.getApplication()).size());
+            List<String> containsConsumes = new ArrayList<String>();
+            List<String> containsProvides = new ArrayList<String>();
+            List<Consumer> consumers =  consumerService.listConsumerByApplication(application.getApplication());
+            for(Consumer consumer:consumers){
+                if(containsConsumes.contains(consumer.getService())){
+                    continue;
+                }
+                containsConsumes.add(consumer.getService());
+            }
+            List<Provider> providers = providerService.listProviderByApplication(application.getApplication());
+            for(Provider provider :providers){
+                if(containsConsumes.contains(provider.getService())){
+                    continue;
+                }
+                containsProvides.add(provider.getService());
+            }
+            data.add(containsProvides.size());
+            data.add(containsConsumes.size());
             statistics.put(application.getApplication(),data);
         }
         return statistics;
     }
-
-
+    @RequestMapping("/loadAppNodes.htm")
+    public  @ResponseBody Map<String,Integer> loadApplicationNodes(){
+        List<Application> applications =  applicationService.getApplications();
+        Map< String,Integer> statistics =  new HashMap<String, Integer>();
+        for(Application application:applications){
+            statistics.put(application.getApplication(),applicationService.getNodesByApplicationName(application.getApplication()).size());
+        }
+        return statistics;
+    }
     @RequestMapping("/loadAppsDependencies.htm")
     public Map<String,List<Map<String,Object>>> loadAppsDependencies(){
         Map<String,List<Map<String,Object>>> statistics=new HashMap<String, List<Map<String, Object>>>();
@@ -120,4 +144,7 @@ public class IndexController {
         statistics.put("links",links);
         return statistics;
     }
+    
+    
+    
 }
