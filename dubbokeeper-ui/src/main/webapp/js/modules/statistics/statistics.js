@@ -108,6 +108,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
 
                     }
                 });
+                break;
             }
             case 'service':{
 
@@ -179,6 +180,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                         });
                     }
                 });
+                break;
             }
             case 'dependencies':{
                 $httpWrapper.post({
@@ -233,7 +235,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                                     name: '纯消费者'
                                                 },
                                                 {
-                                                    name:'即是提供者也是消费者'
+                                                    name:'既是提供者也是消费者'
                                                 }
                                             ],
                                             itemStyle: {
@@ -282,6 +284,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                         });
                     }
                 });
+                break;
             }
         }
     }
