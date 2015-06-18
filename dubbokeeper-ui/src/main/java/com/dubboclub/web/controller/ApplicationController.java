@@ -135,13 +135,13 @@ public class ApplicationController {
      * @return
      */
     @RequestMapping("/{appName}/consumes.htm")
-    public @ResponseBody  List<AppConsumeInfo> getConsumes(@PathVariable("appName")String appName){
+    public @ResponseBody  List<AppConsumeInfo> getConsumes(@PathVariable("appName")String appName) throws UnsupportedEncodingException {
         List<AppConsumeInfo> applicationConsumeInfos = new ArrayList<AppConsumeInfo>();
         List<Consumer> consumers =  consumerService.listConsumerByApplication(appName);
         for(Consumer consumer:consumers){
             AppConsumeInfo consumeInfo = new AppConsumeInfo();
             consumeInfo.setService(Tool.getInterface(consumer.getService()));
-            consumeInfo.setServiceKey(consumer.getService());
+            consumeInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(consumer.getService(),"UTF-8"),"utf-8"));
             List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumer.getService()),Constants.GROUP_KEY,Tool.getGroup(consumer.getService()),Constants.VERSION_KEY,Tool.getVersion(consumer.getService()));
             consumeInfo.setGroup(consumer.getGroup());
             consumeInfo.setVersion(consumer.getVersion());
@@ -195,7 +195,7 @@ public class ApplicationController {
      * @return
      */
     @RequestMapping("/{provider}/{consumer}/consumes.htm")
-    public @ResponseBody List<AppProvideInfo> geConsumeServiceInfoByConsumerAndProvider(@PathVariable("provider")String provider,@PathVariable("consumer")String consumer){
+    public @ResponseBody List<AppProvideInfo> geConsumeServiceInfoByConsumerAndProvider(@PathVariable("provider")String provider,@PathVariable("consumer")String consumer) throws UnsupportedEncodingException {
         List<AppProvideInfo> provideInfos = new ArrayList<AppProvideInfo>();
         List<Consumer> consumers= consumerService.listConsumerByApplication(consumer);
         List<String> containMark = new ArrayList<String>();
@@ -209,7 +209,8 @@ public class ApplicationController {
             if(providers.size()>0){
                 AppProvideInfo provideInfo = new AppProvideInfo();
                 Provider providerEntity = providers.get(0);
-                provideInfo.setService(providerEntity.getService());
+                provideInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(providerEntity.getService(), "UTF-8"), "UTF-8"));
+                provideInfo.setService(Tool.getInterface(providerEntity.getService()));
                 provideInfo.setVersion(providerEntity.getVersion());
                 provideInfo.setGroup(providerEntity.getGroup());
                 List<Provider> providerList = providerService.listProviderByService(providerEntity.getService());

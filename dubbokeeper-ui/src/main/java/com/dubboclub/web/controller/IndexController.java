@@ -111,7 +111,7 @@ public class IndexController {
                 if(providers.size()>0){
                     link.put("target",providers.get(0).getApplication());
                     link.put("weight",1);
-                    link.put("name","依赖");
+                    link.put("name",application.getApplication()+"依赖"+providers.get(0).getApplication());
                     links.add(link);
                 }
             }

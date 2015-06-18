@@ -81,7 +81,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                             'echarts/chart/pie', // 使用柱状图就加载bar模块，按需加载
                             'echarts/chart/funnel' // 使用柱状图就加载bar模块，按需加载
                         ], function (echarts) {
-                            require(['js/echarts/theme/shine'], function(curTheme){
+                            require(['echarts/theme/shine'], function(curTheme){
                                 var option =statistics._generatePieOption({'P':data[0],'C':data[1],'P.AND.C':data[2]},'应用类型分布图','应用类型');
                                 var myChart = echarts.init(document.getElementById('statisticsAppsTypes'));
                                 myChart.setTheme(curTheme)
@@ -98,7 +98,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                             'echarts/chart/pie',// 使用柱状图就加载bar模块，按需加载
                             'echarts/chart/funnel' // 使用柱状图就加载bar模块，按需加载
                         ], function (echarts) {
-                            require(['js/echarts/theme/blue'], function(curTheme){
+                            require(['echarts/theme/blue'], function(curTheme){
                                 var option =statistics._generatePieOption(data,'暴露协议分布图','暴露协议');
                                 var myChart = echarts.init(document.getElementById('statisticsServiceProtocol'));
                                 myChart.setTheme(curTheme);
@@ -120,7 +120,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                             'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
                             'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
                         ], function (echarts) {
-                            require(['js/echarts/theme/macarons'], function(curTheme){
+                            require(['echarts/theme/macarons'], function(curTheme){
                                 var xAxisData=[];
                                 var provides=[];
                                 var consumes=[];
@@ -191,15 +191,9 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                             'echarts/chart/force', // 使用柱状图就加载bar模块，按需加载
                             'echarts/chart/chord' // 使用柱状图就加载bar模块，按需加载
                         ], function (echarts) {
-                            require(['js/echarts/theme/blue'], function(curTheme){
-                                var xAxisData=[];
-                                var provides=[];
-                                var consumes=[];
-                                for(var key in data){
-                                    xAxisData.push(key);
-                                    provides.push(data[key][0]);
-                                    consumes.push(data[key][0]);
-                                }
+                            require(['echarts/theme/blue'], function(curTheme){
+                                var originNodes = data.nodes.filter(function(){return true});
+                                var originLinks = data.links.filter(function(){return true});
                                 var option = {
                                     title : {
                                         text: '应用依赖关系图',
@@ -227,6 +221,9 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                             type:'force',
                                             name : "应用关系",
                                             ribbonType: false,
+                                            roam:'scale',
+                                            nodePadding:50,
+                                            orient:'radial',
                                             categories : [
                                                 {
                                                     name: '纯提供者'
@@ -235,7 +232,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                                     name: '纯消费者'
                                                 },
                                                 {
-                                                    name:'既是提供者也是消费者'
+                                                    name:'即是提供者也是消费者'
                                                 }
                                             ],
                                             itemStyle: {
@@ -277,9 +274,51 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                         }
                                     ]
                                 };
-                                var myChart = echarts.init(document.getElementById('dependencies'));
-                                myChart.setTheme(curTheme)
-                                myChart.setOption(option);
+                                var myChart = echarts.init(document.getElementById('dependencies'),curTheme);
+                                window.onresize = myChart.resize;
+                                myChart.showLoading();
+                                myChart.setOption(option,true);
+                                
+                                var originSeries = option.series;
+                                var ecConfig = require('echarts/config');
+                                function focus(param) {
+                                    var data = param.data;
+                                    var links = option.series[0].links;
+                                    var nodes = option.series[0].nodes;
+                                    var currentSeries = option.series[0];
+                                    if (data.source != null&& data.target != null) { //点击的是边
+                                        location.hash="#/"+data.target+"/"+data.source+"/consumes";
+                                    } else { // 点击的是点
+                                        console.log("选中了" + data.name + '(' + data.value + ')');
+                                        var currentNodes = [data];
+                                        var currentNodeLinks = links.filter(function (link) {
+                                            var matched = link.source == data.name|| link.target==data.name;
+                                            if(matched){
+                                                currentNodes.push(nodes.filter(function (node) {
+                                                    return data.name!=node.name&&(node.name==link.target||node.name==link.source);
+                                                })[0]);
+                                            }
+                                            return matched;
+                                        });
+                                        if(currentNodeLinks.length>0){
+                                            currentSeries.links=currentNodeLinks;
+                                            currentSeries.nodes= currentNodes;
+                                            myChart.showLoading();
+                                            myChart.setSeries([currentSeries],true);
+                                        }
+                                    }
+                                }
+                                myChart.on(ecConfig.EVENT.CLICK, focus)
+                                myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function(){
+                                    myChart.hideLoading();
+                                });
+                                myChart.on(ecConfig.EVENT.RESTORE,function(param){
+                                    var currentSeries = option.series[0];
+                                    currentSeries.nodes=originNodes;
+                                    currentSeries.links=originLinks;
+                                    myChart.showLoading();
+                                    myChart.setSeries([currentSeries]);
+                                });
                             });
                         });
                     }
