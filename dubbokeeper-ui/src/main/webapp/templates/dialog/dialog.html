@@ -10,7 +10,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" ng-show="dialogParams.cancleBtn" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">{{dialogParams.cancelContent?dialogParams.cancelContent:'取消'}}</button>
-                <a href="{{dialogParams.confirmLink?('#'+dialogParams.confirmLink):''}}" ng-show="dialogParams.confirmBtn"><button type="button" class="btn btn-primary" ng-click="ok()" >{{dialogParams.confirmContent?dialogParams.confirmContent:'确认'}}</button></a>
+                <a href="{{dialogParams.confirmLink?('#'+dialogParams.confirmLink):''}}" ng-show="dialogParams.confirmBtn&&dialogParams.confirmLink"><button type="button" class="btn btn-primary" ng-click="ok()" >{{dialogParams.confirmContent?dialogParams.confirmContent:'确认'}}</button></a>
+                <button type="button" class="btn btn-primary" ng-click="ok()" ng-show="dialogParams.confirmBtn&&!dialogParams.confirmLink">{{dialogParams.confirmContent?dialogParams.confirmContent:'确认'}}</button>
             </div>
         </div>
     </div>

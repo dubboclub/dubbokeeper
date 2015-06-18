@@ -4,6 +4,9 @@ serviceProvider.config(function($routeProvider){
     $routeProvider.when("/:serviceKey/:service/providers",{
         templateUrl:"templates/apps/service-providers.html",
         controller:"serviceProviders"
+    }).when("/:serviceKey/:service/service-readme",{
+        templateUrl:"templates/apps/service-readme.html",
+        controller:"serviceReadme"
     }).when("/edit/:service/:address/:id/provider",{
         templateUrl:"templates/apps/edit-provider.html",
         controller:"editProvider"
@@ -158,4 +161,88 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
 
         });
     }
+});
+serviceProvider.controller("serviceReadme",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$httpWrapper){
+    $scope.serviceKey=$routeParams.serviceKey;
+    $breadcrumb.pushCrumb($scope.serviceKey,"查看服务"+$scope.serviceKey+"调用文档","serviceReadme");
+	(function(){
+        $httpWrapper.post({
+            url:"templates/apps/service-readme.md",
+            success:function(mdText){
+            	$httpWrapper.post({
+            		url:"provider/"+$routeParams.service+"/service-readme.htm",
+                    data:"serviceKey="+$routeParams.serviceKey,
+                    config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
+                    success:function(data){
+                    	var converter = new showdown.Converter({extensions: ['table']});
+                    	if(data.providers.length > 0){
+                    		var serviceName = data.providers[0].service;
+                    		var beanNameArr = serviceName.split('.');
+                    		var demoBeanName = beanNameArr[beanNameArr.length - 1][0].toLowerCase() 
+                    				+ beanNameArr[beanNameArr.length - 1].substring(1)
+                    		var demoBeanClassName = beanNameArr[beanNameArr.length - 1];
+                    		var params = data.providers[0]. parameters.split('&');
+                    		var demoMethod;
+                    		angular.forEach(params, function(value, key) {
+                    			if(value.indexOf('methods') === 0){
+                    				demoMethod = value.split('=')[1].split(',')[0];
+                    				return;
+                    			}
+                			});
+                    		var libs = {
+                    				default: [
+	                    		        'log4j/log4j/1.2.17',
+										'commons-logging/commons-logging/1.2',
+										'com.alibaba/dubbo/2.5.3',
+										'org.javassist/javassist/3.15.0-GA',
+										'io.netty/netty/3.7.0.Final',
+										'org.slf4j/slf4j-api/1.7.7',
+										'org.slf4j/org.slf4j/slf4j-log4j12/1.7.7',
+										'org.springframework/spring-core/2.5.6.SEC03',
+										'com.101tec/zkclient/0.4',
+										'org.apache.zookeeper/zookeeper/3.4.6'
+									],
+                    				jsonrpc : [
+	                    		        'com.github.briandilley.jsonrpc4j/jsonrpc4j/1.1',
+										'com.ofpay/dubbo-rpc-jsonrpc/1.0.1'
+									]
+                    		}
+                    		var libsNeeded = [];
+                    		angular.forEach(libs.default, function(lib, key) {
+            					libsNeeded.push({
+            						groupId:lib.split('/')[0],
+        							artifactId:lib.split('/')[1],
+            						version:lib.split('/')[2]
+            					});
+            				});
+                    		angular.forEach(data.providers, function(provider, key) {
+                    			var protocol = provider.url.split(':')[0];
+                    			libs_protocol = libs[protocol];
+                    			if(libs_protocol){
+                    				angular.forEach(libs_protocol, function(lib, key) {
+                    					libsNeeded.push({
+                    						groupId:lib.split('/')[0],
+                    						artifactId:lib.split('/')[1],
+                    						version:lib.split('/')[2]
+                    					});
+                					});
+                				};
+                			});
+                    	}
+                    	var context = {providers: data.providers, 
+                    				serviceName: serviceName,
+                    				demoBeanName: demoBeanName,
+                    				demoBeanClassName: demoBeanClassName,
+                    				demoMethod: demoMethod,
+                    				libsNeeded: libsNeeded,
+                    				registry: data.registry
+                    			};
+                        html = converter.makeHtml(Mustache.render(mdText, context));
+                    	$(".mardown-body").html(html);
+                    	$(".mardown-body table").addClass('table table-bordered');
+                    }
+            	 });
+            }
+        });
+    })();
 });

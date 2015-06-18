@@ -18,6 +18,7 @@
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.protocol" placeholder="支持的协议">
                 </th>
                 <th class="text-center" ng-show="!isForOneConsumer">查看消费列表</th>
+                <th class="text-center">文档</th>
             </tr>
             </thead>
             <tbody>
@@ -33,6 +34,11 @@
                 <td class="text-center"  ng-show="!isForOneConsumer">
                     <a href="#/{{detail.service}}/{{detail.id}}/service-consumers" title="该服务的消费者列表">
                       <i class="icon-group"></i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="#/{{detail.serviceKey}}/{{detail.service}}/service-readme" title="该服务的调用方法">
+                      <i class="icon-file-text"></i>
                     </a>
                 </td>
             </tr>
