@@ -149,7 +149,8 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                     xAxis : [
                                         {
                                             type : 'category',
-                                            data : xAxisData
+                                            data : xAxisData,
+                                            show:false
                                         }
                                     ],
                                     yAxis : [
@@ -219,7 +220,8 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                     xAxis : [
                                         {
                                             type : 'category',
-                                            data : xAxisData
+                                            data : xAxisData,
+                                            show:false
                                         }
                                     ],
                                     yAxis : [
