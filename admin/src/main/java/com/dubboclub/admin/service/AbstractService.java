@@ -6,6 +6,7 @@ import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dubboclub.admin.model.BasicModel;
 import com.dubboclub.admin.sync.RegistryServerSync;
 import com.dubboclub.admin.sync.util.Pair;
+import com.dubboclub.admin.sync.util.Tool;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -85,10 +86,13 @@ public abstract class AbstractService {
                         for(Map.Entry<String,String> filterEntry:filter.entrySet()){
                             String filterValue = filterEntry.getValue();
                             String paramValue = parameters.get(filterEntry.getKey());
-                            if(Constants.ANY_VALUE.equals(paramValue)){
-                                parameters=null;
+                            if(Tool.isItemMatch(paramValue, filterValue)){
+                               continue;
+                            }else{
+                                matched=false;
+                                break;
                             }
-
+/*
                             if(StringUtils.isEmpty(paramValue)&&StringUtils.isEmpty(filterValue)){
                                 continue;
                             }else if(!StringUtils.isEmpty(paramValue)&&!paramValue.equals(filterValue)){
@@ -97,7 +101,7 @@ public abstract class AbstractService {
                             }else if(!StringUtils.isEmpty(filterValue)&&!filterValue.equals(paramValue)) {
                                 matched=false;
                                 break;
-                            }
+                            }*/
                         }
                         if(matched){
                             matchedData.add(entry);
