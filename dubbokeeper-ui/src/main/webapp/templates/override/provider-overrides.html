@@ -1,18 +1,17 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class="icon-cloud"></i> <span>服务<strong class='text-primary'>{{service}}</strong>提供者列表</span>
+        <i class="icon-cog"></i> <span>服务<strong class='text-primary'>{{service}}</strong>动态配置列表</span>
     </div>
     <div class="panel-body">
         <div class="row" style="margin-top: 5px;margin-bottom: 8px;">
             <div class="col-md-7 col-xs-7 col-lg-7 col-sm-7">
-                <a href="javascript:void(0);" ng-click="batchOperation('halfWeight')"><i class="icon-arrow-down" title="批量半权"></i> 批量半权 </a>&nbsp;| &nbsp;
-                <a href="javascript:void(0);" ng-click="batchOperation('doubleWeight')"><i class="icon-arrow-up" title="批量倍权"></i> 批量倍权 </a>&nbsp;| &nbsp;
+                <a href="javascript:void(0);" ng-click="batchOperation('halfWeight')"><i class="icon-plus" title="批量半权"></i> 新建动态配置 </a>&nbsp;| &nbsp;
                 <a href="javascript:void(0);" ng-click="batchOperation('delete')"><i class="glyphicon glyphicon-trash" title="批量删除"></i> 批量删除 </a>&nbsp;| &nbsp;
                 <a href="javascript:void(0);" ng-click="batchOperation('enable')"><i class="glyphicon glyphicon-ok" title="批量启用"></i> 批量启用 </a>&nbsp;| &nbsp;
                 <a href="javascript:void(0);" ng-click="batchOperation('disable')"><i class="glyphicon glyphicon-ban-circle" title="批量禁用"></i> 批量禁用 </a>
             </div>
             <div class="col-md-5 col-xs-5 col-lg-5 col-sm-5">
-                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
@@ -51,13 +50,9 @@
                         <td class="text-left"> <span class='{{provider.enabled?"text-primary":"text-danger"}}'>{{provider.enabled?"已启用":"禁用"}}</span></td>
                         <td class="text-left">
                             <span><a href="#/edit/{{service}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
-                            <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('halfWeight',provider)"><i class="icon-arrow-down" title="半权"></i> </a></span>
-                            <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('copy',provider)"><i class="icon-copy" title="复制"></i> </a></span>
-                            <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('doubleWeight',provider)"><i class="icon-arrow-up" title="倍权"></i> </a> </span>
                             <span ng-show="!provider.enabled">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('enable',provider)"><i class="glyphicon glyphicon-ok" title="启用"></i> </a> </span>
                             <span ng-show="!provider.dynamic">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('delete',provider)"><i class="glyphicon glyphicon-trash"  title="删除"></i> </a> </span>
                             <span ng-show="provider.enabled">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('disable',provider)"><i class="glyphicon glyphicon-ban-circle" title="禁用"></i> </a></span>
-                            <span ng-show="provider.enabled">&nbsp;| &nbsp;<a href="#/override/{{service}}/{{provider.address}}/{{provider.id}}/list"><i class="icon-cogs" title="动态配置"></i> </a></span>
                         </td>
                     </tr>
                     </tbody>
