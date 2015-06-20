@@ -46,12 +46,12 @@ public class SyncUtils {
         if (inf == null) return null;
         StringBuilder buf = new StringBuilder();
         String group = url.getParameter(Constants.GROUP_KEY);
-        if (group != null&&!Constants.ANY_VALUE.equals(group)&& group.length() > 0) {
+        if (group != null&& group.length() > 0) {
             buf.append(group).append("/");
         }
         buf.append(inf);
         String version = url.getParameter(Constants.VERSION_KEY);
-        if (version != null&&!Constants.ANY_VALUE.equals(version) && version.length() > 0) {
+        if (version != null&& version.length() > 0) {
             buf.append(":").append(version);
         }
         return buf.toString();

@@ -3,6 +3,7 @@ package com.dubboclub.admin.service.impl;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.dubbo.common.utils.UrlUtils;
 import com.alibaba.dubbo.rpc.cluster.Configurator;
 import com.dubboclub.admin.model.*;
 import com.dubboclub.admin.model.Override;
@@ -35,13 +36,13 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
             for (Map.Entry<Long, URL> urlEntry : urlMap.entrySet()) {
                 URL url = urlEntry.getValue();
                 if (Constants.ANYHOST_VALUE.equals(url.getHost())
-                        || url.getHost().equals(url.getHost())) {
+                        || providerUrl.getHost().equals(url.getHost())) {
                     String configApplication = url.getParameter(Constants.APPLICATION_KEY, url.getUsername());
                     String currentApplication = StringUtils.isEmpty(provider.getApplication()) ? provider.getUsername() : provider.getApplication();
                     if (configApplication == null || Constants.ANY_VALUE.equals(configApplication)
                             || configApplication.equals(currentApplication)) {
-                        if (url.getPort() == 0 || URL.valueOf(provider.getUrl()).getPort() == url.getPort()) {
-                            if (url.getPath().equals(Tool.getInterface(provider.getService())) && url.getParameter(Constants.GROUP_KEY, Constants.ANY_VALUE).equals(providerUrl.getParameter(Constants.GROUP_KEY, Constants.ANY_VALUE)) && url.getParameter(Constants.VERSION_KEY, Constants.ANY_VALUE).equals(providerUrl.getParameter(Constants.VERSION_KEY, Constants.ANY_VALUE))) {
+                        if ((url.getPort() == 0 || URL.valueOf(provider.getUrl()).getPort() == url.getPort())) {
+                            if (url.getPath().equals(Tool.getInterface(provider.getService())) && Tool.isItemMatch(url.getParameter(Constants.GROUP_KEY),providerUrl.getParameter(Constants.GROUP_KEY))&& Tool.isItemMatch(url.getParameter(Constants.VERSION_KEY), providerUrl.getParameter(Constants.VERSION_KEY))) {
                                 overrides.add(SyncUtils.url2Override(new Pair<Long, URL>(urlEntry.getKey(), url)));
                             }
                         }

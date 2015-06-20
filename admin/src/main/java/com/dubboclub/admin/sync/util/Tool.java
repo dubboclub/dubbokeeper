@@ -77,4 +77,19 @@ public class Tool {
         params.put(Constants.INTERFACE_KEY,getInterface(serviceKey));
         return params;
     }
+
+    /**
+     * 判断 value 是否匹配 pattern，pattern 支持 * 通配符.
+     *
+     * @param pattern pattern
+     * @param value   value
+     * @return  true if match otherwise false
+     */
+    public static boolean isItemMatch(String pattern, String value) {
+        if (pattern == null) {
+            return value == null;
+        } else {
+            return "*".equals(pattern) || pattern.equals(value);
+        }
+    }
 }

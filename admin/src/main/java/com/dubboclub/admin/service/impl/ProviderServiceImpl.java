@@ -123,9 +123,13 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
             override.setParams(Constants.WEIGHT_KEY+"="+params.get(Constants.WEIGHT_KEY));
         }
         override.setParams(Constants.ANYHOST_KEY+"="+params.get(Constants.ANYHOST_KEY));
-        override.setParams(Constants.APPLICATION_KEY+"="+params.get(Constants.APPLICATION_KEY));
-        override.setParams(Constants.GROUP_KEY+"="+ (StringUtils.isEmpty(params.get(Constants.GROUP_KEY))?Constants.ANY_VALUE:params.get(Constants.GROUP_KEY)));
-        override.setParams(Constants.VERSION_KEY+"="+ (StringUtils.isEmpty(params.get(Constants.VERSION_KEY))?Constants.ANY_VALUE:params.get(Constants.VERSION_KEY)));
+        override.setParams(Constants.APPLICATION_KEY+"="+Constants.ANY_VALUE);
+        if(!StringUtils.isEmpty(params.get(Constants.GROUP_KEY))){
+            override.setParams(Constants.GROUP_KEY+"="+params.get(Constants.GROUP_KEY));
+        }
+        if(!StringUtils.isEmpty(params.get(Constants.VERSION_KEY))){
+            override.setParams(Constants.VERSION_KEY+"="+ params.get(Constants.VERSION_KEY));
+        }
         override.setParams("owner="+params.get("owner"));
         return override;
     }
