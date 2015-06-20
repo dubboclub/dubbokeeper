@@ -17,8 +17,9 @@ public class OverrideController {
     private OverrideService overrideService;
 
 
-    @RequestMapping("/provider/{id}/overrides.htm")
-    public void listOverridesByProvider(@RequestParam("id")Long id){
+    @RequestMapping("/provider/{serviceKey}/overrides.htm")
+    public void listOverridesByProvider(@RequestParam("serviceKey")String serviceKey){
+
 
     }
 

@@ -57,7 +57,6 @@
                             <span ng-show="!provider.enabled">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('enable',provider)"><i class="glyphicon glyphicon-ok" title="启用"></i> </a> </span>
                             <span ng-show="!provider.dynamic">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('delete',provider)"><i class="glyphicon glyphicon-trash"  title="删除"></i> </a> </span>
                             <span ng-show="provider.enabled">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('disable',provider)"><i class="glyphicon glyphicon-ban-circle" title="禁用"></i> </a></span>
-                            <span ng-show="provider.enabled">&nbsp;| &nbsp;<a href="#/override/{{service}}/{{provider.address}}/{{provider.id}}/list"><i class="icon-cogs" title="动态配置"></i> </a></span>
                         </td>
                     </tr>
                     </tbody>

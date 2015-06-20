@@ -51,7 +51,7 @@
                     <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                         <div class="form-group">
                             <label>版本：</label>
-                            <span class="label {{!parameters.version?'label-info':(parameters.version=='*'?'label-primary':'label-success')}}">{{!parameters.version?"默认版本":(parameters.version=='*'?'所有版本':parameters.version)}}</span>
+                            <span class="label {{!parameters.version?'label-info':'label-success'}}">{{!parameters.version?"默认版本":parameters.version}}</span>
                         </div>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                     <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                         <div class="form-group">
                             <label>分组：</label>
-                            <span class="label  {{!parameters.group?'label-info':(parameters.group=='*'?'label-primary':'label-success')}}">{{!parameters.group?"默认组":(parameters.group=='*'?'所有组':parameters.group)}}</span>
+                            <span class="label  {{!parameters.group?'label-info':'label-success'}}">{{!parameters.group?"默认组":parameters.group}}</span>
                         </div>
                     </div>
                 </div>

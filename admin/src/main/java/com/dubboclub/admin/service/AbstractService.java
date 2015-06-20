@@ -86,7 +86,7 @@ public abstract class AbstractService {
                         for(Map.Entry<String,String> filterEntry:filter.entrySet()){
                             String filterValue = filterEntry.getValue();
                             String paramValue = parameters.get(filterEntry.getKey());
-                            if(Tool.isItemMatch(paramValue, filterValue)){
+                            if(StringUtils.isEquals(paramValue, filterValue)){
                                continue;
                             }else{
                                 matched=false;

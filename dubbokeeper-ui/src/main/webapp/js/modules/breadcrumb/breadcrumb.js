@@ -25,7 +25,7 @@ breadCrumb.$breadcrumb=function(){
         this.waitingPushCrumbs = [];
     }
     BreadCrumb.prototype.pushCrumb=function(crumbName,tip,key){
-        var crumb = {name:crumbName,url:this.location.path(),tip:tip,key:key};
+        var crumb = {name:crumbName,url:encodeURI(this.location.path()),tip:tip,key:key};
         if(this.inited){
             this._pushCrumb(crumb);
         }else{

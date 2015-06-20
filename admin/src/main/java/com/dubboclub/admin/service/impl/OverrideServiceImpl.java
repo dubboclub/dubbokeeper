@@ -42,7 +42,7 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
                     if (configApplication == null || Constants.ANY_VALUE.equals(configApplication)
                             || configApplication.equals(currentApplication)) {
                         if ((url.getPort() == 0 || URL.valueOf(provider.getUrl()).getPort() == url.getPort())) {
-                            if (url.getPath().equals(Tool.getInterface(provider.getService())) && Tool.isItemMatch(url.getParameter(Constants.GROUP_KEY),providerUrl.getParameter(Constants.GROUP_KEY))&& Tool.isItemMatch(url.getParameter(Constants.VERSION_KEY), providerUrl.getParameter(Constants.VERSION_KEY))) {
+                            if (url.getPath().equals(Tool.getInterface(provider.getService())) && StringUtils.isEquals(url.getParameter(Constants.GROUP_KEY), providerUrl.getParameter(Constants.GROUP_KEY))&& StringUtils.isEquals(url.getParameter(Constants.VERSION_KEY), providerUrl.getParameter(Constants.VERSION_KEY))) {
                                 overrides.add(SyncUtils.url2Override(new Pair<Long, URL>(urlEntry.getKey(), url)));
                             }
                         }
