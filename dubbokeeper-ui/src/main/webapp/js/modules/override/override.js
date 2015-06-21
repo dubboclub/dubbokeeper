@@ -12,6 +12,7 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
     $menu.switchMenu('dynamicConfig');
     $scope.details=[];
     $scope.isEmpty=false;
+    $scope.serviceKey=decodeURIComponent($routeParams.serviceKey);
     $scope.enabledOptios=[{
         val:true,
         text:"已启用"
