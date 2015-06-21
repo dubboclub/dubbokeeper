@@ -13,6 +13,8 @@ public interface OverrideService {
 
     public List<Override> listByProvider(Provider provider);
 
+    public List<Override> listByServiceKey(String serviceKey);
+
     public void update(Override override);
 
     public Override getById(Long id);

@@ -12,6 +12,8 @@ import com.dubboclub.admin.service.OverrideService;
 import com.dubboclub.admin.sync.util.Pair;
 import com.dubboclub.admin.sync.util.SyncUtils;
 import com.dubboclub.admin.sync.util.Tool;
+import com.sun.corba.se.impl.orbutil.closure.Constant;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,6 +52,28 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
                 }
             }
         }
+        return overrides;
+    }
+
+    public List<Override> listByServiceKey(String serviceKey) {
+        List<Override> overrides = new ArrayList<Override>();
+        ConcurrentMap<String, Map<Long, URL>> serviceUrls = getServiceByCategory(Constants.CONFIGURATORS_CATEGORY);
+        if (serviceUrls == null || serviceUrls.size() <= 0) {
+            return overrides;
+        }
+        Collection<Map<Long, URL>> urlMaps = serviceUrls.values();
+        String group = Tool.getGroup(serviceKey);
+        String interfaceName = Tool.getInterface(serviceKey);
+        String version = Tool.getVersion(serviceKey);
+        for (Map<Long, URL> urlMap : urlMaps) {
+            for (Map.Entry<Long, URL> urlEntry : urlMap.entrySet()) {
+                URL url = urlEntry.getValue();
+                if(url.getPath().equals(interfaceName)&&StringUtils.isEquals(group,url.getParameter(Constants.GROUP_KEY))&&StringUtils.isEquals(version,url.getParameter(Constants.VERSION_KEY))){
+                    overrides.add(SyncUtils.url2Override(new Pair<Long, URL>(urlEntry.getKey(), url)));
+                }
+            }
+        }
+
         return overrides;
     }
 
