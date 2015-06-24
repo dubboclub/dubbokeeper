@@ -105,6 +105,16 @@
             <artifactId>spring-webmvc</artifactId>
             <version>${spring_version}</version>
         </dependency>
+	<dependency>
+		<groupId>org.apache.lucene</groupId>
+		<artifactId>lucene-core</artifactId>
+		<version>5.2.1</version>
+	</dependency>
+	<dependency>
+    		<groupId>org.apache.lucene</groupId>
+    		<artifactId>lucene-analyzers-common</artifactId>
+    		<version>5.2.1</version>
+	</dependency>
     </dependencies>
     <reporting>
         <plugins>
