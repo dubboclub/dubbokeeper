@@ -2,8 +2,6 @@ package com.dubboclub.web.model;
 
 import com.alibaba.dubbo.common.Constants;
 import com.dubboclub.admin.model.*;
-import com.dubboclub.admin.model.Override;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by bieber on 2015/6/21.
@@ -16,21 +14,10 @@ public class OverrideInfo {
 
     private boolean enable;
 
-    private Long id;
+    private long id;
 
     private String address;
 
-    private String serviceKey;
-
-
-    public Override toOverride(){
-        Override override = new Override();
-        override.setParams(parameters);
-        override.setEnabled(enable);
-        override.setApplication(StringUtils.isEmpty(application) ? Constants.ANY_VALUE : application);
-        override.setAddress(StringUtils.isEmpty(address) ? Constants.ANYHOST_VALUE : address);
-        return override;
-    }
 
     public static OverrideInfo valueOf(com.dubboclub.admin.model.Override override){
         OverrideInfo overrideInfo = new OverrideInfo();
@@ -39,16 +26,7 @@ public class OverrideInfo {
         overrideInfo.setEnable(override.isEnabled());
         overrideInfo.setId(override.getId());
         overrideInfo.setParameters(override.getParams());
-        overrideInfo.setServiceKey(override.getService());
         return overrideInfo;
-    }
-
-    public String getServiceKey() {
-        return serviceKey;
-    }
-
-    public void setServiceKey(String serviceKey) {
-        this.serviceKey = serviceKey;
     }
 
     public String getApplication() {
@@ -75,12 +53,11 @@ public class OverrideInfo {
         this.enable = enable;
     }
 
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
