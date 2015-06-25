@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class="icon-cogs"></i> <span>服务<strong class='text-primary'>{{serviceKey}}</strong>动态配置列表</span>
+        <i class="icon-cogs"></i> <span>服务<strong class='text-primary'>{{service}}</strong>动态配置列表</span>
     </div>
     <div class="panel-body">
         <div class="container-fluid">
@@ -19,10 +19,8 @@
                 <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                     <div class="row" style="margin-top: 5px;margin-bottom: 8px;">
                         <div class="col-md-7 col-xs-7 col-lg-7 col-sm-7">
-                            <a href="javascript:void(0);"><i class="icon-plus" title="新建动态配置"></i> 新建动态配置 </a>&nbsp;| &nbsp;
-                            <a href="javascript:void(0);"><i class="glyphicon glyphicon-trash" title="批量删除"></i> 批量删除 </a>&nbsp;| &nbsp;
-                            <a href="javascript:void(0);"><i class="glyphicon glyphicon-ok" title="批量启用"></i> 批量启用 </a>&nbsp;| &nbsp;
-                            <a href="javascript:void(0);"><i class="glyphicon glyphicon-ban-circle" title="批量禁用"></i> 批量禁用 </a>
+                            <a href="#/override/{{serviceKey}}/add"><i class="icon-plus" title="新建动态配置"></i> 新建动态配置 </a>&nbsp;| &nbsp;
+                            <a href="javascript:void(0);" ng-click="batchOperation('delete')"><i class="glyphicon glyphicon-trash" title="批量删除"></i> 批量删除 </a>
                         </div>
                         <div class="col-md-5 col-xs-5 col-lg-5 col-sm-5">
                         </div>
@@ -32,7 +30,7 @@
                             <table class="table-striped table-hover table-condensed  table table-condensed">
                                 <thead>
                                 <tr>
-                                    <th class="text-center"><strong><input type="checkbox" ng-click="select()" class="selector" title="全选"/></strong></th>
+                                    <th class="text-center"><strong><input type="checkbox" ng-click="select()"  ng-model="selectAll"   class="selector" title="全选"/></strong></th>
                                     <th class="text-left" title="适用的消费端应用名"><strong>应用名</strong>
                                         <input type="text" class="inner-form-element" ng-model="query.application" ng-change="filter()" placeholder="输入应用名">
                                     </th>
@@ -57,16 +55,16 @@
                                 </tr>
                                 <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'application'"
                                     class="ng-animation">
-                                    <td class="text-center"><input type="checkbox" ng-model="selected" value="{{detail.id}}"></td>
+                                    <td class="text-center"><input type="checkbox" ng-checked="detail.checked" ng-model="detail.checked" ></td>
                                     <td class="text-left">{{detail.application}}</td>
                                     <td class="text-left">{{detail.address}}</td>
-                                    <td class="text-left">{{detail.parameters}}</td>
+                                    <td class="text-left" style="word-break: break-all;word-wrap: break-word;width: 30%;">{{detail.parameters}}</td>
                                     <td class="text-left"> <span class='{{detail.enable?"text-primary":"text-danger"}}'>{{detail.enable?"已启用":"禁用"}}</span></td>
                                     <td class="text-left">
-                                        <span><a href="#/edit/{{service}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
-                                        <span>&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('enable',detail)"><i class="glyphicon glyphicon-ok" title="启用"></i> </a> </span>
+                                        <span><a href="#/override/edit/{{detail.id}}/{{detail.serviceKey | encodeUrl}}"><i class="icon-pencil" title="编辑"></i> </a></span>
                                         <span>&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('delete',detail)"><i class="glyphicon glyphicon-trash"  title="删除"></i> </a> </span>
-                                        <span>&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('disable',detail)"><i class="glyphicon glyphicon-ban-circle" title="禁用"></i> </a></span>
+                                        <span ng-show="!detail.enable">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('enable',detail)"><i class="glyphicon glyphicon-ok" title="启用"></i> </a> </span>
+                                        <span ng-show="detail.enable">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('disable',detail)"><i class="glyphicon glyphicon-ban-circle" title="禁用"></i> </a></span>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -177,5 +175,4 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </div
