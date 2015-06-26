@@ -1,22 +1,22 @@
 var serviceProvider=angular.module("serviceProvider",['ngAnimate','ngRoute','queryFilter','breadCrumb']);
 
 serviceProvider.config(function($routeProvider){
-    $routeProvider.when("/:serviceKey/:service/providers",{
+    $routeProvider.when("/admin/:serviceKey/:service/providers",{
         templateUrl:"templates/apps/service-providers.html",
         controller:"serviceProviders"
-    }).when("/:serviceKey/:service/service-readme",{
+    }).when("/admin/:serviceKey/:service/service-readme",{
         templateUrl:"templates/apps/service-readme.html",
         controller:"serviceReadme"
-    }).when("/edit/:service/:address/:id/provider",{
+    }).when("/admin/edit/:service/:address/:id/provider",{
         templateUrl:"templates/apps/edit-provider.html",
         controller:"editProvider"
-    }).when("/view/:service/:address/:id/detail",{
+    }).when("/admin/view/:service/:address/:id/detail",{
         templateUrl:"templates/apps/view-provider.html",
         controller:"viewProvider"
-    }).when("/operation/:type/:service/:address/:id/provider",{
+    }).when("/admin/operation/:type/:service/:address/:id/provider",{
         templateUrl:"templates/apps/edit-provider.html",
         controller:"operateProvider"
-    }).otherwise("/");
+    });
 });
 serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routeParams,$breadcrumb,$httpWrapper,$menu){
     $menu.switchMenu(menu.APPS);

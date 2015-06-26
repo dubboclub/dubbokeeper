@@ -1,32 +1,32 @@
 var apps=angular.module("apps",['ngAnimate','ngRoute','serviceProvider','queryFilter','breadCrumb']);
 apps.config(function($routeProvider){
-    $routeProvider.when("/apps",{
+    $routeProvider.when("/admin/apps",{
         templateUrl:"templates/apps/application-table.html",
         controller:"appTable"
-    }).when("/:application/nodes",{
+    }).when("/admin/:application/nodes",{
         templateUrl:"templates/apps/node-details.html",
         controller:"nodesDetail"
-    }).when("/:application/consumes",{
+    }).when("/admin/:application/consumes",{
         templateUrl:"templates/apps/consume-details.html",
         controller:"consumeDetail"
-    }).when("/:application/consumers",{
+    }).when("/admin/:application/consumers",{
         templateUrl:"templates/apps/consumer-details.html",
         controller:"consumerDetail"
-    }).when("/:application/provides",{
+    }).when("/admin/:application/provides",{
         templateUrl:"templates/apps/provide-details.html",
         controller:"provideDetail"
-    }).when("/:provider/:consumer/consumes",{
+    }).when("/admin/:provider/:consumer/consumes",{
         templateUrl:"templates/apps/provide-details.html",
         controller:"consumeServiceDetails"
-    }).when("/:service/:id/service-consumers",{
+    }).when("/admin/:service/:id/service-consumers",{
         templateUrl:"templates/apps/application-table.html",
         controller:"consumerAppTable"
-    }).otherwise("/");
+    });
 });
 
 
 apps.controller("consumeServiceDetails",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu(menu.admin.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.provider=$routeParams.provider;
@@ -74,7 +74,7 @@ apps.controller("consumeServiceDetails",function($scope,$httpWrapper,$routeParam
 });
 
 apps.controller("consumerDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu(menu.admin.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -102,7 +102,7 @@ apps.controller("consumerDetail",function($scope,$httpWrapper,$routeParams,$quer
 
 
 apps.controller("nodesDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu(menu.admin.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -134,7 +134,7 @@ apps.controller("nodesDetail",function($scope,$httpWrapper,$routeParams,$queryFi
     }
 });
 apps.controller("consumeDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu(menu.admin.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -159,7 +159,7 @@ apps.controller("consumeDetail",function($scope,$httpWrapper,$routeParams,$query
     }
 });
 apps.controller("provideDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu(menu.admin.APPS);
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -203,7 +203,7 @@ apps.controller("provideDetail",function($scope,$httpWrapper,$routeParams,$query
     }
 });
 apps.controller("consumerAppTable",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu(menu.admin.APPS);
     $scope.applications=[];
     $scope.isEmpty=false;
     $scope.isConsumer=true;
@@ -240,7 +240,7 @@ apps.controller("consumerAppTable",function($scope,$httpWrapper,$routeParams,$qu
 });
 
 apps.controller("appTable",function($scope,$httpWrapper,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu(menu.admin.APPS);
     $scope.applications=[];
     $scope.isEmpty=false;
     $breadcrumb.pushCrumb("应用列表","查看应用列表","appTable");

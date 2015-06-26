@@ -1,7 +1,7 @@
 var statistics = angular.module("statistics",['ngRoute']);
 
 statistics.config(function($routeProvider){
-    $routeProvider.when("/",{
+    $routeProvider.when("/statistics",{
         templateUrl:"templates/statistics/statistics.html",
         controller:"statisticsIndex"
     });

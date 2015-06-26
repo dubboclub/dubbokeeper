@@ -3,6 +3,9 @@ head.directive("headTpl",function(){
 
      return {
         restrict:"E",
-        templateUrl:"templates/head/head.html"
+        templateUrl:"templates/head/head.html",
+        controller:"headController"
     };
+});
+head.controller("headController",function($scope){
 });
