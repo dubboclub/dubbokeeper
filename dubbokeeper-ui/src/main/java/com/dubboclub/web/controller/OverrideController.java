@@ -1,22 +1,24 @@
 package com.dubboclub.web.controller;
 
+import com.alibaba.dubbo.common.Constants;
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dubboclub.admin.model.*;
 import com.dubboclub.admin.model.Override;
 import com.dubboclub.admin.service.OverrideService;
+import com.dubboclub.admin.service.ProviderService;
+import com.dubboclub.web.model.BasicResponse;
 import com.dubboclub.web.model.LoadBalanceOverrideInfo;
 import com.dubboclub.web.model.OverrideInfo;
 import com.dubboclub.web.model.WeightOverrideInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bieber on 2015/6/20.
@@ -28,10 +30,14 @@ public class OverrideController {
     @Autowired
     private OverrideService overrideService;
 
+    @Autowired
+    private ProviderService providerService;
+
+
 
     @RequestMapping("/provider/{serviceKey}/list.htm")
     public @ResponseBody List<OverrideInfo>  listOverridesByProvider(@PathVariable("serviceKey")String serviceKey) throws UnsupportedEncodingException {
-       List<Override> overrideList =  overrideService.listByServiceKey(URLDecoder.decode(serviceKey,"UTF-8"));
+        List<Override> overrideList =  overrideService.listByServiceKey(URLDecoder.decode(serviceKey,"UTF-8"));
         List<OverrideInfo> overrideInfos = new ArrayList<OverrideInfo>();
         for(Override override:overrideList){
             overrideInfos.add(OverrideInfo.valueOf(override));
@@ -64,5 +70,106 @@ public class OverrideController {
             }
         }
         return overrideInfos;
+    }
+
+    @RequestMapping("/provider/{serviceKey}/methods.htm")
+    public @ResponseBody List<String> loadMethodsByServiceKey(@PathVariable("serviceKey")String serviceKey) throws UnsupportedEncodingException {
+        List<Provider> providers = providerService.listProviderByServiceKey(URLDecoder.decode(serviceKey, "UTF-8"));
+        List<String> methods = new ArrayList<String>();
+        if(providers.size()>0){
+            Provider provider = providers.get(0);
+            Map<String,String> params = StringUtils.parseQueryString(provider.getParameters());
+            String methodStr = params.get(Constants.METHODS_KEY);
+            if(!StringUtils.isEmpty(methodStr)){
+                String[] methodArray = Constants.COMMA_SPLIT_PATTERN.split(methodStr);
+                for(String method:methodArray){
+                    methods.add(method);
+                }
+            }
+        }
+        return methods;
+    }
+
+    @RequestMapping("/provider/{serviceKey}/saveOverride.htm")
+    public @ResponseBody BasicResponse saveOverride(@PathVariable("serviceKey")String serviceKey,@RequestBody OverrideInfo overrideInfo) throws UnsupportedEncodingException {
+        Override override = overrideInfo.toOverride();
+        override.setService(URLDecoder.decode(serviceKey, "UTF-8"));
+        BasicResponse response = new BasicResponse();
+        if(overrideInfo.getId()==null){
+            overrideService.add(override);
+        }else{
+            override.setId(overrideInfo.getId());
+            overrideService.update(override);
+        }
+        return response;
+    }
+
+    @RequestMapping("/{id}/{type}.htm")
+    public @ResponseBody BasicResponse operate(@PathVariable("id")Long id,@PathVariable("type")String type){
+        BasicResponse response = new BasicResponse();
+        if("enable".equals(type)){
+            Override override = overrideService.getById(id);
+            override.setEnabled(true);
+            overrideService.update(override);
+        }else if("disable".equals(type)){
+            Override override = overrideService.getById(id);
+            override.setEnabled(false);
+            overrideService.update(override);
+        }else if("delete".equals(type)){
+            overrideService.delete(id);
+        }else{
+            response.setMemo("未知操作！");
+            response.setResult(BasicResponse.FAILED);
+        }
+
+        return response;
+    }
+
+    @RequestMapping("/{ids}/batch/{type}.htm")
+    public @ResponseBody BasicResponse batchOperate(@PathVariable("ids")String ids,@PathVariable("type")String type){
+        BasicResponse response = new BasicResponse();
+        String[] idArray = Constants.COMMA_SPLIT_PATTERN.split(ids);
+        if("enable".equals(type)){
+            for(String id:idArray){
+                Override override = overrideService.getById(Long.parseLong(id));
+                if(override.isEnabled()){
+                    continue;
+                }
+                override.setEnabled(true);
+                overrideService.add(override);
+            }
+            for(String id :idArray){
+                overrideService.delete(Long.parseLong(id));
+            }
+
+        }else if("disable".equals(type)){
+            for(String id:idArray){
+                Override override = overrideService.getById(Long.parseLong(id));
+                if(!override.isEnabled()){
+                    continue;
+                }
+                override.setEnabled(false);
+                overrideService.add(override);
+            }
+            for(String id :idArray){
+                overrideService.delete(Long.parseLong(id));
+            }
+        }else if("delete".equals(type)){
+            for(String id :idArray){
+                overrideService.delete(Long.parseLong(id));
+            }
+        }else{
+            response.setMemo("未知操作！");
+            response.setResult(BasicResponse.FAILED);
+        }
+
+        return response;
+    }
+
+
+    @RequestMapping("/{id}/detail.htm")
+    public @ResponseBody OverrideInfo getOverrideById(@PathVariable("id")Long id){
+        Override override =  overrideService.getById(id);
+        return OverrideInfo.valueOf(override);
     }
 }

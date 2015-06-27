@@ -24,7 +24,7 @@ public class LuceneUtil {
 	 * Encapsulate a process into a Lucene context.
 	 * 
 	 * @param runnable
-	 * @throws IOException
+	 * @throws java.io.IOException
 	 */
 	public static void handle(LuceneRunnable runnable) {
 		// Standard analyzer

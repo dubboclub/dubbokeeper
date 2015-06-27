@@ -1,0 +1,176 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-cogs"></i> <span ng-show="!id">为<strong class='text-primary'>{{serviceKey}}</strong>服务新增动态配置</span><span ng-show="id">编辑<strong class='text-primary'>{{serviceKey}}</strong>服务动态配置</span>
+    </div>
+    <div class="panel-body">
+        <div class="container-fluid">
+            <div class="row form-group  form-group-sm">
+                <label class="col-md-3 col-sm-3 col-xs-3 col-lg-3 control-label">服务名：</label>
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">{{item.serviceKey}}</div>
+                <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5"></div>
+            </div>
+            <div class="row form-group form-group-sm">
+                <label class="col-md-3 col-sm-3 col-xs-3 col-lg-3 control-label">消费者应用名：</label>
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4">
+                    <input  class="form-control"  ng-model="item.application" placeholder="输入应用名">
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5">不填表示对所有消费者生效 </div>
+            </div>
+            <div class="row form-group  form-group-sm">
+                <label class="col-md-3 col-sm-3 col-xs-3 col-lg-3 control-label">给制定服务提供者配置：</label>
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">
+                    <input  class="form-control" ng-model="item.host"  placeholder="输入地址信息">
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5">不填表示对提供者应用的所有机器生效 </div>
+            </div>
+            <div class="row form-group  form-group-sm">
+                <label class="col-md-3 col-sm-3 col-xs-3 col-lg-3 control-label">状态：</label>
+                <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">
+                    <select ng-model="item.enable" class="form-control">
+                        <option value="false" selected>禁用</option>
+                        <option value="true">启用</option>
+                    </select>
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5">
+
+                </div>
+            </div>
+            <hr width="100%"/>
+            <div class="row">
+                <label class="col-md-3 col-sm-3 col-xs-3 col-lg-3 control-label">接口参数设置</label>
+            </div>
+            <div class="row form-group form-group-sm" ng-repeat="param in item.params">
+                <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">参数名：</label>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <input  class="form-control" ng-model="param.key"  placeholder="参数名">
+                </div>
+                <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">参数值：</label>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <input  class="form-control" ng-model="param.value"  placeholder="参数值">
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+                    <div class="row" ng-show="$index==0">
+                        <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                            可选参数:
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-10 col-lg-10">
+                            <span class="label label-info" title="超时时间"> timeout</span> <span class="label label-info" title="(负载均衡规则)支持failover,failfast,failsafe,failback,forking,available,mergeable,broadcast"> loadbalance</span> <span class="label label-info" title="(重试次数，默认2次)">retries</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="$index>0">
+                        <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                            <a href="javascript:void(0);" ng-click="removeParam($index)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group form-group-sm">
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <a href="javascript:void(0);" ng-click="addParam()"> <i class="icon-plus-sign"></i> 新增参数</button></a>
+                </div>
+            </div>
+            <hr width="100%"/>
+            <div class="row">
+                <label class="col-md-3 col-sm-3 col-xs-3 col-lg-3 control-label">方法参数设置</label>
+            </div>
+            <div class="row form-group form-group-sm" ng-repeat="methodParam in item.methodParams">
+                <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">方法名：</label>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <select class="form-control " ng-model="methodParam.method">
+                        <option ng-repeat="o in methods" value="{{o}}" ng-selected="methodParam.method==o">{{o}}</option>
+                    </select>
+                </div>
+                <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">参数名：</label>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <input  class="form-control" ng-model="methodParam.key"  placeholder="参数名">
+                </div>
+                <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">参数值：</label>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <input  class="form-control" ng-model="methodParam.value"  placeholder="参数值">
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <div class="row" ng-show="$index>0">
+                        <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5">
+                            <a href="javascript:void(0);" ng-click="removeMethodParam($index)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group form-group-sm">
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <a href="javascript:void(0);"  ng-click="addMethodParam()"><i class="icon-plus-sign"></i> 新增参数 </a>
+                </div>
+            </div>
+
+            <hr width="100%">
+            <div class="row">
+                <label class="col-md-3 col-sm-3 col-xs-3 col-lg-3 control-label">服务降级</label>
+            </div>
+            <div class="row form-group form-group-sm">
+                <label class="col-md-3 col-sm-3 col-xs-3 col-lg-3 control-label">所有方法的Mock值：</label>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <select ng-model="item.mock.type" class="form-control">
+                        <option value="fail">容错</option>
+                        <option value="force">屏蔽</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <input  class="form-control" ng-model="item.mock.value"  placeholder="Mock返回结果">
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                            示例:
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-10 col-lg-10">
+                            return null/empty/JSON或throw com.foo.BarException
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group form-group-sm" ng-repeat="methodMock in item.methodMocks">
+                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5">
+                            <select class="form-control " ng-model="methodMock.method">
+                                <option ng-repeat="o in methods" value="{{o}}">{{o}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7">
+                            方法的Mock的值为
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <select ng-model="methodMock.type" class="form-control">
+                        <option value="fail">容错</option>
+                        <option value="force">屏蔽</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <input  class="form-control" ng-model="methodMock.value"  placeholder="Mock返回结果">
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5">
+                            <a href="javascript:void(0);" ng-click="removeMethodMock($index)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group form-group-sm">
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <a href="javascript:void(0);" ng-click="addMethodMock()"> <i class="icon-plus-sign"></i> 新增方法 </a>
+                </div>
+            </div>
+
+            <div class="row form-group form-group-sm">
+                <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                    <button type="button" class="btn btn-success btn-sm" ng-click="save()"><i class="icon-ok"></i> 保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
