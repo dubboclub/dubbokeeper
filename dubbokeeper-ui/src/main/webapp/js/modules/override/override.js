@@ -10,7 +10,7 @@ override.config(function($routeProvider){
     }).when("/admin/override/edit/:id/:serviceKey",{
         templateUrl:"templates/override/edit-override.html",
         controller:"editOverride"
-    }).otherwise("/");
+    }).otherwise("/statistics");
 
 });
 
@@ -28,6 +28,12 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
     $scope.item.mock={};
     $scope.item.mock.type="fail";
     $scope.item.methodMocks=[];
+    //$scope.item.timeout;
+    $scope.item.methodTimeouts=[];
+    $scope.item.loadbalance="";
+    $scope.item.methodLoadBalances = [];
+    //$scope.item.retries;
+    $scope.item.methodRetries=[];
     $httpWrapper.post({
         url:"/override/provider/"+encodeURIComponent(encodeURIComponent($scope.serviceKey))+"/methods.htm",
         success:function(data){
@@ -51,42 +57,60 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
                         var methodParams=[];
                         var mock={};
                         var methodMocks=[];
+                        var methodTimeouts=[];
+                        var methodLoadBalances=[];
+                        var methodRetries=[];
                         var hadMock =false;
                         for(var key in paramsObj){
+                            var value = decodeURIComponent(paramsObj[key]);
                             if(key.indexOf(".")>0){
                                 var splits = key.split(".");
                                 if(splits.length==2){
                                     var method = splits[0];
                                     var keyName = splits[1];
                                     if("mock"==keyName){
-                                        var mockVal = decodeURIComponent(paramsObj[key]);
                                         var itemMock={};
                                         if(mockVal.indexOf("fail")==0){
                                             itemMock.type="fail";
-                                            itemMock.value= mockVal.substring(5);
+                                            itemMock.value= value.substring(5);
                                         }else if(mockVal.index("force")==0){
                                             itemMock.type="force";
-                                            itemMock.value= mockVal.substring(6);
+                                            itemMock.value= value.substring(6);
                                         }
                                         itemMock.method=method;
                                         methodMocks.push(itemMock);
                                     }else{
-                                        methodParams.push({method:method,key:keyName,value:decodeURIComponent(paramsObj[key])});
+                                        if(keyName=='timeout'){
+                                            methodTimeouts.push({method:method,value:value});
+                                        }else if(keyName=='loadbalance'){
+                                            methodLoadBalances.push({method:method,value:value});
+                                        }else if(keyName=='retries'){
+                                            methodRetries.push({method:method,value:value});
+                                        }else{
+                                            methodParams.push({method:method,key:keyName,value:value});
+                                        }
                                     }
                                 }
                             }else{
                                 if("mock"==key){
-                                    var mockVal = decodeURIComponent(paramsObj[key]);
                                     if(mockVal.indexOf("fail")==0){
                                         mock.type="fail";
-                                        mock.value=mockVal.substring(5);
+                                        mock.value=value.substring(5);
                                     }else if(mockVal.index("force")==0){
                                         mock.type="force";
-                                        mock.value=mockVal.substring(6);
+                                        mock.value=value.substring(6);
                                     }
                                     hadMock=true;
                                 }else{
-                                    params.push({key:key,value:decodeURIComponent(paramsObj[key])})
+                                    if(key=='timeout'){
+                                        item.timeout=value;
+                                    }else if(key=='loadbalance'){
+                                        item.loadbalance = value;
+                                    }else if(key=='retires'){
+                                        item.retries=value;
+                                    }else{
+                                        params.push({key:key,value:value});
+                                    }
                                 }
                             }
                         }
@@ -100,6 +124,25 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
                         }else{
                             item.methodMocks=$scope.item.methodMocks;
                         }
+
+                        if(methodLoadBalances.length>0){
+                            item.methodLoadBalances=methodLoadBalances;
+                        }else{
+                            item.methodLoadBalances=$scope.item.methodLoadBalances;
+                        }
+
+                        if(methodRetries.length>0){
+                            item.methodRetries=methodRetries;
+                        }else{
+                            item.methodRetries=$scope.item.methodRetries;
+                        }
+                        if(methodTimeouts.length>0){
+                            item.methodTimeouts=methodTimeouts;
+                        }else{
+                            item.methodTimeouts=$scope.item.methodTimeouts;
+                        }
+
+
                         if(params.length>0){
                             item.params=params;
                         }else{
@@ -119,6 +162,42 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
     });
 
 
+    $scope.removeMethodTimeout=function(index){
+        var newParams=[];
+        newParams=newParams.concat($scope.item.methodTimeouts.slice(0,index));
+        newParams=newParams.concat($scope.item.methodTimeouts.slice(index+1));
+        $scope.item.methodTimeouts=newParams;
+    }
+
+    $scope.removeMethodLoadBalance=function(index){
+        var newParams=[];
+        newParams=newParams.concat($scope.item.methodLoadBalances.slice(0,index));
+        newParams=newParams.concat($scope.item.methodLoadBalances.slice(index+1));
+        $scope.item.methodLoadBalances=newParams;
+    }
+    $scope.removeMethodRetry=function(index){
+        var newParams=[];
+        newParams=newParams.concat($scope.item.methodRetries.slice(0,index));
+        newParams=newParams.concat($scope.item.methodRetries.slice(index+1));
+        $scope.item.methodRetries=newParams;
+    }
+
+
+    $scope.switchTab=function(tabName){
+        $scope.currentTab=tabName;
+    }
+    $scope.switchTab('system');
+    $scope.addMethodTimeout=function(){
+        $scope.item.methodTimeouts.push({method:$scope.methods[0],value:""});
+    }
+
+    $scope.addMethodLoadBalance=function(){
+        $scope.item.methodLoadBalances.push({method:$scope.methods[0],value:""});
+    }
+
+    $scope.addMethodRetry=function(){
+        $scope.item.methodRetries.push({method:$scope.methods[0],value:""});
+    }
 
     $scope.addParam=function(){
         $scope.item.params.push({key:"",value:""});
@@ -174,9 +253,41 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
     }
     var generateParams=function(){
         var item = $scope.item;
+        var paramContent="";
+        if(item.loadbalance&&""!=item.loadbalance){
+            paramContent+="loadbalance="+item.loadbalance+"&";
+        }
+
+        if(item.timeout){
+            paramContent+="timeout="+item.timeout+"&";
+        }
+
+        if(undefined!=item.retries&&item.retries!=""){
+            paramContent+="retries="+item.retries+"&";
+        }
+
+        var methodTimeouts = item.methodTimeouts;
+        for(var i=0;i<methodTimeouts.length;i++){
+            if(undefined!=methodTimeouts[i].value&&""!=methodTimeouts[i].value){
+                paramContent+=methodTimeouts[i].method+".timeout="+methodTimeouts[i].value+"&";
+            }
+        }
+        var methodLoadBalances = item.methodLoadBalances;
+        for(var i=0;i<methodLoadBalances.length;i++){
+            if(undefined!=methodLoadBalances[i].value&&""!=methodLoadBalances[i].value){
+                paramContent+=methodLoadBalances[i].method+".loadbalance="+methodLoadBalances[i].value+"&";
+            }
+        }
+        var methodRetries = item.methodRetries;
+        for(var i=0;i<methodRetries.length;i++){
+            if(undefined!=methodRetries[i].value&&""!=methodRetries[i].value){
+                paramContent+=methodRetries[i].method+".retries="+methodRetries[i].value+"&";
+            }
+        }
+
+
         //提取接口参数
         var params=item.params;
-        var paramContent="";
         for(var i=0;i<params.length;i++){
             if(params[i].value&&params[i].value!=""&&params[i].key&&params[i].key!=""){
                 paramContent+=params[i].key+"="+encodeURIComponent(params[i].value)+"&";

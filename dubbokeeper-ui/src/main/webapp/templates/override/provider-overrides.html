@@ -4,7 +4,7 @@
     </div>
     <div class="panel-body">
         <div class="container-fluid">
-            <div class="row">
+            <!--<div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                     <ul class="nav nav-tabs">
                         <li role="presentation" class="{{currentTab=='dynamicConfig'?'active':''}}" ng-click="switchTab('dynamicConfig')"><a href="javascript:;">动态配置</a></li>
@@ -12,14 +12,14 @@
                         <li role="presentation" class="{{currentTab=='loadBalance'?'active':''}}" ng-click="switchTab('loadBalance')"><a href="javascript:;">负载均衡</a></li>
                     </ul>
                 </div>
-            </div>
+            </div>-->
 
 
             <div class="row" ng-show="currentTab=='dynamicConfig'">
                 <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                     <div class="row" style="margin-top: 5px;margin-bottom: 8px;">
                         <div class="col-md-7 col-xs-7 col-lg-7 col-sm-7">
-                            <a href="#/override/{{serviceKey}}/add"><i class="icon-plus" title="新建动态配置"></i> 新建动态配置 </a>&nbsp;| &nbsp;
+                            <a href="#/admin/override/{{serviceKey}}/add"><i class="icon-plus" title="新建动态配置"></i> 新建动态配置 </a>&nbsp;| &nbsp;
                             <a href="javascript:void(0);" ng-click="batchOperation('delete')"><i class="glyphicon glyphicon-trash" title="批量删除"></i> 批量删除 </a>
                         </div>
                         <div class="col-md-5 col-xs-5 col-lg-5 col-sm-5">
@@ -75,7 +75,7 @@
             </div>
 
 
-            <div class="row" ng-show="currentTab=='weightConfig'">
+           <!-- <div class="row" ng-show="currentTab=='weightConfig'">
                 <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                     <div class="row" style="margin-top: 5px;margin-bottom: 8px;">
                         <div class="col-md-7 col-xs-7 col-lg-7 col-sm-7">
@@ -121,9 +121,9 @@
                     </div>
                 </div>
             </div>
+-->
 
-
-
+<!--
             <div class="row" ng-show="currentTab=='loadBalance'">
                 <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                     <div class="row"  style="margin-top: 5px;margin-bottom: 8px;">
@@ -173,6 +173,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div>-->
         </div>
-    </div
+    </div>
+</div>
