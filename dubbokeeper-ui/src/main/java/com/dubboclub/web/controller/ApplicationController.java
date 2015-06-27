@@ -60,7 +60,7 @@ public class ApplicationController {
     @RequestMapping("/{id}/consumer-apps.htm")
     public @ResponseBody List<Application> getConsumerAppByService(@PathVariable("id")long id ){
         Provider provider = providerService.getProviderById(id);
-        List<Consumer> consumers = consumerService.listConsumerByConditions(Constants.INTERFACE_KEY,Tool.getInterface(provider.getService()),Constants.VERSION_KEY,Tool.getVersion(provider.getService()),Constants.GROUP_KEY,Tool.getGroup(provider.getService()));
+        List<Consumer> consumers = consumerService.listConsumerByConditions(Constants.INTERFACE_KEY,Tool.getInterface(provider.getServiceKey()),Constants.VERSION_KEY,Tool.getVersion(provider.getServiceKey()),Constants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()));
         List<Application> applicationList = new ArrayList<Application>();
         List<String> containMark = new ArrayList<String>();
         for(Consumer consumer:consumers){
@@ -103,17 +103,17 @@ public class ApplicationController {
         List<String> containMark = new ArrayList<String>();
         StringBuffer protocolBuffer = new StringBuffer();
         for(Provider provider : providers){
-            if(containMark.contains(provider.getService())){
+            if(containMark.contains(provider.getServiceKey())){
                 continue;
             }
-            containMark.add(provider.getService());
+            containMark.add(provider.getServiceKey());
             AppProvideInfo provideInfo = new AppProvideInfo();
-            provideInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(provider.getService(),"UTF-8"),"UTF-8"));
-            provideInfo.setService(Tool.getInterface(provider.getService()));
+            provideInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(provider.getServiceKey(), "UTF-8"), "UTF-8"));
+            provideInfo.setService(Tool.getInterface(provider.getServiceKey()));
             provideInfo.setVersion(provider.getVersion());
             provideInfo.setGroup(provider.getGroup());
             provideInfo.setId(provider.getId());
-            List<Provider> providerList  = providerService.listProviderByConditions(Constants.INTERFACE_KEY,provideInfo.getService(),Constants.GROUP_KEY,Tool.getGroup(provider.getService()),Constants.VERSION_KEY,Tool.getVersion(provider.getService()));
+            List<Provider> providerList  = providerService.listProviderByConditions(Constants.INTERFACE_KEY,provideInfo.getService(),Constants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()),Constants.VERSION_KEY,Tool.getVersion(provider.getServiceKey()));
             for(Provider item:providerList){
                 URL url = URL.valueOf(item.getUrl());
                 protocolBuffer.append(url.getProtocol()).append(":").append(url.getPort()).append(",");
@@ -140,9 +140,9 @@ public class ApplicationController {
         List<Consumer> consumers =  consumerService.listConsumerByApplication(appName);
         for(Consumer consumer:consumers){
             AppConsumeInfo consumeInfo = new AppConsumeInfo();
-            consumeInfo.setService(Tool.getInterface(consumer.getService()));
-            consumeInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(consumer.getService(),"UTF-8"),"utf-8"));
-            List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumer.getService()),Constants.GROUP_KEY,Tool.getGroup(consumer.getService()),Constants.VERSION_KEY,Tool.getVersion(consumer.getService()));
+            consumeInfo.setService(Tool.getInterface(consumer.getServiceKey()));
+            consumeInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(consumer.getServiceKey(),"UTF-8"),"utf-8"));
+            List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumer.getServiceKey()),Constants.GROUP_KEY,Tool.getGroup(consumer.getServiceKey()),Constants.VERSION_KEY,Tool.getVersion(consumer.getServiceKey()));
             consumeInfo.setGroup(consumer.getGroup());
             consumeInfo.setVersion(consumer.getVersion());
             Map<String,String> params = Tool.convertParametersMap(consumer.getParameters());
@@ -172,12 +172,12 @@ public class ApplicationController {
         List<Provider> providers = providerService.listProviderByApplication(appName);
         List<String> containMark = new ArrayList<String>();
         for(Provider provider:providers){
-            if(containMark.contains(provider.getService())){
+            if(containMark.contains(provider.getServiceKey())){
                 continue;
             }
-            containMark.add(provider.getService());
+            containMark.add(provider.getServiceKey());
             ConsumerInfo consumerInfo = new ConsumerInfo();
-            List<Consumer> consumers = consumerService.listConsumerByService(provider.getService());
+            List<Consumer> consumers = consumerService.listConsumerByService(provider.getServiceKey());
             if(consumers.size()>0){
                 consumerInfo.setParameters(consumers.get(0). getParameters());
                 consumerInfo.setApplication(consumers.get(0).getApplication());
@@ -201,19 +201,19 @@ public class ApplicationController {
         List<String> containMark = new ArrayList<String>();
         StringBuffer protocolBuffer = new StringBuffer();
         for(Consumer consumerEntity:consumers){
-            if(containMark.contains(consumerEntity.getService())){
+            if(containMark.contains(consumerEntity.getServiceKey())){
                 continue;
             }
-            containMark.add(consumerEntity.getService());
-            List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,consumerEntity.getService(),Constants.APPLICATION_KEY,provider);
+            containMark.add(consumerEntity.getServiceKey());
+            List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumerEntity.getServiceKey()),Constants.VERSION_KEY,Tool.getVersion(consumerEntity.getServiceKey()),Constants.GROUP_KEY,Tool.getGroup(consumerEntity.getServiceKey()),Constants.APPLICATION_KEY,provider);
             if(providers.size()>0){
                 AppProvideInfo provideInfo = new AppProvideInfo();
                 Provider providerEntity = providers.get(0);
-                provideInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(providerEntity.getService(), "UTF-8"), "UTF-8"));
-                provideInfo.setService(Tool.getInterface(providerEntity.getService()));
+                provideInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(providerEntity.getServiceKey(), "UTF-8"), "UTF-8"));
+                provideInfo.setService(Tool.getInterface(providerEntity.getServiceKey()));
                 provideInfo.setVersion(providerEntity.getVersion());
                 provideInfo.setGroup(providerEntity.getGroup());
-                List<Provider> providerList = providerService.listProviderByService(providerEntity.getService());
+                List<Provider> providerList = providerService.listProviderByServiceKey(providerEntity.getServiceKey());
                 for(Provider item:providerList){
                     URL url = URL.valueOf(item.getUrl());
                     protocolBuffer.append(url.getProtocol()).append(":").append(url.getPort()).append(",");

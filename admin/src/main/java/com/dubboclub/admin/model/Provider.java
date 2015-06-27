@@ -33,7 +33,7 @@ public class Provider extends BasicModel {
 
     private static final long serialVersionUID = 5981342400350878171L;
 
-    private String service;/* 提供者所提供的服务名称 */
+    private String serviceKey;/* 提供者所提供的服务名称 */
 
     private String url; /* 提供者提供服务的地址 */
 
@@ -92,12 +92,12 @@ public class Provider extends BasicModel {
         this.version = version;
     }
 
-    public String getService() {
-        return service;
+    public String getServiceKey() {
+        return serviceKey;
     }
 
-    public void setService(String service) {
-        this.service = service;
+    public void setServiceKey(String serviceKey) {
+        this.serviceKey = serviceKey;
     }
 
     public String getUrl() {
@@ -207,7 +207,7 @@ public class Provider extends BasicModel {
     }
 
     public URL toUrl() {
-        Map<String, String> serviceName2Map = Tool.serviceName2Map(getService());
+        Map<String, String> serviceName2Map = Tool.serviceName2Map(getServiceKey());
 
 
         String u = getUrl();

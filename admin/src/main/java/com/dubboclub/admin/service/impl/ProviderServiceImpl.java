@@ -11,7 +11,6 @@ import com.dubboclub.admin.service.ProviderService;
 import com.dubboclub.admin.sync.util.Pair;
 import com.dubboclub.admin.sync.util.SyncUtils;
 import com.dubboclub.admin.sync.util.Tool;
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 
 import java.util.*;
 
@@ -117,7 +116,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         Map<String,String> params = Tool.convertParametersMap(provider.getParameters());
         Override override = new Override();
         override.setAddress(provider.getAddress());
-        override.setService(Tool.getInterface(provider.getService()));
+        override.setService(Tool.getInterface(provider.getServiceKey()));
         override.setEnabled(true);
         if(!StringUtils.isEmpty(params.get(Constants.WEIGHT_KEY))){
             override.setParams(Constants.WEIGHT_KEY+"="+params.get(Constants.WEIGHT_KEY));

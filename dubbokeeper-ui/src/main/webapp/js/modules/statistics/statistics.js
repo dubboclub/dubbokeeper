@@ -171,7 +171,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                 myChart.setOption(option);
                                 var ecConfig = require('echarts/config');
                                 myChart.on(ecConfig.EVENT.CLICK, function (params) {
-                                    location.hash="#/"+params.name+"/nodes";
+                                    location.hash="#/admin/"+params.name+"/nodes";
                                 });
                             });
                         });
@@ -248,9 +248,9 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                 var ecConfig = require('echarts/config');
                                 myChart.on(ecConfig.EVENT.CLICK, function (params) {
                                     if(params.seriesIndex==0){
-                                        location.hash="#/"+params.name+"/provides";
+                                        location.hash="#/admin/"+params.name+"/provides";
                                     }else{
-                                        location.hash="#/"+params.name+"/consumes";
+                                        location.hash="#/admin/"+params.name+"/consumes";
                                     }
                                 })
                             });
@@ -364,7 +364,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                     var nodes = option.series[0].nodes;
                                     var currentSeries = option.series[0];
                                     if (data.source != null&& data.target != null) { //点击的是边
-                                        location.hash="#/"+data.target+"/"+data.source+"/consumes";
+                                        location.hash="#/admin/"+data.target+"/"+data.source+"/consumes";
                                     } else { // 点击的是点
                                         console.log("选中了" + data.name + '(' + data.value + ')');
                                         var currentNodes = [data];

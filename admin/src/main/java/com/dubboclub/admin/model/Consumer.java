@@ -32,7 +32,7 @@ public class Consumer extends BasicModel {
 
     private static final long serialVersionUID = -1140894843784583237L;
 
-    private String service; /* 消费者所引用的服务名称 */
+    private String serviceKey; /* 消费者所引用的服务名称 */
 
     private String parameters;
     
@@ -91,12 +91,12 @@ public class Consumer extends BasicModel {
         this.version = version;
     }
 
-    public String getService() {
-        return service;
+    public String getServiceKey() {
+        return serviceKey;
     }
 
-    public void setService(String service) {
-        this.service = service;
+    public void setServiceKey(String serviceKey) {
+        this.serviceKey = serviceKey;
     }
 
     public String getParameters() {
@@ -215,7 +215,7 @@ public class Consumer extends BasicModel {
 	}
 
     public String toString() {
-        return "Consumer [service=" + service + ", parameters=" + parameters + ", result=" + result
+        return "Consumer [serviceKey=" + serviceKey + ", parameters=" + parameters + ", result=" + result
                 + ", address=" + address + ", registry=" + registry + ", application="
                 + application + ", username=" + username + ", statistics=" + statistics
                 + ", collected=" + collected + ", routes=" + routes + ", overrides=" + overrides
@@ -225,7 +225,7 @@ public class Consumer extends BasicModel {
     public URL toUrl() {
         String group = null;
         String version = null;
-        String path = service;
+        String path = serviceKey;
         int i = path.indexOf("/");
         if (i > 0) {
             group = path.substring(0, i);

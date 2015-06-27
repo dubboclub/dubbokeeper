@@ -6,10 +6,7 @@ import com.dubboclub.admin.model.*;
 import com.dubboclub.admin.model.Override;
 import com.dubboclub.admin.service.OverrideService;
 import com.dubboclub.admin.service.ProviderService;
-import com.dubboclub.web.model.BasicResponse;
-import com.dubboclub.web.model.LoadBalanceOverrideInfo;
-import com.dubboclub.web.model.OverrideInfo;
-import com.dubboclub.web.model.WeightOverrideInfo;
+import com.dubboclub.web.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -172,4 +169,21 @@ public class OverrideController {
         Override override =  overrideService.getById(id);
         return OverrideInfo.valueOf(override);
     }
+
+
+    @RequestMapping("/list.htm")
+    public @ResponseBody List<OverrideAbstractInfo> listOverrideInfos(){
+        List<Provider> providers = providerService.listAllProvider();
+        List<OverrideAbstractInfo> overrideAbstractInfos = new ArrayList<OverrideAbstractInfo>();
+        for(Provider provider :providers){
+            OverrideAbstractInfo overrideAbstractInfo = new OverrideAbstractInfo();
+            overrideAbstractInfo.setServiceKey(provider.getServiceKey());
+            overrideAbstractInfo.setApplicationName(provider.getApplication());
+            overrideAbstractInfo.setOverrideCount( overrideService.listByServiceKey(overrideAbstractInfo.getServiceKey()).size());
+            overrideAbstractInfos.add(overrideAbstractInfo);
+        }
+        return overrideAbstractInfos;
+    }
+
+
 }

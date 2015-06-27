@@ -3,7 +3,6 @@ package com.dubboclub.web.controller;
 import com.alibaba.dubbo.common.URL;
 import com.dubboclub.admin.model.Application;
 import com.dubboclub.admin.model.Consumer;
-import com.dubboclub.admin.model.Node;
 import com.dubboclub.admin.model.Provider;
 import com.dubboclub.admin.service.ApplicationService;
 import com.dubboclub.admin.service.ConsumerService;
@@ -86,17 +85,17 @@ public class IndexController {
             List<String> containsProvides = new ArrayList<String>();
             List<Consumer> consumers =  consumerService.listConsumerByApplication(application.getApplication());
             for(Consumer consumer:consumers){
-                if(containsConsumes.contains(consumer.getService())){
+                if(containsConsumes.contains(consumer.getServiceKey())){
                     continue;
                 }
-                containsConsumes.add(consumer.getService());
+                containsConsumes.add(consumer.getServiceKey());
             }
             List<Provider> providers = providerService.listProviderByApplication(application.getApplication());
             for(Provider provider :providers){
-                if(containsConsumes.contains(provider.getService())){
+                if(containsConsumes.contains(provider.getServiceKey())){
                     continue;
                 }
-                containsProvides.add(provider.getService());
+                containsProvides.add(provider.getServiceKey());
             }
             data.add(containsProvides.size());
             data.add(containsConsumes.size());
@@ -131,7 +130,7 @@ public class IndexController {
             for(Consumer consumer:consumers){
                 Map<String,Object> link = new HashMap<String, Object>();
                 link.put("source",application.getApplication());
-                List<Provider> providers = providerService.listProviderByServiceKey(consumer.getService());
+                List<Provider> providers = providerService.listProviderByServiceKey(consumer.getServiceKey());
                 if(providers.size()>0){
                     link.put("target",providers.get(0).getApplication());
                     link.put("weight",1);

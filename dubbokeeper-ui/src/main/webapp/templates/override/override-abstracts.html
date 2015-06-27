@@ -1,0 +1,52 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-cogs"></i> <span>服务动态配置概览</span>
+    </div>
+    <div class="panel-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                            <table class="table-striped table-hover table-condensed  table table-condensed">
+                                <thead>
+                                <tr>
+                                    <th class="text-left"><strong>应用名</strong>
+                                        <select class="inner-form-element" ng-model="query.applicationName" ng-change="filter()">
+                                            <option value="">所有</option>
+                                            <option ng-repeat="app in applications" value="{{app.application}}">{{app.application}}</option>
+                                        </select>
+                                    </th>
+                                    <th class="text-left" ><strong>服务名</strong>
+                                        <input type="text" class="inner-form-element" ng-model="query.serviceKey" ng-change="filter()" placeholder="输入机器IP">
+                                    </th>
+                                    <th class="text-left"><strong>拥有动态配置数量</strong>
+
+                                    </th>
+                                    <th class="text-left"><strong>操作</strong></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-show="!details||details.length<=0">
+                                    <td class="text-center text-warning" colspan="4">{{(isEmpty||!dynaimcConfigs||dynaimcConfigs.length<=0)?"未发现任何数据...":"努力加载中...."}}
+                                    </td>
+                                </tr>
+                                <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'applicationName'"
+                                    class="ng-animation">
+                                    <td class="text-left"><a href="#/admin/{{detail.applicationName}}/provides">{{detail.applicationName}}</a></td>
+                                    <td class="text-left"><a href="#/admin/{{detail.serviceKey | encodeUrl}}/providers"> {{detail.serviceKey}}</a></td>
+                                    <td class="text-left" style="word-break: break-all;word-wrap: break-word;width: 30%;">{{detail.overrideCount}}</td>
+                                    <td class="text-left">
+                                        <span><a href="#/admin/override/{{detail.serviceKey | encodeUrl}}/list"><i class="glyphicon glyphicon-list" title="查看该服务的动态配置明细"></i> </a></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

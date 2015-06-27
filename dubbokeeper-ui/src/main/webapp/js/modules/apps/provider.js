@@ -1,16 +1,16 @@
 var serviceProvider=angular.module("serviceProvider",['ngAnimate','ngRoute','queryFilter','breadCrumb']);
 
 serviceProvider.config(function($routeProvider){
-    $routeProvider.when("/admin/:serviceKey/:service/providers",{
+    $routeProvider.when("/admin/:serviceKey/providers",{
         templateUrl:"templates/apps/service-providers.html",
         controller:"serviceProviders"
-    }).when("/admin/:serviceKey/:service/service-readme",{
+    }).when("/admin/:serviceKey/service-readme",{
         templateUrl:"templates/apps/service-readme.html",
         controller:"serviceReadme"
-    }).when("/admin/edit/:service/:address/:id/provider",{
+    }).when("/admin/edit/:serviceKey/:address/:id/provider",{
         templateUrl:"templates/apps/edit-provider.html",
         controller:"editProvider"
-    }).when("/admin/view/:service/:address/:id/detail",{
+    }).when("/admin/view/:serviceKey/:address/:id/detail",{
         templateUrl:"templates/apps/view-provider.html",
         controller:"viewProvider"
     }).when("/admin/operation/:type/:service/:address/:id/provider",{
@@ -21,8 +21,8 @@ serviceProvider.config(function($routeProvider){
 serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routeParams,$breadcrumb,$httpWrapper,$menu){
     $menu.switchMenu("admin/apps");
     $scope.provider={};
-    $scope.service=$routeParams.service;
-    $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.service+"提供者明细","viewProvider");
+    $scope.serviceKey=decodeURIComponent($routeParams.serviceKey);
+    $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.serviceKey+"提供者明细","viewProvider");
     $httpWrapper.post({url:"provider/"+$routeParams.id+"/provider-detail.htm",success:function(data){
         $scope.provider=data;
         $scope.parameters=queryString2Object(data.parameters);
@@ -33,8 +33,8 @@ serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routePar
 serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb,$dialog,$httpWrapper,$menu){
     $menu.switchMenu("admin/apps");
     $scope.provider={};
-    $scope.service=$routeParams.service;
-    $breadcrumb.pushCrumb($routeParams.address,"编辑服务"+$routeParams.service+"提供者","editProvider");
+    $scope.serviceKey=decodeURIComponent($routeParams.serviceKey);
+    $breadcrumb.pushCrumb($routeParams.address,"编辑服务"+$scope.serviceKey+"提供者","editProvider");
     $scope.enabledOptios=[{
         val:true,
         text:"启用"
@@ -58,7 +58,7 @@ serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$br
                 data:"parameters="+object2QueryString($scope.parameters)+"&id="+$routeParams.id,
                 config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
                 success:function(data){
-                    $dialog.info({content:"成功更新"+$scope.service+"服务信息！"});
+                    $dialog.info({content:"成功更新"+$scope.serviceKey+"服务信息！"});
                 }
             });
         }})
@@ -72,7 +72,7 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
     $menu.switchMenu("admin/apps");
     $scope.details=[];
     $scope.isEmpty=false;
-    $scope.service=$routeParams.service;
+    $scope.serviceKey=decodeURIComponent($routeParams.serviceKey);
     $scope.query={};
     $scope.dynamicOptios=[{
         val:true,
@@ -88,12 +88,10 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
         val:false,
         text:"已禁用"
     }];
-    $breadcrumb.pushCrumb($scope.service,"查看服务"+$scope.service+"提供者列表","serviceProviders");
+    $breadcrumb.pushCrumb($scope.serviceKey,"查看服务"+$scope.serviceKey+"提供者列表","serviceProviders");
     var refreshData = function(){
         $httpWrapper.post({
-            url:"provider/"+$routeParams.service+"/providers.htm",
-            data:"serviceKey="+$routeParams.serviceKey,
-            config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
+            url:"provider/"+encodeURIComponent($routeParams.serviceKey)+"/providers.htm",
             success:function(data){
                 $scope.details=data;
                 if(!data||data.length<=0){
@@ -116,7 +114,7 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
             $httpWrapper.post({
                 url:"provider/"+provider.id+"/"+type+"/operate.htm",
                 success:function(data){
-                    $dialog.info({content:"成功更新"+$scope.service+"服务信息！",callback:refreshData});
+                    $dialog.info({content:"成功更新"+$scope.serviceKey+"服务信息！",callback:refreshData});
                 }
             });
         };
@@ -141,7 +139,7 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
                 data:"ids="+selected.join(","),
                 config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
                 success:function(){
-                    $dialog.info({content:"成功更新"+$scope.service+"服务信息！",callback:refreshData});
+                    $dialog.info({content:"成功更新"+$scope.serviceKey+"服务信息！",callback:refreshData});
                     $("thead tr input[type='checkbox']")[0].checked=false;
                 }
             });
@@ -162,8 +160,8 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
         });
     }
 });
-serviceProvider.controller("serviceReadme",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$httpWrapper){
-    $scope.serviceKey=$routeParams.serviceKey;
+serviceProvider.controller("serviceReadme",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$httpWrapper,$menu){
+    $scope.serviceKey=decodeURIComponent($routeParams.serviceKey);
     $menu.switchMenu("admin/apps");
     $breadcrumb.pushCrumb($scope.serviceKey,"查看服务"+$scope.serviceKey+"调用文档","serviceReadme");
 	(function(){
@@ -171,9 +169,7 @@ serviceProvider.controller("serviceReadme",function($scope,$http,$routeParams,$q
             url:"templates/apps/service-readme.md",
             success:function(mdText){
             	$httpWrapper.post({
-            		url:"provider/"+$routeParams.service+"/service-readme.htm",
-                    data:"serviceKey="+$routeParams.serviceKey,
-                    config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
+            		url:"provider/"+encodeURIComponent($routeParams.serviceKey)+"/service-readme.htm",
                     success:function(data){
                     	var converter = new showdown.Converter({extensions: ['table']});
                     	if(data.providers.length > 0){

@@ -127,26 +127,26 @@ public class Override extends BasicModel{
     
     public boolean isUniqueMatch(Provider provider) {
     	return isEnabled() && getParams() != null && getParams().length() > 0
-    			&& provider.getService().equals(getService())
+    			&& provider.getServiceKey().equals(getService())
     			&& provider.getAddress().equals(getAddress());
     }
     
     public boolean isMatch(Provider provider) {
     	return isEnabled() && getParams() != null && getParams().length() > 0
-    			&& provider.getService().equals(getService())
+    			&& provider.getServiceKey().equals(getService())
     			&& (getAddress() == null || getAddress().length() == 0 || getAddress().equals(Constants.ANY_VALUE) || getAddress().equals(Constants.ANYHOST_VALUE) || getAddress().equals(provider.getAddress()))
     			&& (getApplication() == null || getApplication().length() == 0 || getApplication().equals(Constants.ANY_VALUE) || getApplication().equals(provider.getApplication()));
     }
 
     public boolean isUniqueMatch(Consumer consumer) {
     	return isEnabled() && getParams() != null && getParams().length() > 0
-    			&& consumer.getService().equals(getService())
+    			&& consumer.getServiceKey().equals(getService())
     			&& consumer.getAddress().equals(getAddress());
     }
     
     public boolean isMatch(Consumer consumer) {
     	return isEnabled() && getParams() != null && getParams().length() > 0
-    			&& consumer.getService().equals(getService())
+    			&& consumer.getServiceKey().equals(getService())
     			&& (getAddress() == null || getAddress().length() == 0 || getAddress().equals(Constants.ANY_VALUE) || getAddress().equals(Constants.ANYHOST_VALUE) || getAddress().equals(consumer.getAddress()))
     			&& (getApplication() == null || getApplication().length() == 0 || getApplication().equals(Constants.ANY_VALUE) || getApplication().equals(consumer.getApplication()));
     }

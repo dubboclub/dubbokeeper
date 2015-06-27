@@ -10,8 +10,44 @@ override.config(function($routeProvider){
     }).when("/admin/override/edit/:id/:serviceKey",{
         templateUrl:"templates/override/edit-override.html",
         controller:"editOverride"
+    }).when("/admin/override/list",{
+        templateUrl:"templates/override/override-abstracts.html",
+        controller:"listOverrides"
     }).otherwise("/statistics");
 
+});
+
+
+
+override.controller('listOverrides',function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu('admin/dynamicConfig');
+    $breadcrumb.pushCrumb("动态配置概要列表","动态配置概要列表","listOverrides");
+    $scope.details=[];
+    $scope.isEmpty=false;
+    $httpWrapper.post({
+        url:"override/list.htm",
+        success:function(data){
+            $scope.details=data;
+            if(!data||data.length<=0){
+                $scope.isEmpty=true;
+            }
+            $scope.originData=data;
+        }
+    });
+    $httpWrapper.post({
+        url:"app/list.htm",
+        success:function(data){
+            $scope.applications=data;
+        }
+    });
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.details=$queryFilter($scope.originData,$scope.query);
+    }
 });
 
 override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog){
@@ -230,7 +266,7 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
     $scope.save=function(){
         var params = generateParams();
         if(params==""){
-            $dialog.alert({content:"请输入配置的参数！"});
+            $dialog.alert({content:"请输入配置的参数！", size:"small"});
             return ;
         }
         var item={};
@@ -245,7 +281,8 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
             success:function(data){
                 if(data.result==ajaxResultStatu.SUCCESS){
                     $dialog.info({
-                        content:"配置保存成功！"
+                        content:"配置保存成功！",
+                        size:"small"
                     });
                 }
             }
@@ -416,6 +453,7 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
     $scope.operation=function(type,item){
         $dialog.confirm({
             content:"确认进行该操作？",
+            size:"small",
             callback:function(){
                 $httpWrapper.post({
                     url:"/override/"+item.id+"/"+type+".htm",
@@ -423,6 +461,7 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
                         if(data.result==ajaxResultStatu.SUCCESS){
                             $dialog.info({
                                 content:"成功更新该配置！",
+                                size:"small",
                                 callback:function(){
                                     currentQuery();
                                 }
@@ -445,6 +484,7 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
         if(selected.length>0){
             $dialog.confirm({
                 content:"确定进行此操作？",
+                size:"small",
                 callback:function(){
                     $httpWrapper.post({
                         url:"/override/"+selected.join(",")+"/batch/"+type+".htm" ,
@@ -452,6 +492,7 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
                             if(data.result==ajaxResultStatu.SUCCESS){
                                 $dialog.info({
                                     content:"成功更新选中配置！",
+                                    size:"small",
                                     callback:function(){
                                         currentQuery();
                                     }
@@ -463,7 +504,8 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
             });
         }else{
             $dialog.alert({
-                content:"请选择操作项！"
+                content:"请选择操作项！",
+                size:"small"
             });
         }
 

@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class="icon-cloud"></i> <span>服务<strong class='text-primary'>{{service}}</strong>提供者列表</span>
+        <i class="icon-cloud"></i> <span>服务<strong class='text-primary'>{{serviceKey}}</strong>提供者列表</span>
     </div>
     <div class="panel-body">
         <div class="row" style="margin-top: 5px;margin-bottom: 8px;">
@@ -45,12 +45,12 @@
                     <tr ng-show="details&&details.length>0" ng-repeat="provider in details | orderBy : 'address' | filter:search"
                         class="ng-animation">
                         <td class="text-center"><input type="checkbox" ng-model="selected" value="{{provider.id}}"></td>
-                        <td class="text-left"><a href="#/admin/view/{{service}}/{{provider.address}}/{{provider.id}}/detail">{{provider.address}}</a></td>
+                        <td class="text-left"><a href="#/admin/view/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/detail">{{provider.address}}</a></td>
                         <td class="text-left">{{provider.weight}}</td>
                         <td class="text-left"> <span class='{{provider.dynamic?"text-primary":"text-danger"}}'>{{provider.dynamic?"动态":"静态"}}</span></td>
                         <td class="text-left"> <span class='{{provider.enabled?"text-primary":"text-danger"}}'>{{provider.enabled?"已启用":"禁用"}}</span></td>
                         <td class="text-left">
-                            <span><a href="#/admin/edit/{{service}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
+                            <span><a href="#/admin/edit/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('halfWeight',provider)"><i class="icon-arrow-down" title="半权"></i> </a></span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('copy',provider)"><i class="icon-copy" title="复制"></i> </a></span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('doubleWeight',provider)"><i class="icon-arrow-up" title="倍权"></i> </a> </span>

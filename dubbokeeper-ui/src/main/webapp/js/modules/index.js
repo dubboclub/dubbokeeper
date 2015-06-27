@@ -22,7 +22,7 @@ dubbokeeper.barDataset=[{
     },{
         showName:"动态配置",
         identify:"admin/dynamicConfig",
-        href:"/admin/apps",
+        href:"/admin/override/list",
         icon:"icon-cogs"
     },{
         showName:"路由规则",

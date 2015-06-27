@@ -93,7 +93,7 @@ public class SyncUtils {
 
         Provider p = new Provider();
         p.setId(id);
-        p.setService(generateServiceKey(url));
+        p.setServiceKey(generateServiceKey(url));
         p.setAddress(url.getAddress());
         p.setApplication(url.getParameter(Constants.APPLICATION_KEY));
         p.setUrl(url.toIdentityString());
@@ -133,7 +133,7 @@ public class SyncUtils {
 
         Consumer c = new Consumer();
         c.setId(id);
-        c.setService(generateServiceKey(url));
+        c.setServiceKey(generateServiceKey(url));
         c.setAddress(url.getHost());
         c.setApplication(url.getParameter(Constants.APPLICATION_KEY));
         c.setParameters(url.toParameterString());

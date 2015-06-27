@@ -3,7 +3,6 @@ package com.dubboclub.admin.service.impl;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.StringUtils;
-import com.alibaba.dubbo.common.utils.UrlUtils;
 import com.alibaba.dubbo.rpc.cluster.Configurator;
 import com.dubboclub.admin.model.*;
 import com.dubboclub.admin.model.Override;
@@ -12,7 +11,6 @@ import com.dubboclub.admin.service.OverrideService;
 import com.dubboclub.admin.sync.util.Pair;
 import com.dubboclub.admin.sync.util.SyncUtils;
 import com.dubboclub.admin.sync.util.Tool;
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +42,7 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
                     if (configApplication == null || Constants.ANY_VALUE.equals(configApplication)
                             || configApplication.equals(currentApplication)) {
                         if ((url.getPort() == 0 || URL.valueOf(provider.getUrl()).getPort() == url.getPort())) {
-                            if (url.getPath().equals(Tool.getInterface(provider.getService())) && StringUtils.isEquals(url.getParameter(Constants.GROUP_KEY), providerUrl.getParameter(Constants.GROUP_KEY))&& StringUtils.isEquals(url.getParameter(Constants.VERSION_KEY), providerUrl.getParameter(Constants.VERSION_KEY))) {
+                            if (url.getPath().equals(Tool.getInterface(provider.getServiceKey())) && StringUtils.isEquals(url.getParameter(Constants.GROUP_KEY), providerUrl.getParameter(Constants.GROUP_KEY))&& StringUtils.isEquals(url.getParameter(Constants.VERSION_KEY), providerUrl.getParameter(Constants.VERSION_KEY))) {
                                 overrides.add(SyncUtils.url2Override(new Pair<Long, URL>(urlEntry.getKey(), url)));
                             }
                         }
