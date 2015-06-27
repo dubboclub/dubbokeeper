@@ -30,6 +30,7 @@
 <%@include file="common/scripts.jsp"%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/override/override.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/statistics/statistics.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/monitor/monitor.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/http.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/dialog.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/breadcrumb/breadcrumb.js"></script>

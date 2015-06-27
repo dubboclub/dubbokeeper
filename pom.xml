@@ -18,6 +18,7 @@
         <dubbo.version>2.5.3</dubbo.version>
         <spring_version>4.1.6.RELEASE</spring_version>
         <servlet_version>2.5</servlet_version>
+	    <lucene_version>4.2.0</lucene_version>
         <findbugs.excludeFilterFile>findbugs-exclude.xml</findbugs.excludeFilterFile>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -108,13 +109,18 @@
 	<dependency>
 		<groupId>org.apache.lucene</groupId>
 		<artifactId>lucene-core</artifactId>
-		<version>5.2.1</version>
+		<version>${lucene_version}</version>
 	</dependency>
 	<dependency>
     		<groupId>org.apache.lucene</groupId>
     		<artifactId>lucene-analyzers-common</artifactId>
-    		<version>5.2.1</version>
+    		<version>${lucene_version}</version>
 	</dependency>
+        <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-grouping</artifactId>
+                <version>${lucene_version}</version>
+        </dependency>
     </dependencies>
     <reporting>
         <plugins>

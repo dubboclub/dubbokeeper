@@ -24,11 +24,11 @@
             </tr>
             <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'application' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>
-                <td class="text-left"><a href="#/{{detail.application}}/nodes" style="text-underline: none;"
+                <td class="text-left"><a href="#/admin/{{detail.application}}/nodes" style="text-underline: none;"
                                            title="{{detail.application | uppercase}}应用部署在哪些节点上">{{detail.application}}</a></td>
                 <td class="text-left">{{detail.username}}</td>
                 <td class="text-center">
-                    <a href="#/{{application}}/{{detail.application}}/consumes" title="该应用的订阅服务列表">
+                    <a href="#/admin/{{application}}/{{detail.application}}/consumes" title="该应用的订阅服务列表">
                         <i class="glyphicon glyphicon-pushpin"></i>
                     </a>
                 </td>

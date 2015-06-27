@@ -1,8 +1,12 @@
 var menu=angular.module("menu",['ngCookies']);
-menu.HOME="home";
-menu.APPS="apps";
-menu.DYNAMIC_CONFIG="dynamicConfig";
-menu.ROUTER="routeConfig";
+menu.statistics = {};
+menu.statistics.HOME="statistics/home";
+menu.admin = {};
+menu.admin.APPS="admin/apps";
+menu.admin.DYNAMIC_CONFIG="admin/dynamicConfig";
+menu.admin.ROUTER="admin/routeConfig";
+menu.monitor = {};
+menu.monitor.elapsed="monitor/elapsed";
 menu.directive("menuTpl",function(){
     return {
         restrict:"E",
@@ -11,7 +15,7 @@ menu.directive("menuTpl",function(){
     };
 });
 menu.controller("menuController",function($scope,$cookieStore,$menu){
-    $scope.currentMenu=menu.HOME;
+    $scope.currentMenu=menu.statistics.HOME;
     $scope.switchMenu=function(m){
         $scope.currentMenu=m;
     }
