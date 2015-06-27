@@ -1,18 +1,19 @@
-<div class="list-group" id="dashboard">
-</div>
-<div class="list-group" id="admin">
-    <a href="#/admin/apps" class="list-group-item {{currentMenu=='admin/apps'?'active':''}}" ng-click="switchMenu('admin/apps')">
-       <i class="icon-cloud"></i> 应用列表
+<!--<div class="list-group" id="dashboard">
+</div>-->
+<div class="list-group">
+    <a ng-repeat="menu in menus" href="#{{menu.href}}" class="list-group-item {{currentMenu==menu.identify?'active':''}}" ng-click="switchMenu(menu.identify)">
+       <i class="{{menu.icon}}"></i> {{menu.showName}}
     </a>
-    <a href="#/admin/dynamicConfig" class="list-group-item {{currentMenu=='admin/dynamicConfig'?'active':''}}"  ng-click="switchMenu('admin/dynamicConfig')">
+  <!--  <a href="#/admin/dynamicConfig" class="list-group-item {{currentMenu=='admin/dynamicConfig'?'active':''}}"  ng-click="switchMenu('admin/dynamicConfig')">
         <i class="icon-cogs"></i> 动态配置
     </a>
     <a href="#/" class="list-group-item {{currentMenu=='admin/routeConfig'?'active':''}}"  ng-click="switchMenu('admin/home')">
         <i class="icon-random"></i> 路由规则
-    </a>
+    </a>-->
 </div>
-<div class="list-group" id="monitor">
+<!--
+<div class="list-group" id="monitor" ng-show="currentBar=='monitor'">
     <a href="#/monitor/elapsed" class="list-group-item  {{currentMenu=='monitor/elapsed'?'active':''}}"  ng-click="switchMenu('monitor/elapsed')">
         <i class="glyphicon glyphicon-home"></i> 耗时
     </a>
-</div>
+</div>-->

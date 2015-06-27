@@ -19,7 +19,7 @@ serviceProvider.config(function($routeProvider){
     });
 });
 serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routeParams,$breadcrumb,$httpWrapper,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.provider={};
     $scope.service=$routeParams.service;
     $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.service+"提供者明细","viewProvider");
@@ -31,7 +31,7 @@ serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routePar
     }})
 });
 serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$breadcrumb,$dialog,$httpWrapper,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.provider={};
     $scope.service=$routeParams.service;
     $breadcrumb.pushCrumb($routeParams.address,"编辑服务"+$routeParams.service+"提供者","editProvider");
@@ -69,7 +69,7 @@ serviceProvider.controller("editProvider",function($scope,$http,$routeParams,$br
 
 
 serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$httpWrapper,$menu){
-    $menu.switchMenu(menu.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.service=$routeParams.service;
@@ -164,6 +164,7 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
 });
 serviceProvider.controller("serviceReadme",function($scope,$http,$routeParams,$queryFilter,$breadcrumb,$dialog,$httpWrapper){
     $scope.serviceKey=$routeParams.serviceKey;
+    $menu.switchMenu("admin/apps");
     $breadcrumb.pushCrumb($scope.serviceKey,"查看服务"+$scope.serviceKey+"调用文档","serviceReadme");
 	(function(){
         $httpWrapper.post({

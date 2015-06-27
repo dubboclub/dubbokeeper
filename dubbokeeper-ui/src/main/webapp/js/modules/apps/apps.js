@@ -26,7 +26,8 @@ apps.config(function($routeProvider){
 
 
 apps.controller("consumeServiceDetails",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.admin.APPS);
+
+    $menu.switchMenu("admin/apps");
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.provider=$routeParams.provider;
@@ -74,7 +75,7 @@ apps.controller("consumeServiceDetails",function($scope,$httpWrapper,$routeParam
 });
 
 apps.controller("consumerDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.admin.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -102,7 +103,7 @@ apps.controller("consumerDetail",function($scope,$httpWrapper,$routeParams,$quer
 
 
 apps.controller("nodesDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.admin.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -134,7 +135,7 @@ apps.controller("nodesDetail",function($scope,$httpWrapper,$routeParams,$queryFi
     }
 });
 apps.controller("consumeDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.admin.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -159,7 +160,7 @@ apps.controller("consumeDetail",function($scope,$httpWrapper,$routeParams,$query
     }
 });
 apps.controller("provideDetail",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.admin.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
@@ -203,7 +204,7 @@ apps.controller("provideDetail",function($scope,$httpWrapper,$routeParams,$query
     }
 });
 apps.controller("consumerAppTable",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.admin.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.applications=[];
     $scope.isEmpty=false;
     $scope.isConsumer=true;
@@ -240,10 +241,10 @@ apps.controller("consumerAppTable",function($scope,$httpWrapper,$routeParams,$qu
 });
 
 apps.controller("appTable",function($scope,$httpWrapper,$queryFilter,$breadcrumb,$menu){
-    $menu.switchMenu(menu.admin.APPS);
+    $menu.switchMenu("admin/apps");
     $scope.applications=[];
     $scope.isEmpty=false;
-    $breadcrumb.pushCrumb("应用列表","查看应用列表","appTable");
+    $breadcrumb.pushCrumb("应用列表","查看应用列表","admin/apps");
     $httpWrapper.post({
         url:"app/list.htm",
         success:function(data){

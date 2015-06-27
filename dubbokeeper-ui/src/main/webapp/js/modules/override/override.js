@@ -1,13 +1,13 @@
 var override = angular.module('override',['ngAnimate','ngRoute','serviceProvider','queryFilter','breadCrumb','dialog','dubbokeeperFilters']);
 
 override.config(function($routeProvider){
-    $routeProvider.when("/override/:serviceKey/list",{
+    $routeProvider.when("/admin/override/:serviceKey/list",{
         templateUrl:"templates/override/provider-overrides.html",
         controller:"providerOverrides"
-    }).when("/override/:serviceKey/add",{
+    }).when("/admin/override/:serviceKey/add",{
         templateUrl:"templates/override/edit-override.html",
         controller:"editOverride"
-    }).when("/override/edit/:id/:serviceKey",{
+    }).when("/admin/override/edit/:id/:serviceKey",{
         templateUrl:"templates/override/edit-override.html",
         controller:"editOverride"
     }).otherwise("/");
@@ -15,7 +15,7 @@ override.config(function($routeProvider){
 });
 
 override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog){
-    $menu.switchMenu('dynamicConfig');
+    $menu.switchMenu('admin/dynamicConfig');
     $breadcrumb.pushCrumb('为'+decodeURIComponent($routeParams.serviceKey)+"新建动态配置",'为'+decodeURIComponent($routeParams.serviceKey)+"新建动态配置","addOverride");
     $scope.serviceKey=decodeURIComponent($routeParams.serviceKey);
     $scope.item={};
@@ -211,7 +211,7 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
 
 
 override.controller('providerOverrides',function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog){
-    $menu.switchMenu('dynamicConfig');
+    $menu.switchMenu('admin/dynamicConfig');
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.service=decodeURIComponent($routeParams.serviceKey);

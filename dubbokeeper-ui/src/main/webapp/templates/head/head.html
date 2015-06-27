@@ -8,12 +8,8 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#/statistics"><i class="icon-dashboard"></i> Dashboard</a></li>
-                <li><a href="#/admin/apps"><i class="icon-dashboard"></i> Admin</a></li>
-                <li><a href="#/monitor/elapsed"><i class="icon-bar-chart"></i> Monitor</a></li>
-                <li><a href="#/"><i class="icon-bookmark"></i> AboutUs</a></li>
+                <li ng-repeat="bar in bars" class="{{currentBar==bar.barIdentify?'active':''}}"><a href="#{{bar.barHref}}" ng-click="switchBar(bar.barIdentify)"><i class="{{bar.barIconClass}}"></i> {{bar.barShowName}}</a></li>
             </ul>
         </div>
-        <!--/.nav-collapse -->
     </div>
 </div>

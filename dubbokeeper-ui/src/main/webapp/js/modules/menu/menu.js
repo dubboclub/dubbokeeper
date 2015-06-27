@@ -16,6 +16,7 @@ menu.directive("menuTpl",function(){
 });
 menu.controller("menuController",function($scope,$cookieStore,$menu){
     $scope.currentMenu=menu.statistics.HOME;
+    $scope.currentBar='dashboard';
     $scope.switchMenu=function(m){
         $scope.currentMenu=m;
     }
@@ -29,18 +30,34 @@ menu.$menu= function () {
         this.inited=true;
         this.scope = $scope;
         if(this.lastMenu){
-            this.scope.currentMenu=this.lastMenu;
+           this._switch(this.lastMenu);
         }
+    }
+    dubboKeeperMenu.prototype.refreshMenus=function(menus){
+        this.scope.menus=menus;
     }
     dubboKeeperMenu.prototype.switchMenu=function(menu){
         if(this.inited){
-            this.scope.currentMenu=menu;
+            this._switch(menu);
         }else{
             this.lastMenu=menu;
         }
     }
-    this.$get = function () {
-        return new dubboKeeperMenu();
-    };
+    dubboKeeperMenu.prototype._switch=function(menu){
+        if(this.scope.currentMenu==menu){
+            return ;
+        }
+        this.scope.currentMenu=menu;
+        var bar = this.dkContext.getBarByMenuIdentify(menu);
+        if(bar){
+            this.barProvider.switchBar(bar.barIdentify);
+        }
+    }
+    var menuProvider = new dubboKeeperMenu();
+    this.$get = ["$bars","$dkContext",function ($bar,$dkContext) {
+        menuProvider.barProvider = $bar;
+        menuProvider.dkContext=$dkContext;
+        return menuProvider;
+    }];
 }
 menu.provider("$menu",menu.$menu);

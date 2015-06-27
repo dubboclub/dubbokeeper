@@ -78,8 +78,8 @@ monitor._generateElapsedOption = function(data){
 	return option;
 }
 monitor.controller("monitorElapsed",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
-    $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.service+"的执行耗时","monitorElapsed");
-    $menu.switchMenu(menu.monitor.elapsed);
+    $menu.switchMenu("monitor/elapsed");
+    $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.service+"的执行耗时","monitor/elapsed");
     var dataUrl = "monitor/" + $routeParams.service + "/monitors.htm";
     var stop;
     var lastTimestamp;

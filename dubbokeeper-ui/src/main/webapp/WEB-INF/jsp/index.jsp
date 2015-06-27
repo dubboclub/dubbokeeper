@@ -7,20 +7,19 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="common/header.jsp"%>
-<div class="container-fluid ">
+<div class="container-fluid " ng-controller="dubbokeeperCtrl">
     <div class="row">
-        <div class="col-md-2 col-lg-2 col-xs-2">
+        <div class="col-md-2 col-lg-2 col-xs-2" ng-show="needMenus">
             <div class="row">
                 <div class="col-md-12 col-lg-12 col-xs-12">
                     <menu-tpl></menu-tpl>
                 </div>
             </div>
         </div>
-        <div class="col-md-10 col-lg-10 col-xs-10 app-container">
-            <breadcrumb-tpl></breadcrumb-tpl>
+        <div class="{{needMenus?'col-md-10 col-lg-10 col-xs-10':'col-md-12 col-lg-12 col-xs-12'}} app-container">
+            <breadcrumb-tpl ng-show="needMenus"></breadcrumb-tpl>
             <div class="row">
                 <div class="col-md-12 col-lg-12 col-xs-12" ng-view>
-                    <app-list></app-list>
                 </div>
             </div>
         </div>
@@ -31,6 +30,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/override/override.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/statistics/statistics.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/monitor/monitor.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/filter.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/basic.module.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/http.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/dialog.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/breadcrumb/breadcrumb.js"></script>

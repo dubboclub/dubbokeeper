@@ -14,8 +14,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/filter.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/util.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/libs-mapping.js"></script>
-<%--
-<script type="text/javascript" src="${pageContext.request.contextPath}/flat-ui/js/flat-ui.min.js"></script>--%>
+
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/bootstrap.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/showdown.min.js"></script>
