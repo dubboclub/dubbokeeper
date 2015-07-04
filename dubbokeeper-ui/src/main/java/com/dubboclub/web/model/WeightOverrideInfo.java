@@ -34,7 +34,9 @@ public class WeightOverrideInfo extends  OverrideInfo{
         overrideInfo.setEnable(override.isEnabled());
         overrideInfo.setId(override.getId());
         overrideInfo.setParameters(override.getParams());
-        overrideInfo.setWeight(Integer.parseInt(weight));
+        if(!org.apache.commons.lang.StringUtils.isEmpty(weight)){
+            overrideInfo.setWeight(Integer.parseInt(weight));
+        }
         return overrideInfo;
     }
 }
