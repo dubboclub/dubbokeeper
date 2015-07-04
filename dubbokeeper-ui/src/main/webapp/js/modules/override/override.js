@@ -63,6 +63,8 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
     $scope.item.enable="false";
     $scope.item.mock={};
     $scope.item.mock.type="fail";
+    $scope.item.threadpool="";
+    $scope.item.dispatcher="";
     $scope.item.methodMocks=[];
     //$scope.item.timeout;
     $scope.item.methodTimeouts=[];
@@ -100,6 +102,10 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
                         for(var key in paramsObj){
                             var value = decodeURIComponent(paramsObj[key]);
                             if(key.indexOf(".")>0){
+                                if(key=='heartbeat.timeout'){
+                                    item.heartbeatTimeout=parseInt(value);
+                                    continue;
+                                }
                                 var splits = key.split(".");
                                 if(splits.length==2){
                                     var method = splits[0];
@@ -117,11 +123,11 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
                                         methodMocks.push(itemMock);
                                     }else{
                                         if(keyName=='timeout'){
-                                            methodTimeouts.push({method:method,value:value});
+                                            methodTimeouts.push({method:method,value:parseInt(value)});
                                         }else if(keyName=='loadbalance'){
                                             methodLoadBalances.push({method:method,value:value});
                                         }else if(keyName=='retries'){
-                                            methodRetries.push({method:method,value:value});
+                                            methodRetries.push({method:method,value:parseInt(value)});
                                         }else{
                                             methodParams.push({method:method,key:keyName,value:value});
                                         }
@@ -139,11 +145,21 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
                                     hadMock=true;
                                 }else{
                                     if(key=='timeout'){
-                                        item.timeout=value;
+                                        item.timeout=parseInt(value);
                                     }else if(key=='loadbalance'){
                                         item.loadbalance = value;
                                     }else if(key=='retires'){
-                                        item.retries=value;
+                                        item.retries=parseInt(value);
+                                    }else if(key=='heartbeat'){
+                                        item.heartbeat=parseInt(value);
+                                    }else if(key=='accepts'){
+                                        item.accepts=parseInt(value);
+                                    }else if(key=='threads'){
+                                        item.threads=parseInt(value);
+                                    }else if(key=='connections'){
+                                        item.connections=parseInt(value);
+                                    }else if(key=='retries'){
+                                        item.retries=parseInt(value);
                                     }else{
                                         params.push({key:key,value:value});
                                     }
@@ -222,7 +238,7 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
     $scope.switchTab=function(tabName){
         $scope.currentTab=tabName;
     }
-    $scope.switchTab('system');
+    $scope.switchTab('server');
     $scope.addMethodTimeout=function(){
         $scope.item.methodTimeouts.push({method:$scope.methods[0],value:""});
     }
@@ -302,7 +318,27 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
         if(undefined!=item.retries&&item.retries!=""){
             paramContent+="retries="+item.retries+"&";
         }
-
+        if(undefined!=item.threadpool&&item.threadpool!=""){
+            paramContent+="threadpool="+item.threadpool+"&";
+        }
+        if(undefined!=item.dispatcher&&item.dispatcher!=""){
+            paramContent+="dispatcher="+item.dispatcher+"&";
+        }
+        if(undefined!=item.threads&&item.threads!=""){
+            paramContent+="threads="+item.threads+"&";
+        }
+        if(undefined!=item.heartbeat&&item.heartbeat!=""){
+            paramContent+="heartbeat="+item.heartbeat+"&";
+        }
+        if(undefined!=item.heartbeatTimeout&&item.heartbeatTimeout!=""){
+            paramContent+="heartbeat.timeout="+item.heartbeatTimeout+"&";
+        }
+        if(undefined!=item.accepts&&item.accepts!=""){
+            paramContent+="accepts="+item.accepts+"&";
+        }
+        if(undefined!=item.connections&&item.connections!=""){
+            paramContent+="connections="+item.connections+"&";
+        }
         var methodTimeouts = item.methodTimeouts;
         for(var i=0;i<methodTimeouts.length;i++){
             if(undefined!=methodTimeouts[i].value&&""!=methodTimeouts[i].value){
