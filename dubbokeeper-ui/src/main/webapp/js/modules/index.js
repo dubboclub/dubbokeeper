@@ -1,4 +1,4 @@
-var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','httpWrapper','override']);
+var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','httpWrapper','override','router']);
 dubbokeeper.controller("dubbokeeperCtrl",function($scope,$dkContext){
     $dkContext._init($scope);
     $scope.currentHome={};

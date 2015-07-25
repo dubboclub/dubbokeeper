@@ -1,15 +1,15 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class="icon-cogs"></i> <span>服务<strong class='text-primary'>{{service}}</strong>动态配置列表</span>
+        <i class="icon-cogs"></i> <span>服务<strong class='text-primary'>{{service}}</strong>路由规则列表</span>
     </div>
     <div class="panel-body">
         <div class="container-fluid">
-            <div class="row" ng-show="currentTab=='dynamicConfig'">
+            <div class="row">
                 <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                     <div class="row" style="margin-top: 5px;margin-bottom: 8px;">
                         <div class="col-md-7 col-xs-7 col-lg-7 col-sm-7">
-                            <a href="#/admin/override/{{serviceKey}}/add"><i class="icon-plus" title="新建动态配置"></i> 新建动态配置 </a>&nbsp;| &nbsp;
-                            <a href="javascript:void(0);" ng-click="batchOperation('delete')"><i class="glyphicon glyphicon-trash" title="批量删除"></i> 批量删除 </a>
+                            <a href="#/admin/router/{{serviceKey}}/condition/add"><i class="icon-plus" title="新建动态配置"></i> 新建条件路由规则 </a>&nbsp;| &nbsp;
+                            <a href="#/admin/router/{{serviceKey}}/script/add"><i class="icon-plus" title="新建动态配置"></i> 新建脚本路由规则 </a>&nbsp;| &nbsp;
                         </div>
                         <div class="col-md-5 col-xs-5 col-lg-5 col-sm-5">
                         </div>
@@ -20,17 +20,16 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center"><strong><input type="checkbox" ng-click="select()"  ng-model="selectAll"   class="selector" title="全选"/></strong></th>
-                                    <th class="text-left" title="适用的消费端应用名"><strong>应用名</strong>
-                                        <input type="text" class="inner-form-element" ng-model="query.application" ng-change="filter()" placeholder="输入应用名">
+                                    <th class="text-left" title="适用的消费端应用名"><strong>规则名称</strong>
+                                        <input type="text" class="inner-form-element" ng-model="query.name" ng-change="filter()" placeholder="输入规则名">
                                     </th>
-                                    <th class="text-left" title="适用的提供端ip"><strong>机器ip</strong>
-                                        <input type="text" class="inner-form-element" ng-model="query.address" ng-change="filter()" placeholder="输入机器IP">
-                                    </th>
-                                    <th class="text-left" title="服务参数"><strong>服务参数</strong>
-
+                                    <th class="text-left" title="适用的提供端ip"><strong>规则类型</strong>
+                                        <select ng-model="query.type" class="inner-form-element" ng-options="o.val as o.text for o in routerTypes" ng-change="filter()">
+                                            <option value="" selected="selected">所有</option>
+                                        </select>
                                     </th>
                                     <th class="text-left" title="该调配置状态"><strong>状态</strong>
-                                        <select ng-model="query.enable" class="inner-form-element" ng-options="o.val as o.text for o in enabledOptios" ng-change="filter()">
+                                        <select ng-model="query.enabled" class="inner-form-element" ng-options="o.val as o.text for o in enabledOptios" ng-change="filter()">
                                             <option value="" selected="selected">所有</option>
                                         </select>
                                     </th>
@@ -39,16 +38,15 @@
                                 </thead>
                                 <tbody>
                                 <tr ng-show="!details||details.length<=0">
-                                    <td class="text-center text-warning" colspan="6">{{(isEmpty||!dynaimcConfigs||dynaimcConfigs.length<=0)?"未发现任何数据...":"努力加载中...."}}
+                                    <td class="text-center text-warning" colspan="6">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}
                                     </td>
                                 </tr>
-                                <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'application'"
+                                <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'name'"
                                     class="ng-animation">
                                     <td class="text-center"><input type="checkbox" ng-checked="detail.checked" ng-model="detail.checked" ></td>
-                                    <td class="text-left">{{detail.application}}</td>
-                                    <td class="text-left">{{detail.address}}</td>
-                                    <td class="text-left" style="word-break: break-all;word-wrap: break-word;width: 30%;">{{detail.parameters}}</td>
-                                    <td class="text-left"> <span class='{{detail.enable?"text-primary":"text-danger"}}'>{{detail.enable?"已启用":"禁用"}}</span></td>
+                                    <td class="text-left">{{detail.name}}</td>
+                                    <td class="text-left">{{detail.type=='condition'?'条件类型':'脚本类型'}}</td>
+                                    <td class="text-left"> <span class='{{detail.enable?"text-primary":"text-danger"}}'>{{detail.enabled?"已启用":"禁用"}}</span></td>
                                     <td class="text-left">
                                         <span><a href="#/admin/override/edit/{{detail.id}}/{{detail.serviceKey | encodeUrl}}"><i class="icon-pencil" title="编辑"></i> </a></span>
                                         <span>&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('delete',detail)"><i class="glyphicon glyphicon-trash"  title="删除"></i> </a> </span>

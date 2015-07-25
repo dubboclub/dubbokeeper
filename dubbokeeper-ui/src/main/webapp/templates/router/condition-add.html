@@ -1,0 +1,170 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-random"></i> <span ng-show="!id">为<strong class='text-primary'>{{serviceKey}}</strong>服务新增路由规则</span><span ng-show="id">编辑<strong class='text-primary'>{{serviceKey}}</strong>服务路由规则</span>
+    </div>
+    <div class="panel-body">
+        <div class="container-fluid">
+            <form name="routeForm">
+                <div class="row form-group  form-group-sm">
+                    <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">名称：</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">
+                        <input  class="form-control"  ng-model="item.name" placeholder="路由名称">
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7">可使用中文，由1-200个字符组成</div>
+                </div>
+                <div class="row form-group  form-group-sm">
+                    <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">优先级：</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">
+                        <input  class="form-control"  type="number"   ng-model="item.priority" placeholder="优先级">
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7">数字越大越优先</div>
+                </div>
+                <div class="row form-group  form-group-sm">
+                    <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">服务名：</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">{{service}}</div>
+                    <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7"></div>
+                </div>
+                <div class="row form-group  form-group-sm">
+                    <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">方法名：</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 ">
+                                <input  class="form-control"    ng-model="item.method" placeholder="方法名">
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 ">
+                                <select ng-model="selectedMethod"  class="form-control"  ng-change="selectMethod()">
+                                    <option value="" selected="selected">请选择</option>
+                                    <option ng-repeat="o in methods" value="{{o}}" ng-selected="selectedMethod==o">{{o}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7">只有Dubbo2.0.0以上版本的服务消费端支持按方法路由，多个方法名用逗号分隔</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                        <ul class="nav nav-tabs">
+                            <li role="presentation" class="{{currentTab=='when'?'active':''}}" ng-click="switchTab('when')"><a href="javascript:void(0);">消费端匹配条件</a></li>
+                            <li role="presentation" class="{{currentTab=='then'?'active':''}}" ng-click="switchTab('then')"><a href="javascript:void(0);">提供端过滤规则</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="height: 10px;">
+                    </div>
+                </div>
+
+
+                <div class="row" ng-show="currentTab=='when'">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" >
+                        <div class="row" ng-show="currentTab=='when'">
+                            <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                                匹配条件
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                                规则
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                匹配值
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1 col-lg-1">
+                                <a href="javascript:void(0);" ng-click="addWhen()"><i class="glyphicon glyphicon-plus"></i>添加</a>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                多个值用逗号分隔，以星号结尾表示通配地址段
+                            </div>
+                        </div>
+                        <div class="row form-group  form-group-sm" ng-repeat="when in whenList">
+                            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="height: 10px;">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                                        <select ng-model="when.condition"  class="form-control"    ng-options="o.val as o.text for o in whenConditions">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                                        <select ng-model="when.rule"   class="form-control"   ng-options="o.val as o.text for o in rules">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                        <input  class="form-control"  ng-model="when.value" placeholder="匹配的值">
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1 col-lg-1">
+                                        <a href="javascript:void(0);" ng-click="removeWhen($index)"><i class="glyphicon glyphicon-trash"></i>删除</a>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                <div  class="row" ng-show="currentTab=='then'">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                        <div class="row" >
+                            <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                                过滤规则
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                                规则
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                匹配值
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1 col-lg-1">
+                                <a href="javascript:void(0);" ng-click="addThen()"><i class="glyphicon glyphicon-plus"></i>添加</a>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                多个值用逗号分隔，以星号结尾表示通配地址段
+                            </div>
+                        </div>
+                        <div class="row form-group  form-group-sm" ng-repeat="then in thenList">
+                            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" style="height: 10px;">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                                        <select ng-model="then.condition"  class="form-control"   ng-options="o.val as o.text for o in thenConditions">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                                        <select ng-model="then.rule"  class="form-control"    ng-options="o.val as o.text for o in rules">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                        <input  class="form-control"  class="form-control"  ng-model="then.value" placeholder="匹配的值">
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-xs-1 col-lg-1">
+                                        <a href="javascript:void(0);" ng-click="removeThen($index)"><i class="glyphicon glyphicon-trash"></i>删除</a>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row form-group form-group-sm">
+                    <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                        <button type="button" class="btn btn-success btn-sm"  ng-disabled="routeForm.$invalid"><i class="icon-ok"></i> 保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

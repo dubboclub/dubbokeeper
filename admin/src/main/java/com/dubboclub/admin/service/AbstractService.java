@@ -4,6 +4,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dubboclub.admin.model.BasicModel;
+import com.dubboclub.admin.model.Route;
 import com.dubboclub.admin.sync.RegistryServerSync;
 import com.dubboclub.admin.sync.util.Pair;
 import com.dubboclub.admin.sync.util.Tool;
@@ -22,6 +23,7 @@ public abstract class AbstractService {
         registryServerSync.update(oldURL,newURL);
     }
 
+
     protected void delete(URL url){
         registryServerSync.unregister(url);
     }
@@ -30,6 +32,10 @@ public abstract class AbstractService {
         registryServerSync.register(url);
     }
 
+    protected void delete(Long id,String category){
+        URL url =  getOneById(category,id);
+        delete(url);
+    }
 
     public void setRegistryServerSync(RegistryServerSync registryServerSync) {
         this.registryServerSync = registryServerSync;
@@ -49,6 +55,9 @@ public abstract class AbstractService {
         throw new IllegalStateException("data had changed!");
     }
 
+    protected <T extends BasicModel> List<T> filterCategoryDataByServiceKey(ConvertURL2Entity<T> convertURLTOEntity,String category,String serviceKey){
+        return filterCategoryData(convertURLTOEntity,category,Constants.INTERFACE_KEY, Tool.getInterface(serviceKey),Constants.GROUP_KEY,Tool.getGroup(serviceKey),Constants.VERSION_KEY,Tool.getVersion(serviceKey));
+    }
     //通过对某个目录下的数据定义过滤器，过滤出复核条件的数据
     protected<T extends BasicModel> List<T>  filterCategoryData(ConvertURL2Entity<T> convertURLTOEntity,String category,String... params){
         if(params.length%2!=0){

@@ -1,4 +1,4 @@
-var override = angular.module('override',['ngAnimate','ngRoute','serviceProvider','queryFilter','breadCrumb','dialog','dubbokeeperFilters']);
+var override = angular.module('override',['ngAnimate','ngRoute','queryFilter','breadCrumb','dialog','dubbokeeperFilters']);
 
 override.config(function($routeProvider){
     $routeProvider.when("/admin/override/:serviceKey/list",{

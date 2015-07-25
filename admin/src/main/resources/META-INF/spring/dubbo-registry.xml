@@ -27,5 +27,5 @@
     </bean>
     <bean class="com.dubboclub.admin.service.impl.ConsumerServiceImpl" id="consumerService" parent="abstractService"/>
     <bean class="com.dubboclub.admin.service.impl.OverrideServiceImpl" id="overrideService" parent="abstractService"/>
-
+    <bean class="com.dubboclub.admin.service.impl.RouteServiceImpl" id="routeService" parent="abstractService"/>
 </beans>

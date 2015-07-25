@@ -78,10 +78,20 @@ public class Route  extends BasicModel{
     private boolean enabled;
 
     private boolean force;
+
+    private String type;
     
     private List<Route> children;
     
     public Route() {
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Route(Long id) {
@@ -208,7 +218,7 @@ public class Route  extends BasicModel{
 	            + "&router=condition&runtime=false&enabled=" + isEnabled() + "&priority=" + getPriority() + "&force=" + isForce() + "&dynamic=false"
 	            + "&name=" + getName() + "&" + Constants.RULE_KEY + "=" + URL.encode(getMatchRule() + " => " + getFilterRule())
 	            + (group == null ? "" : "&" + Constants.GROUP_KEY + "=" + group)
-	            + (version == null ? "" : "&" + Constants.VERSION_KEY + "=" + version));
+	            + (version == null ? "" : "&" + Constants.VERSION_KEY + "=" + version)+"&"+Constants.ROUTER_KEY+"="+type);
 	}
 
 }
