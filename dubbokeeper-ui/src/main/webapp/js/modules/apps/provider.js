@@ -173,7 +173,7 @@ serviceProvider.controller("serviceReadme",function($scope,$http,$routeParams,$q
                     success:function(data){
                     	var converter = new showdown.Converter({extensions: ['table']});
                     	if(data.providers.length > 0){
-                    		var serviceName = data.providers[0].service;
+                    		var serviceName = data.providers[0].serviceKey;
                     		var beanNameArr = serviceName.split('.');
                     		var demoBeanName = beanNameArr[beanNameArr.length - 1][0].toLowerCase() 
                     				+ beanNameArr[beanNameArr.length - 1].substring(1)

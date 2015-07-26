@@ -48,7 +48,7 @@
                                     <td class="text-left">{{detail.type=='condition'?'条件类型':'脚本类型'}}</td>
                                     <td class="text-left"> <span class='{{detail.enable?"text-primary":"text-danger"}}'>{{detail.enabled?"已启用":"禁用"}}</span></td>
                                     <td class="text-left">
-                                        <span><a href="#/admin/override/edit/{{detail.id}}/{{detail.serviceKey | encodeUrl}}"><i class="icon-pencil" title="编辑"></i> </a></span>
+                                        <span><a href="#/admin/router/edit/condition/{{detail.service | encodeUrl}}/{{detail.id}}"><i class="icon-pencil" title="编辑"></i> </a></span>
                                         <span>&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('delete',detail)"><i class="glyphicon glyphicon-trash"  title="删除"></i> </a> </span>
                                         <span ng-show="!detail.enable">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('enable',detail)"><i class="glyphicon glyphicon-ok" title="启用"></i> </a> </span>
                                         <span ng-show="detail.enable">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('disable',detail)"><i class="glyphicon glyphicon-ban-circle" title="禁用"></i> </a></span>

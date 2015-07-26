@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/bootstrap/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animation.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/font-awesome/font-awesome.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/validator.css">
     <!--[if IE 7]>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/font-awesome/font-awesome-ie7.css">
     <![endif]-->

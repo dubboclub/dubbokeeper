@@ -2,9 +2,11 @@ package com.dubboclub.web.controller;
 
 import com.dubboclub.admin.model.Route;
 import com.dubboclub.admin.service.RouteService;
+import com.dubboclub.web.model.BasicResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,6 +32,19 @@ public class RouterController {
         return routeService.listByServiceKey(serviceKey);
     }
 
+    @RequestMapping("create.htm")
+    public @ResponseBody
+    BasicResponse createRoute(@RequestBody Route route){
+        BasicResponse response = new BasicResponse();
+        response.setResult(BasicResponse.SUCCESS);
+        routeService.createRoute(route);
+        return response;
+    }
+
+    @RequestMapping("get_{id}.htm")
+    public @ResponseBody Route getRoute(@PathVariable("id")Long id){
+        return routeService.getRoute(id);
+    }
 
 
 }

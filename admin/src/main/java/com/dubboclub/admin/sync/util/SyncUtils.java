@@ -171,6 +171,11 @@ public class SyncUtils {
         r.setEnabled(url.getParameter(Constants.ENABLED_KEY, true));
         r.setForce(url.getParameter(Constants.FORCE_KEY, false));
         r.setRule(url.getParameterAndDecoded(Constants.RULE_KEY));
+        if(!StringUtils.isEmpty(r.getRule())){
+            int index=r.getRule().indexOf("=>");
+            r.setFilterRule(r.getRule().substring(0,index));
+            r.setMatchRule(r.getRule().substring(index+2));
+        }
         r.setType(url.getParameter(Constants.ROUTER_KEY));
         return r;
     }
