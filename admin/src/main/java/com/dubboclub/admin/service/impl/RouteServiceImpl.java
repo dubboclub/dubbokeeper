@@ -51,4 +51,18 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
     public Route getRoute(Long id) {
         return SyncUtils.url2Route(new Pair<Long, URL>(id,getOneById(Constants.ROUTERS_CATEGORY,id)));
     }
+
+    @Override
+    public void enable(Long id) {
+        Route route = getRoute(id);
+        route.setEnabled(true);
+        updateRoute(route);
+    }
+
+    @Override
+    public void disable(Long id) {
+        Route route = getRoute(id);
+        route.setEnabled(false);
+        updateRoute(route);
+    }
 }

@@ -1,0 +1,91 @@
+<style>
+    .CodeMirror{
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .introduction .CodeMirror{
+        height: 300px;
+    }
+</style>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-random"></i> <span ng-show="!id">为<strong class='text-primary'>{{serviceKey}}</strong>服务新增路由规则</span><span ng-show="id">编辑<strong class='text-primary'>{{serviceKey}}</strong>服务路由规则</span>
+    </div>
+    <div class="panel-body">
+        <div class="container-fluid">
+            <form name="routeForm">
+                <div class="row form-group  form-group-sm">
+                    <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">名称：</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">
+                        <input  class="form-control" type="text" ng-model="item.name" required placeholder="路由名称">
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7">可使用中文，由1-200个字符组成</div>
+                </div>
+                <div class="row form-group  form-group-sm">
+                    <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">优先级：</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">
+                        <input  class="form-control"  type="number" required   ng-model="item.priority" placeholder="优先级">
+
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7">数字越大越优先</div>
+                </div>
+                <div class="row form-group  form-group-sm">
+                    <label class="col-md-1 col-sm-1 col-xs-1 col-lg-1 control-label">服务名：</label>
+                    <div class="col-md-4 col-sm-4 col-xs-4 col-lg-4 ">
+                        {{service}}
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7"></div>
+                </div>
+                <div class="row form-group  form-group-sm">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 ">
+                        <h5>编写路由规则脚本(javascript脚本)：</h5>
+                    </div>
+                </div>
+                <div class="row form-group  form-group-sm">
+                    <div class="col-md-5 col-sm-5 col-xs-5 col-lg-5 ">
+                        <textarea id="script-editor">{{rule}}</textarea>
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7 col-lg-7 introduction">
+                        <p>
+                            Dubbo在调用脚本的时候均会调用该函数,Dubbo会提供三个入参
+                        </p>
+                        <p>
+                            1、<code>invokers</code>:这个是一个<code>InvokerDelegete</code>类的实体集合，该类有三个属性<code>invoker</code>(具备远程通信能力的Invoker子类对象),<code>url</code>(当前消费端的URL对象),<code>providerUrl</code>(当前invoker包装的提供端地址URL对象)
+                        </p>
+                        <p>
+                            2、<code>invocation</code>:由于Dubbo的服务调用是以方法为单位，那么每个方法都会匹配一批Invoker集合，该参数则指明了当前方法信息，不过由于当前并没有进行方法调用，只是服务的订阅，所以此对象只有一个属性可用<code>methodName</code>
+                        </p>
+                        <p>
+                            3、<code>context</code>:当前线程的服务调用上线文，由于当前服务并不是处于调用状态，所以该参数并没有实际用途
+                        </p>
+                        <p>
+                        例如：
+                            <textarea id="script-demo">(function(invokers,invocation,context){
+var methodName = invocation.methodName;
+var resultInvokers=[];
+for(var i=0;i<invokers.length;i++){
+    var invoker = invokers[i];
+    var currentConsumerUrl = invoker.url;
+    var providerUrl = invoker.providerUrl;
+    var consumerHost=currentConsumerUrl.host;
+    var providerHost = providerUrl.host;
+    var providerProtocol = providerUrl.protocol;
+    var currentService = providerUrl.getParameter("interface");
+    if(methodName.indexOf('get')>=0&&providerHost=='192.168.0.23'){
+        resultInvokers.push(invoker);
+    }
+}
+//该方法返回值必须是一个Invoker的集合或者数组
+return resultInvokers;})(invokers,invocation,context);</textarea>
+                        </p>
+                    </div>
+                </div>
+                <div class="row form-group form-group-sm">
+                    <div class="col-md-2 col-sm-2 col-xs-2 col-lg-2">
+                        <button type="button" class="btn btn-success btn-sm" ng-click="save()"  ng-disabled="routeForm.$invalid"><i class="icon-ok"></i> 保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

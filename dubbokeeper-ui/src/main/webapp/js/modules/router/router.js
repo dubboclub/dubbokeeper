@@ -8,22 +8,94 @@ router.config(function($routeProvider){
         templateUrl:"templates/router/condition-edit.html",
         controller:"conditionEdit"
     }).when("/admin/router/:serviceKey/script/add",{
-        templateUrl:"templates/router/script-add.html",
-        controller:"scriptAdd"
+        templateUrl:"templates/router/script-edit.html",
+        controller:"scriptEdit"
     }).when("/admin/router/edit/condition/:serviceKey/:id",{
         templateUrl:"templates/router/condition-edit.html",
         controller:"conditionEdit"
+    }).when("/admin/router/edit/script/:serviceKey/:id",{
+        templateUrl:"templates/router/script-edit.html",
+        controller:"scriptEdit"
     }).otherwise("/statistics");
 });
 
-
-router.controller('conditionEdit',function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog){
+router.controller('scriptEdit', function ($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog) {
     $menu.switchMenu('admin/routeConfig');
-    $breadcrumb.pushCrumb('对服务'+decodeURIComponent($routeParams.serviceKey)+"新增路由规则",'对服务'+decodeURIComponent($routeParams.serviceKey)+"新增路由规则","routeConditionAdd");
+    $breadcrumb.pushCrumb('对服务'+decodeURIComponent($routeParams.serviceKey)+"新增路由规则",'对服务'+decodeURIComponent($routeParams.serviceKey)+"新增路由规则","routeScriptEdit");
     $scope.service=decodeURIComponent($routeParams.serviceKey);
     $scope.serviceKey=encodeURI($routeParams.serviceKey);
     $scope.id=$routeParams.id;
     $scope.item={};
+    $scope.item.id=$scope.id;
+    var editor = CodeMirror.fromTextArea(document.getElementById("script-editor"), {
+        lineNumbers: true,
+        styleActiveLine: true,
+        matchBrackets: true
+    });
+    if($scope.id){
+        $httpWrapper.post({
+            url:"route/get_"+$scope.id+".htm",
+            success: function (data) {
+                $scope.item=data;
+                editor.setValue(data.rule);
+            }
+        });
+    }
+
+     CodeMirror.fromTextArea(document.getElementById("script-demo"), {
+        lineNumbers: true,
+        styleActiveLine: true,
+        matchBrackets: true, readOnly:true
+    });
+    $scope.save= function () {
+        var script = editor.getDoc().getValue();
+        if(script&&script!=""){
+            console.log(script);
+            try{
+                esprima.parse(script, { tolerant: true, loc: true });
+            }catch (e){
+                var errorContent = e.message;
+                var position = {};
+                editor.setCursor(e.lineNumber-1);
+                $dialog.alert({
+                    content:"脚本存在语法错误，"+errorContent,
+                    size:"small"
+                });
+            }
+            $scope.item.service=$scope.service;
+            $scope.item.type="script";
+            $scope.item.scriptType="javascript";
+            $scope.item.rule=script;
+            $httpWrapper.post({
+                url:$scope.id?"route/update.htm":"route/create.htm",
+                data:$scope.item,
+                success: function (data) {
+                    if(data.result==ajaxResultStatu.SUCCESS){
+                        $dialog.info({
+                            content:"成功编辑路由规则！",
+                            size:"small"
+                        });
+                    }
+                }
+            });
+        }else{
+            $dialog.alert({
+               content:"请输入路由脚本！",
+                size:"small"
+            });
+        }
+
+    }
+});
+
+router.controller('conditionEdit',function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog){
+    $menu.switchMenu('admin/routeConfig');
+    $breadcrumb.pushCrumb('对服务'+decodeURIComponent($routeParams.serviceKey)+"新增路由规则",'对服务'+decodeURIComponent($routeParams.serviceKey)+"新增路由规则","routeConditionEdit");
+    $scope.service=decodeURIComponent($routeParams.serviceKey);
+    $scope.serviceKey=encodeURI($routeParams.serviceKey);
+    $scope.id=$routeParams.id;
+    $scope.item={};
+    $scope.item.id=$scope.id;
     $scope.whenList=[];
     $scope.thenList=[];
     $httpWrapper.post({
@@ -181,7 +253,7 @@ router.controller('conditionEdit',function($scope,$httpWrapper,$routeParams,$que
                 var then = $scope.thenList[i];
                 var condition = thenConditions[then.condition];
                 var reg = new RegExp(condition.pattern);
-                if(!reg.test(when.value)){
+                if(!reg.test(then.value)){
                     $dialog.alert({content:condition.title, size:"small"});
                     return ;
                 }
@@ -196,7 +268,7 @@ router.controller('conditionEdit',function($scope,$httpWrapper,$routeParams,$que
         $scope.item.service=$scope.service;
         $scope.item.type="condition";
         $httpWrapper.post({
-            url:"route/create.htm",
+            url:$scope.id?"route/update.htm":"route/create.htm",
             data:$scope.item,
             success: function (data) {
                 if(data.result==ajaxResultStatu.SUCCESS){
@@ -247,7 +319,7 @@ router.controller('conditionEdit',function($scope,$httpWrapper,$routeParams,$que
     }
 });
 
-router.controller('providerRoutes', function ($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu) {
+router.controller('providerRoutes', function ($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog) {
     $menu.switchMenu('admin/routeConfig');
     $breadcrumb.pushCrumb('服务'+decodeURIComponent($routeParams.serviceKey)+"路由配置列表",'服务'+decodeURIComponent($routeParams.serviceKey)+"路由配置列表","providerRoutes");
     $scope.details=[];
@@ -268,16 +340,19 @@ router.controller('providerRoutes', function ($scope,$httpWrapper,$routeParams,$
         val:'script',
         text:"脚本规则"
     }];
-    $httpWrapper.post({
-        url:"route/provider/"+encodeURIComponent($routeParams.serviceKey)+"/list.htm",
-        success:function(data){
-            $scope.details=data;
-            if(!data||data.length<=0){
-                $scope.isEmpty=true;
+    var refreshData=function(){
+        $httpWrapper.post({
+            url:"route/provider/"+encodeURIComponent($routeParams.serviceKey)+"/list.htm",
+            success:function(data){
+                $scope.details=data;
+                if(!data||data.length<=0){
+                    $scope.isEmpty=true;
+                }
+                $scope.originData=data;
             }
-            $scope.originData=data;
-        }
-    });
+        });
+    }
+    refreshData();
     $scope.select=function(){
         if($scope.selectAll){
             for(var i=0;i<$scope.details.length;i++){
@@ -288,6 +363,29 @@ router.controller('providerRoutes', function ($scope,$httpWrapper,$routeParams,$
                 $scope.details[i].checked=false;
             }
         }
+    }
+    var operateType={
+        'delete':"删除",
+        'enable':'启用',
+        'disable':'禁用'
+    }
+    $scope.operate=function(type,item){
+        $dialog.confirm({
+            content:"确认执行"+operateType[type]+"操作?",
+            size:"small",
+            callback: function () {
+                $httpWrapper.post({
+                    url:"route/"+type+"_"+item.id+".htm",
+                    success: function (data) {
+                        if(data.result==ajaxResultStatu.SUCCESS){
+                            refreshData();
+                            $dialog.info({content:operateType[type]+"成功！", size:"small"});
+                        }
+                    }
+                });
+            }
+        });
+
     }
     $scope.query={};
     $scope.filter=function(){

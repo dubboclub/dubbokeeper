@@ -19,5 +19,9 @@ public interface RouteService {
 
     public Route getRoute(Long id);
 
+    public void enable(Long id);
+
+    public void disable(Long id);
+
 
 }

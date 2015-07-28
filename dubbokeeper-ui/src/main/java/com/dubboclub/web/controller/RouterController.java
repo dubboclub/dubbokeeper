@@ -41,6 +41,31 @@ public class RouterController {
         return response;
     }
 
+
+    @RequestMapping("{type}_{id}.htm")
+    public @ResponseBody BasicResponse delete(@PathVariable("type")String type,@PathVariable("id")Long id){
+        BasicResponse response = new BasicResponse();
+        response.setResult(BasicResponse.SUCCESS);
+        if("delete".equals(type)){
+            routeService.deleteRoute(id);
+        }else if("enable".equals(type)){
+            routeService.enable(id);
+        }else if("disable".equals(type)){
+            routeService.disable(id);
+        }else{
+            response.setResult(BasicResponse.FAILED);
+        }
+        return response;
+    }
+
+    @RequestMapping("update.htm")
+    public @ResponseBody BasicResponse updateRoute(@RequestBody Route route){
+        BasicResponse response = new BasicResponse();
+        response.setResult(BasicResponse.SUCCESS);
+        routeService.updateRoute(route);
+        return response;
+    }
+
     @RequestMapping("get_{id}.htm")
     public @ResponseBody Route getRoute(@PathVariable("id")Long id){
         return routeService.getRoute(id);

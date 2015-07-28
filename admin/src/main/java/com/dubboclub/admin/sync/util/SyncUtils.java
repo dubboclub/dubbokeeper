@@ -170,13 +170,9 @@ public class SyncUtils {
         r.setPriority(url.getParameter(Constants.PRIORITY_KEY, 0));
         r.setEnabled(url.getParameter(Constants.ENABLED_KEY, true));
         r.setForce(url.getParameter(Constants.FORCE_KEY, false));
-        r.setRule(url.getParameterAndDecoded(Constants.RULE_KEY));
-        if(!StringUtils.isEmpty(r.getRule())){
-            int index=r.getRule().indexOf("=>");
-            r.setFilterRule(r.getRule().substring(0,index));
-            r.setMatchRule(r.getRule().substring(index+2));
-        }
         r.setType(url.getParameter(Constants.ROUTER_KEY));
+        r.setRule(url.getParameterAndDecoded(Constants.RULE_KEY));
+        r.setScriptType(url.getParameter(Constants.TYPE_KEY,Constants.DEFAULT_SCRIPT_TYPE_KEY));
         return r;
     }
     

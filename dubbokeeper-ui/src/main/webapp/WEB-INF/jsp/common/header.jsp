@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animation.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/font-awesome/font-awesome.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/validator.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/codemirror/theme/ttcn.css">
     <!--[if IE 7]>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/font-awesome/font-awesome-ie7.css">
     <![endif]-->
