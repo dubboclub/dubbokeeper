@@ -20,16 +20,16 @@
                     <thead>
                     <tr>
                         <th class="text-center"><strong><input type="checkbox" ng-click="select()" class="selector" title="全选"/></strong></th>
-                        <th class="text-left"><strong>机器IP</strong>
+                        <th class="text-left" style="width:30%;"><strong>机器IP</strong>
                             <input type="text" class="inner-form-element" ng-model="query.address" ng-change="filter()" placeholder="输入机器IP">
                         </th>
-                        <th class="text-left"><strong>权重</strong></th>
-                        <th class="text-left"><strong>类型</strong>
+                        <th class="text-left" style="width: 5%;"><strong>权重</strong></th>
+                        <th class="text-left" style="width: 15%;"><strong>类型</strong>
                             <select ng-model="query.dynamic" class="inner-form-element" ng-options="o.val as o.text for o in dynamicOptios" ng-change="filter()">
                                 <option value="" selected="selected">所有</option>
                             </select>
                         </th>
-                        <th class="text-left"><strong>状态</strong>
+                        <th class="text-left" style="width: 15%;"><strong>状态</strong>
                             <select ng-model="query.enabled" class="inner-form-element" ng-options="o.val as o.text for o in enabledOptios" ng-change="filter()">
                                 <option value="" selected="selected">所有</option>
                             </select>

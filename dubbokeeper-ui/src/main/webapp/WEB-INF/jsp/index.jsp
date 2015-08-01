@@ -27,6 +27,7 @@
 </div>
 <dialog-tpl></dialog-tpl>
 <%@include file="common/scripts.jsp"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/theme/theme.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/router/router.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/override/override.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/statistics/statistics.js"></script>

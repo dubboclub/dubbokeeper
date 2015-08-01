@@ -16,7 +16,41 @@ router.config(function($routeProvider){
     }).when("/admin/router/edit/script/:serviceKey/:id",{
         templateUrl:"templates/router/script-edit.html",
         controller:"scriptEdit"
+    }).when("/admin/route/list",{
+        templateUrl:"templates/router/route-abstracts.html",
+        controller:"listRoutes"
     }).otherwise("/statistics");
+});
+
+router.controller('listRoutes', function ($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog) {
+    $menu.switchMenu('admin/routeConfig');
+    $breadcrumb.pushCrumb("路由规则概要列表","路由规则概要列表","listRoutes");
+    $scope.details=[];
+    $scope.isEmpty=false;
+    $httpWrapper.post({
+        url:"route/list.htm",
+        success:function(data){
+            $scope.details=data;
+            if(!data||data.length<=0){
+                $scope.isEmpty=true;
+            }
+            $scope.originData=data;
+        }
+    });
+    $httpWrapper.post({
+        url:"app/list.htm",
+        success:function(data){
+            $scope.applications=data;
+        }
+    });
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.details=$queryFilter($scope.originData,$scope.query);
+    }
 });
 
 router.controller('scriptEdit', function ($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu,$dialog) {
@@ -363,6 +397,45 @@ router.controller('providerRoutes', function ($scope,$httpWrapper,$routeParams,$
                 $scope.details[i].checked=false;
             }
         }
+    }
+    $scope.batchDelete=function(){
+
+        var selected=[];
+        for(var i=0;i<$scope.details.length;i++){
+            if($scope.details[i].checked){
+                selected.push($scope.details[i].id);
+            }
+        }
+        if(selected.length<=0){
+            $dialog.info({
+                content:"请选择操作项！",
+                size:"small"
+            });
+            return ;
+        }
+        $dialog.confirm({
+            content:"确认批量删除路由规则吗?",
+            size:"small",
+            callback:function(){
+                $httpWrapper.post({
+                    url:"/route/batch-delete-"+selected.join(",")+".htm",
+                    success: function (data) {
+                        if(data.result==ajaxResultStatu.SUCCESS){
+                            $dialog.info({
+                                content:"批量删除配置成功！",
+                                size:"small"
+                            });
+                        }else{
+                            $dialog.alert({
+                                content:"批量删除配置失败！",
+                                size:"small"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
     }
     var operateType={
         'delete':"删除",

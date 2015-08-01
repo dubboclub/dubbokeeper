@@ -1,15 +1,41 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <button type="button"  class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
             </button>
-            <a class="navbar-brand" href="#/statistics"><i class="icon-fire"></i> DubboKeeper</a>
+            <a class="navbar-brand" href="#/statistics" ng-click="switchBar('dashboard')"><i class="icon-fire"></i> DubboKeeper</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li ng-repeat="bar in bars" class="{{currentBar==bar.barIdentify?'active':''}}"><a href="#{{bar.barHref}}" ng-click="switchBar(bar.barIdentify)"><i class="{{bar.barIconClass}}"></i> {{bar.barShowName}}</a></li>
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);" id="themes" aria-expanded="false">{{currentTheme|uppercase}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="themes">
+                        <li class="{{currentTheme=='default'?'active':''}}" ><a href="javascript:void(0);" ng-click="switchTheme('default')">Default</a></li>
+                        <li class="divider"></li>
+                        <li  class="{{currentTheme=='cerulean'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('cerulean')">Cerulean</a></li>
+                        <li  class="{{currentTheme=='cosmo'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('cosmo')">Cosmo</a></li>
+                        <li class="{{currentTheme=='cyborg'?'active':''}}" ><a href="javascript:void(0);"  ng-click="switchTheme('cyborg')">Cyborg</a></li>
+                        <li class="{{currentTheme=='darkly'?'active':''}}"><a href="javascript:void(0);"   ng-click="switchTheme('darkly')">Darkly</a></li>
+                        <li class="{{currentTheme=='flatly'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('flatly')">Flatly</a></li>
+                        <li class="{{currentTheme=='journal'?'active':''}}"><a href="javascript:void(0);"   ng-click="switchTheme('journal')">Journal</a></li>
+                        <li class="{{currentTheme=='lumen'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('lumen')">Lumen</a></li>
+                        <li class="{{currentTheme=='paper'?'active':''}}" ><a href="javascript:void(0);" ng-click="switchTheme('paper')">Paper</a></li>
+                        <li  class="{{currentTheme=='readable'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('readable')">Readable</a></li>
+                        <li class="{{currentTheme=='sandstone'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('sandstone')">Sandstone</a></li>
+                        <li  class="{{currentTheme=='simplex'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('simplex')">Simplex</a></li>
+                        <li class="{{currentTheme=='slate'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('slate')">Slate</a></li>
+                        <li class="{{currentTheme=='spacelab'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('spacelab')">Spacelab</a></li>
+                        <li  class="{{currentTheme=='superhero'?'active':''}}"><a href="javascript:void(0);"  ng-click="switchTheme('superhero')">Superhero</a></li>
+                        <li class="{{currentTheme=='united'?'active':''}}"><a href="javascript:void(0);"   ng-click="switchTheme('united')">United</a></li>
+                        <li class="{{currentTheme=='yeti'?'active':''}}"><a href="javascript:void(0);"   ng-click="switchTheme('yeti')">Yeti</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
+
     </div>
 </div>

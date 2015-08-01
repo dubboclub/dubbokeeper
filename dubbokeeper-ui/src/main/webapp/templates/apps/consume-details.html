@@ -9,21 +9,21 @@
             <thead>
             <tr>
                 <th class="text-center"><strong>#</strong></th>
-                <th class="text-left"><strong>服务名称</strong>
+                <th class="text-left" style="width: 30%;"><strong>服务名称</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.service" placeholder="输入服务名">
                 </th>
-                <th class="text-left"><strong>服务版本</strong></th>
-                <th class="text-left"><strong>服务组</strong></th>
-                <th class="text-left"><strong>应用名称</strong>
+                <th class="text-left" style="width: 10%;"><strong>服务版本</strong></th>
+                <th class="text-left" style="width: 10%;"><strong>服务组</strong></th>
+                <th class="text-left" style="width: 25%;"><strong>应用名称</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.providerName" placeholder="输入应用名">
                 </th>
-                <th class="text-center"><strong>提供者数量</strong></th>
-                <th class="text-left"><strong>应用所有者</strong></th>
+                <th class="text-center" style="width: 10%;"><strong>提供者数量</strong></th>
+                <th class="text-left"  style="width: 10%;"><strong>应用所有者</strong></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-show="!details||details.length<=0">
-                <td class="text-center text-warning" colspan="6">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}</td>
+                <td class="text-center text-warning" colspan="7">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}</td>
             </tr>
             <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' | filter:search"   class="ng-animation">
                 <td class="text-center">{{$index+1}}</td>

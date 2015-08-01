@@ -11,16 +11,16 @@
                             <table class="table-responsive table-striped table-hover table-condensed  table table-condensed">
                                 <thead>
                                 <tr>
-                                    <th class="text-left"><strong>应用名</strong>
+                                    <th class="text-left" style="width: 35%;"><strong>应用名</strong>
                                         <select class="inner-form-element" ng-model="query.applicationName" ng-change="filter()">
                                             <option value="">所有</option>
                                             <option ng-repeat="app in applications" value="{{app.application}}">{{app.application}}</option>
                                         </select>
                                     </th>
-                                    <th class="text-left" ><strong>服务名</strong>
-                                        <input type="text" class="inner-form-element" ng-model="query.serviceKey" ng-change="filter()" placeholder="输入机器IP">
+                                    <th class="text-left" style="width: 30%;"><strong>服务名</strong>
+                                        <input type="text" class="inner-form-element" ng-model="query.serviceKey" ng-change="filter()" placeholder="输入服务名">
                                     </th>
-                                    <th class="text-left"><strong>拥有动态配置数量</strong>
+                                    <th class="text-left" style="width: 15%;"><strong>拥有动态配置数量</strong>
 
                                     </th>
                                     <th class="text-left"><strong>操作</strong></th>
@@ -28,7 +28,7 @@
                                 </thead>
                                 <tbody>
                                 <tr ng-show="!details||details.length<=0">
-                                    <td class="text-center text-warning" colspan="4">{{(isEmpty||!dynaimcConfigs||dynaimcConfigs.length<=0)?"未发现任何数据...":"努力加载中...."}}
+                                    <td class="text-center text-warning" colspan="4">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}
                                     </td>
                                 </tr>
                                 <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'applicationName'"

@@ -1,4 +1,4 @@
-var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','httpWrapper','override','router']);
+var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','httpWrapper','override','router','theme']);
 dubbokeeper.controller("dubbokeeperCtrl",function($scope,$dkContext){
     $dkContext._init($scope);
     $scope.currentHome={};
@@ -27,7 +27,7 @@ dubbokeeper.barDataset=[{
     },{
         showName:"路由规则",
         identify:"admin/routeConfig",
-        href:"/admin/apps",
+        href:"/admin/route/list",
         icon:"icon-random"
     }]
 },{

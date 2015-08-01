@@ -22,6 +22,7 @@
 
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/css/libs/themes/assets/js/bootswatch.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/showdown.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/showdown-table.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/mustache.min.js"></script>

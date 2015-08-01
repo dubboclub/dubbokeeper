@@ -15,7 +15,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/bootstrap-table.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/bootstrap/css/bootstrap-theme.min.css">
+    <%--<link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/bootstrap/css/bootstrap-theme.min.css">--%>
+    <theme-tpl></theme-tpl>
+    <%--<link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/themes/sandstone/bootstrap.css" media="screen">--%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/themes/assets/css/bootswatch.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animation.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/libs/font-awesome/font-awesome.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/validator.css">

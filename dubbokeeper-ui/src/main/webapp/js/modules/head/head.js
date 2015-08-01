@@ -6,10 +6,14 @@ head.directive("headTpl",function(){
         controller:"headController"
     };
 });
-head.controller("headController",function($scope,$menu,$dkContext,$breadcrumb,$bars){
+head.controller("headController",function($scope,$menu,$dkContext,$breadcrumb,$bars,$theme){
     $scope.currentBar="dashboard";
     $scope.bars=$dkContext.getBars();
     $dkContext.changeProperty('needMenus',false);
+    $scope.currentTheme = $theme.getCurrentTheme();
+    $scope.switchTheme=function(type){
+        $theme.setTheme(type);
+    }
     $scope.switchBar=function(barName){
         var menus=[];
         for(var i=0;i<$scope.bars.length;i++){
