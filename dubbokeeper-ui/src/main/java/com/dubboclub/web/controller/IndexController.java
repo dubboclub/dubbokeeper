@@ -120,26 +120,23 @@ public class IndexController {
         List<Application> applications =  applicationService.getApplications();
         List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
         List<Map<String,Object>> links = new ArrayList<Map<String, Object>>();
-        List<String> contained = new ArrayList<String>();
         for(Application application:applications){
             Map<String,Object> node = new HashMap<String, Object>();
-            node.put("color",APP_COLORS[application.getType()-1]);
-            node.put("id",application.getApplication());
-            node.put("label",application.getApplication());
+            node.put("category",application.getType()-1);
+            node.put("name",application.getApplication());
+            node.put("value",application.getApplication());
+            node.put("symbolSize",20);
+            node.put("draggable",true);
             nodes.add(node);
             List<Consumer> consumers = consumerService.listConsumerByApplication(application.getApplication());
             for(Consumer consumer:consumers){
                 Map<String,Object> link = new HashMap<String, Object>();
-                link.put("from",application.getApplication());
+                link.put("source",application.getApplication());
                 List<Provider> providers = providerService.listProviderByServiceKey(consumer.getServiceKey());
                 if(providers.size()>0){
-                    String key = application.getApplication()+"&"+providers.get(0).getApplication();
-                    if(contained.contains(key)){
-                        continue;
-                    }
-                    contained.add(key);
-                    link.put("to",providers.get(0).getApplication());
-                    link.put("title",application.getApplication()+"依赖"+providers.get(0).getApplication());
+                    link.put("target",providers.get(0).getApplication());
+                    link.put("weight",1);
+                    link.put("name",application.getApplication()+"依赖"+providers.get(0).getApplication());
                     links.add(link);
                 }
             }
