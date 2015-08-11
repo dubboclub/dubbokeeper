@@ -180,7 +180,9 @@ public class OverrideController {
             overrideAbstractInfo.setServiceKey(provider.getServiceKey());
             overrideAbstractInfo.setApplicationName(provider.getApplication());
             overrideAbstractInfo.setOverrideCount( overrideService.listByServiceKey(overrideAbstractInfo.getServiceKey()).size());
-            overrideAbstractInfos.add(overrideAbstractInfo);
+            if(overrideAbstractInfo.getOverrideCount()>0){
+                overrideAbstractInfos.add(overrideAbstractInfo);
+            }
         }
         return overrideAbstractInfos;
     }

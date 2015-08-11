@@ -96,7 +96,9 @@ public class RouterController {
             routeAbstractInfo.setServiceKey(provider.getServiceKey());
             routeAbstractInfo.setApplicationName(provider.getApplication());
             routeAbstractInfo.setRouteCount(routeService.listByServiceKey(provider.getServiceKey()).size());
-            routeAbstractInfos.add(routeAbstractInfo);
+            if(routeAbstractInfo.getRouteCount()>0){
+                routeAbstractInfos.add(routeAbstractInfo);
+            }
         }
         return routeAbstractInfos;
     }
