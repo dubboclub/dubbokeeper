@@ -21,15 +21,15 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center"><strong><input type="checkbox" ng-click="select()"  ng-model="selectAll"   class="selector" title="全选"/></strong></th>
-                                    <th class="text-left" style="width: 35%;" title="适用的消费端应用名"><strong>规则名称</strong>
+                                    <th class="text-left"   title="适用的消费端应用名"><strong>规则名称</strong>
                                         <input type="text" class="inner-form-element" ng-model="query.name" ng-change="filter()" placeholder="输入规则名">
                                     </th>
-                                    <th class="text-left" title="适用的提供端ip" style="width: 25%;"><strong>规则类型</strong>
+                                    <th class="text-left" title="适用的提供端ip" ><strong>规则类型</strong>
                                         <select ng-model="query.type" class="inner-form-element" ng-options="o.val as o.text for o in routerTypes" ng-change="filter()">
                                             <option value="" selected="selected">所有</option>
                                         </select>
                                     </th>
-                                    <th class="text-left" title="该调配置状态" style="width: 20%;"><strong>状态</strong>
+                                    <th class="text-left" title="该调配置状态" ><strong>状态</strong>
                                         <select ng-model="query.enabled" class="inner-form-element" ng-options="o.val as o.text for o in enabledOptios" ng-change="filter()">
                                             <option value="" selected="selected">所有</option>
                                         </select>
@@ -45,9 +45,9 @@
                                 <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'name'"
                                     class="ng-animation">
                                     <td class="text-center"><input type="checkbox" ng-checked="detail.checked" ng-model="detail.checked" ></td>
-                                    <td class="text-left">{{detail.name}}</td>
-                                    <td class="text-left">{{detail.type=='condition'?'条件类型':'脚本类型'}}</td>
-                                    <td class="text-left"> <span class='{{detail.enabled?"text-primary":"text-danger"}}'>{{detail.enabled?"已启用":"禁用"}}</span></td>
+                                    <td class="text-left td-35-width">{{detail.name}}</td>
+                                    <td class="text-left td-25-width">{{detail.type=='condition'?'条件类型':'脚本类型'}}</td>
+                                    <td class="text-left td-20-width"> <span class='{{detail.enabled?"text-primary":"text-danger"}}'>{{detail.enabled?"已启用":"禁用"}}</span></td>
                                     <td class="text-left">
                                         <span><a href="#/admin/router/edit/{{detail.type}}/{{detail.service | encodeUrl}}/{{detail.id}}"><i class="icon-pencil" title="编辑"></i> </a></span>
                                         <span>&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operate('delete',detail)"><i class="glyphicon glyphicon-trash"  title="删除"></i> </a> </span>

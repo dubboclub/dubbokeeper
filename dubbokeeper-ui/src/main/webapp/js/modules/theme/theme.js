@@ -1,35 +1,18 @@
 var theme=angular.module("theme",['ngCookies']);
-theme.directive("themeTpl",function(){
-    return {
-        restrict:"E",
-        templateUrl:"templates/theme/theme.html",
-        controller:"themeController"
-    };
-});
-
-theme.controller("themeController",function($scope,$theme,$cookieStore){
-    $scope.currentTheme='default';
-    if($cookieStore.get(theme.cookieName)){
-        $scope.currentTheme=$cookieStore.get(theme.cookieName);
-    }
-    $theme._init($scope);
-});
-
 theme.cookieName = "dubbokeeper.theme";
 theme.$theme= function () {
     var dubboKeeperTheme = function () {
-        this.inited=false;
+        this.currentTheme='default';
     }
-    dubboKeeperTheme.prototype._init=function($scope){
-        this.scope = $scope;
-        this.inited=true;
-        this.setTheme($scope.currentTheme);
+    dubboKeeperTheme.prototype._init=function(cookieStore){
+        if(cookieStore.get(theme.cookieName)){
+            this.currentTheme=cookieStore.get(theme.cookieName);
+        }
+        this.cookiesStore=cookieStore;
+        this.setTheme(this.currentTheme);
     }
     dubboKeeperTheme.prototype.getCurrentTheme=function(){
-        while(!this.inited){
-
-        }
-        return this.scope.currentTheme;
+        return this.currentTheme;
     }
     dubboKeeperTheme.prototype.setTheme=function(themeName){
         var themeUrl = "";
@@ -40,11 +23,11 @@ theme.$theme= function () {
         }
         this.cookiesStore.put(theme.cookieName, themeName);
         window.document.getElementById('dubboKeeperTheme').setAttribute('href',themeUrl);
-        this.scope.currentTheme = themeName;
+        this.currentTheme = themeName;
     }
     var themeProvider = new dubboKeeperTheme();
     this.$get = ["$cookieStore",function ($cookieStore) {
-        themeProvider.cookiesStore = $cookieStore;
+        themeProvider._init($cookieStore);
         return themeProvider;
     }];
 }

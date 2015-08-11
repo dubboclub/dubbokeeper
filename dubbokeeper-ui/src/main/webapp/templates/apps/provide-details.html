@@ -9,12 +9,12 @@
                     <thead>
                     <tr>
                         <th class="text-center"><strong>#</strong></th>
-                        <th class="text-left" style="width: 30%;"><strong>服务名称</strong>
+                        <th class="text-left" ><strong>服务名称</strong>
                             <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.service" placeholder="服务名称">
                         </th>
-                        <th class="text-left" style="width: 10%;"><strong>服务版本</strong></th>
-                        <th class="text-left" style="width: 10%;"><strong>服务组</strong></th>
-                        <th class="text-left" style="width: 25%;"><strong>支持的协议</strong>
+                        <th class="text-left"><strong>服务版本</strong></th>
+                        <th class="text-left"><strong>服务组</strong></th>
+                        <th class="text-left" ><strong>支持的协议</strong>
                             <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.protocol" placeholder="支持的协议">
                         </th>
                         <th class="text-center" ng-show="!isForOneConsumer">操作</th>
@@ -26,10 +26,10 @@
                     </tr>
                     <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'service' | filter:search"   class="ng-animation">
                         <td class="text-center">{{$index+1}}</td>
-                        <td class="text-left" title="管理该服务的提供者"><a href="#/admin/{{detail.serviceKey}}/providers">{{detail.service}}</a></td>
-                        <td class="text-left"><span class="label {{!detail.version?'label-info':'label-success'}}">{{!detail.version?"默认版本":detail.version}}</span></td>
-                        <td class="text-left"><span class="label {{!detail.group?'label-info':'label-success'}}">{{!detail.group?"默认组":detail.group}}</span></td>
-                        <td class="text-left">{{detail.protocol}}</td>
+                        <td class="text-left td-30-width" title="管理该服务的提供者"><a href="#/admin/{{detail.serviceKey}}/providers">{{detail.service}}</a></td>
+                        <td class="text-left td-10-width"><span class="label {{!detail.version?'label-info':'label-success'}}">{{!detail.version?"默认版本":detail.version}}</span></td>
+                        <td class="text-left td-10-width"><span class="label {{!detail.group?'label-info':'label-success'}}">{{!detail.group?"默认组":detail.group}}</span></td>
+                        <td class="text-left td-25-width">{{detail.protocol}}</td>
                         <td class="text-center"  ng-show="!isForOneConsumer">
                             <a href="#/admin/{{detail.service}}/{{detail.id}}/service-consumers" title="该服务的消费者列表"><i class="icon-group"></i></a>
                             <span>&nbsp;| &nbsp;<a href="#/admin/{{detail.serviceKey}}/service-readme" title="该服务的调用方法"><i class="icon-file-text"></i></a></span>

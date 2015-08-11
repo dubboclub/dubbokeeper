@@ -9,7 +9,7 @@
             <thead>
             <tr>
                 <th class="text-center"><strong>#</strong></th>
-                <th class="text-left" style="width:90%"><strong>节点地址信息</strong>
+                <th class="text-left" ><strong>节点地址信息</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.nodeAddress" placeholder="节点地址">
                 </th>
             </tr>
@@ -20,7 +20,7 @@
                 </tr>
                 <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'nodeAddress' | filter:search"   class="ng-animation">
                     <td class="text-center">{{$index+1}}</td>
-                    <td class="text-left">{{detail.nodeAddress}}</td>
+                    <td class="text-left td-90-width">{{detail.nodeAddress}}</td>
                 </tr>
             </tbody>
         </table>

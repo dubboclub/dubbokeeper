@@ -20,16 +20,16 @@
                     <thead>
                     <tr>
                         <th class="text-center"><strong><input type="checkbox" ng-click="select()" class="selector" title="全选"/></strong></th>
-                        <th class="text-left" style="width:30%;"><strong>机器IP</strong>
+                        <th class="text-left"  ><strong>机器IP</strong>
                             <input type="text" class="inner-form-element" ng-model="query.address" ng-change="filter()" placeholder="输入机器IP">
                         </th>
-                        <th class="text-left" style="width: 5%;"><strong>权重</strong></th>
-                        <th class="text-left" style="width: 15%;"><strong>类型</strong>
+                        <th class="text-left" ><strong>权重</strong></th>
+                        <th class="text-left"  ><strong>类型</strong>
                             <select ng-model="query.dynamic" class="inner-form-element" ng-options="o.val as o.text for o in dynamicOptios" ng-change="filter()">
                                 <option value="" selected="selected">所有</option>
                             </select>
                         </th>
-                        <th class="text-left" style="width: 15%;"><strong>状态</strong>
+                        <th class="text-left"><strong>状态</strong>
                             <select ng-model="query.enabled" class="inner-form-element" ng-options="o.val as o.text for o in enabledOptios" ng-change="filter()">
                                 <option value="" selected="selected">所有</option>
                             </select>
@@ -45,10 +45,10 @@
                     <tr ng-show="details&&details.length>0" ng-repeat="provider in details | orderBy : 'address' | filter:search"
                         class="ng-animation">
                         <td class="text-center"><input type="checkbox" ng-model="selected" value="{{provider.id}}"></td>
-                        <td class="text-left"><a href="#/admin/view/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/detail">{{provider.address}}</a></td>
-                        <td class="text-left">{{provider.weight}}</td>
-                        <td class="text-left"> <span class='{{provider.dynamic?"text-primary":"text-danger"}}'>{{provider.dynamic?"动态":"静态"}}</span></td>
-                        <td class="text-left"> <span class='{{provider.enabled?"text-primary":"text-danger"}}'>{{provider.enabled?"已启用":"禁用"}}</span></td>
+                        <td class="text-left td-30-width"><a href="#/admin/view/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/detail">{{provider.address}}</a></td>
+                        <td class="text-left td-5-width">{{provider.weight}}</td>
+                        <td class="text-left td-15-width"> <span class='{{provider.dynamic?"text-primary":"text-danger"}}'>{{provider.dynamic?"动态":"静态"}}</span></td>
+                        <td class="text-left td-15-width"> <span class='{{provider.enabled?"text-primary":"text-danger"}}'>{{provider.enabled?"已启用":"禁用"}}</span></td>
                         <td class="text-left">
                             <span><a href="#/admin/edit/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('halfWeight',provider)"><i class="icon-arrow-down" title="半权"></i> </a></span>

@@ -9,13 +9,13 @@
             <thead>
             <tr>
                 <th class="text-center"><strong>#</strong></th>
-                <th class="text-left" style="width:30%;"><strong>应用名</strong>
+                <th class="text-left" ><strong>应用名</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.application" placeholder="输入应用名">
                 </th>
-                <th class="text-left" style="width:30%;"><strong>拥有者</strong>
+                <th class="text-left" ><strong>拥有者</strong>
                     <input type="text" class="inner-form-element" ng-change="filter()" ng-model="query.username" placeholder="输入拥有者">
                 </th>
-                <th class="text-left" style="width:15%;"><strong>类型</strong>
+                <th class="text-left"><strong>类型</strong>
                     <select  ng-change="filter()" ng-model="query.type" class="inner-form-element" ng-options="o.val as o.text for o in typeOptions">
                         <option value="">所有</option>
                     </select>
@@ -30,10 +30,10 @@
             </tr>
             <tr ng-show="applications&&applications.length>0" ng-repeat="app in applications | orderBy : 'application' | filter:search"
                 class="ng-animation">
-                <td class="text-center">{{$index+1}}</td>
-                <td class="text-left">{{app.application}}</td>
-                <td class="text-left">{{app.username}}</td>
-                <td class="text-left"><span class="label {{app.type==1?'label-primary':(app.type==2?'label-warning':'label-success')}}" title="{{app.type==1?'纯提供者':(app.type==2?'纯消费者':'即是提供者也是消费者')}}">{{app.type==1?"P":(app.type==2?"C":"P.AND.C")}}</span></td>
+                <td class="text-center ">{{$index+1}}</td>
+                <td class="text-left td-30-width">{{app.application}}</td>
+                <td class="text-left td-30-width">{{app.username}}</td>
+                <td class="text-left td-15-width"><span class="label {{app.type==1?'label-primary':(app.type==2?'label-warning':'label-success')}}" title="{{app.type==1?'纯提供者':(app.type==2?'纯消费者':'即是提供者也是消费者')}}">{{app.type==1?"P":(app.type==2?"C":"P.AND.C")}}</span></td>
                 <td class="text-left" ng-show="!isConsumer">
                     <a href="#/admin/{{app.application}}/nodes" class="link" style="text-underline: none;"
                        title="部署节点列表">

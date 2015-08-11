@@ -20,16 +20,16 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center"><strong><input type="checkbox" ng-click="select()"  ng-model="selectAll"   class="selector" title="全选"/></strong></th>
-                                    <th class="text-left" title="适用的消费端应用名" style="width: 20%;"><strong>应用名</strong>
+                                    <th class="text-left" title="适用的消费端应用名" ><strong>应用名</strong>
                                         <input type="text" class="inner-form-element" ng-model="query.application" ng-change="filter()" placeholder="输入应用名">
                                     </th>
-                                    <th class="text-left" title="适用的提供端ip" style="width: 20%;"><strong>机器ip</strong>
+                                    <th class="text-left" title="适用的提供端ip" ><strong>机器ip</strong>
                                         <input type="text" class="inner-form-element" ng-model="query.address" ng-change="filter()" placeholder="输入机器IP">
                                     </th>
-                                    <th class="text-left" title="服务参数" style="width: 23%;"><strong>服务参数</strong>
+                                    <th class="text-left" title="服务参数" ><strong>服务参数</strong>
 
                                     </th>
-                                    <th class="text-left" title="该调配置状态" style="width: 12%;"><strong>状态</strong>
+                                    <th class="text-left" title="该调配置状态"><strong>状态</strong>
                                         <select ng-model="query.enable" class="inner-form-element" ng-options="o.val as o.text for o in enabledOptios" ng-change="filter()">
                                             <option value="" selected="selected">所有</option>
                                         </select>
@@ -45,10 +45,10 @@
                                 <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'application'"
                                     class="ng-animation">
                                     <td class="text-center"><input type="checkbox" ng-checked="detail.checked" ng-model="detail.checked" ></td>
-                                    <td class="text-left">{{detail.application}}</td>
-                                    <td class="text-left">{{detail.address}}</td>
-                                    <td class="text-left" style="word-break: break-all;word-wrap: break-word;width: 30%;">{{detail.parameters}}</td>
-                                    <td class="text-left"> <span class='{{detail.enable?"text-primary":"text-danger"}}'>{{detail.enable?"已启用":"禁用"}}</span></td>
+                                    <td class="text-left td-20-width">{{detail.application}}</td>
+                                    <td class="text-left td-20-width">{{detail.address}}</td>
+                                    <td class="text-left td-23-width" style="word-break: break-all;word-wrap: break-word;">{{detail.parameters}}</td>
+                                    <td class="text-left td-12-width"> <span class='{{detail.enable?"text-primary":"text-danger"}}'>{{detail.enable?"已启用":"禁用"}}</span></td>
                                     <td class="text-left">
                                         <span><a href="#/admin/override/edit/{{detail.id}}/{{detail.serviceKey | encodeUrl}}"><i class="icon-pencil" title="编辑"></i> </a></span>
                                         <span>&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('delete',detail)"><i class="glyphicon glyphicon-trash"  title="删除"></i> </a> </span>

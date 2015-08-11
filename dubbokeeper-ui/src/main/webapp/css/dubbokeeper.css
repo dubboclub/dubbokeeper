@@ -1,0 +1,79 @@
+.td-30-width{
+    width:30%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-10-width{
+    width:10%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-15-width{
+    width:15%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-25-width{
+    width:25%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-35-width{
+    width: 35%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-90-width{
+    width: 90%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-5-width{
+    width: 5%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-23-width{
+    width: 23%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-12-width{
+    width: 12%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.td-20-width{
+    width: 20%;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+body{
+    padding-top: 70px;
+    font-size: 13px;
+}
+*{
+    font-family: "Microsoft YaHei","宋体", Arial, Helvetica, sans-serif;
+}
+.inner-form-element{
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1px 2px;
+    font-size: 12px;
+}
+.app-container{
+    font-size: 12px;
+}
+.app-container td{
+    font-size: 12px;
+}
+.app-container th{
+    font-size: 12px;
+}
+.app-container a{
+    font-size: 12px;
+}
