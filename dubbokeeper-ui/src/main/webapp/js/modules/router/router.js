@@ -262,7 +262,7 @@ router.controller('conditionEdit',function($scope,$httpWrapper,$routeParams,$que
         }
     };
     $scope.save=function(){
-        var filterRule ="";
+        var matchRule ="";
         if($scope.whenList.length>0){
             for(var i=0;i<$scope.whenList.length;i++){
                 var when = $scope.whenList[i];
@@ -272,16 +272,18 @@ router.controller('conditionEdit',function($scope,$httpWrapper,$routeParams,$que
                     $dialog.alert({content:condition.title, size:"small"});
                     return ;
                 }
-                filterRule+=when.condition+when.rule+when.value+"&"
+                matchRule+=when.condition+when.rule+when.value+"&"
             }
         }
         if($scope.item.method){
-            filterRule+="consumer.methods="+$scope.item.method;
+            matchRule+="consumer.methods="+$scope.item.method;
             delete $scope.item.method;
-        }else if(filterRule.length>0){
-            filterRule=filterRule.substring(0,filterRule.length-1);
+        }else if(matchRule.length>0){
+            matchRule=matchRule.substring(0,matchRule.length-1);
         }
-        var matchRule="";
+        
+        
+        var filterRule="";
         if($scope.thenList.length>0){
             for(var i=0;i<$scope.thenList.length;i++){
                 var then = $scope.thenList[i];
@@ -291,11 +293,11 @@ router.controller('conditionEdit',function($scope,$httpWrapper,$routeParams,$que
                     $dialog.alert({content:condition.title, size:"small"});
                     return ;
                 }
-                matchRule+=then.condition+then.rule+then.value+"&";
+                filterRule+=then.condition+then.rule+then.value+"&";
             }
         }
-        if(matchRule.length>0){
-            matchRule=matchRule.substring(0,matchRule.length-1);
+        if(filterRule.length>0){
+            filterRule=filterRule.substring(0,filterRule.length-1);
         }
         $scope.item.matchRule=matchRule;
         $scope.item.filterRule=filterRule;
