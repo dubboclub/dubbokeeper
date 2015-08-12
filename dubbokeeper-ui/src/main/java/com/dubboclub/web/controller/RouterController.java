@@ -81,6 +81,7 @@ public class RouterController {
     public @ResponseBody BasicResponse updateRoute(@RequestBody Route route){
         BasicResponse response = new BasicResponse();
         response.setResult(BasicResponse.SUCCESS);
+        route.setRule(null);
         routeService.updateRoute(route);
         return response;
     }
