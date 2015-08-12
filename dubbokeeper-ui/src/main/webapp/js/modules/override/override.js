@@ -73,7 +73,7 @@ override.controller('editOverride',function($scope,$httpWrapper,$routeParams,$qu
     //$scope.item.retries;
     $scope.item.methodRetries=[];
     $httpWrapper.post({
-        url:"/override/provider/"+encodeURIComponent(encodeURIComponent($scope.serviceKey))+"/methods.htm",
+        url:"override/provider/"+encodeURIComponent(encodeURIComponent($scope.serviceKey))+"/methods.htm",
         success:function(data){
             $scope.methods=data;
             if(!$scope.item.methodParams[0].method){
@@ -523,7 +523,7 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
                 size:"small",
                 callback:function(){
                     $httpWrapper.post({
-                        url:"/override/"+selected.join(",")+"/batch/"+type+".htm" ,
+                        url:"override/"+selected.join(",")+"/batch/"+type+".htm" ,
                         success:function(data){
                             if(data.result==ajaxResultStatu.SUCCESS){
                                 $dialog.info({

@@ -418,7 +418,7 @@ router.controller('providerRoutes', function ($scope,$httpWrapper,$routeParams,$
             size:"small",
             callback:function(){
                 $httpWrapper.post({
-                    url:"/route/batch-delete-"+selected.join(",")+".htm",
+                    url:"route/batch-delete-"+selected.join(",")+".htm",
                     success: function (data) {
                         if(data.result==ajaxResultStatu.SUCCESS){
                             $dialog.info({
