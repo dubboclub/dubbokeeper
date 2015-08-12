@@ -17,8 +17,7 @@ package com.dubboclub.admin.model;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
-import com.sun.corba.se.impl.orbutil.closure.Constant;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
@@ -181,15 +180,17 @@ public class Route  extends BasicModel{
 
     public void setRule(String rule) {
         this.rule = rule;
-        if(Constants.CONDITION_PROTOCOL.equals(type)){
+        if(Constants.CONDITION_PROTOCOL.equals(type)&& !StringUtils.isEmpty(rule)){
             String[] rules = rule.split(" => ");
-            if(rules.length != 2){
-                throw new IllegalArgumentException("Illegal Route Condition Rule");
+            if(rules.length==2){
+                this.matchRule = rules[0];
+                this.filterRule = rules[1];
+            }else{
+                this.matchRule = rules[0];
             }
-            this.matchRule = rules[0];
-            this.filterRule = rules[1];
         }
     }
+    
 
     public String getMatchRule() {
 		return matchRule;
