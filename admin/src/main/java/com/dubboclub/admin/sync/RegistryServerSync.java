@@ -61,6 +61,8 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
     // ConcurrentMap<category, ConcurrentMap<servicename, Map<Long, URL>>>
     private final ConcurrentMap<String, ConcurrentMap<String, Map<Long, URL>>> registryCache = new ConcurrentHashMap<String, ConcurrentMap<String, Map<Long, URL>>>();
 
+    private final ConcurrentHashMap<String,Long> URL_IDS_MAPPER = new ConcurrentHashMap<String, Long>();
+    
     public ConcurrentMap<String, ConcurrentMap<String, Map<Long, URL>>> getRegistryCache(){
         return registryCache;
     }
@@ -81,6 +83,7 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
     }
 
     public void unregister(URL url){
+        URL_IDS_MAPPER.remove(url.toFullString());
         registryService.unregister(url);
     }
 
@@ -132,7 +135,14 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
                     ids = new HashMap<Long, URL>();
                     services.put(service, ids);
                 }
-                ids.put(ID.incrementAndGet(), url);
+                //保证ID对于同一个URL的不可变
+                if(URL_IDS_MAPPER.containsKey(url.toFullString())){
+                    ids.put(URL_IDS_MAPPER.get(url.toFullString()),url);
+                }else{
+                    long currentId = ID.incrementAndGet();
+                    ids.put(currentId, url);
+                    URL_IDS_MAPPER.put(url.toFullString(),currentId);
+                }
             }
         }
         for(Map.Entry<String, Map<String, Map<Long, URL>>> categoryEntry : categories.entrySet()) {
@@ -144,8 +154,8 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
             }
             services.putAll(categoryEntry.getValue());
         }
+        
     }
-
     public void setRegistryService(RegistryService registryService) {
         this.registryService = registryService;
     }
