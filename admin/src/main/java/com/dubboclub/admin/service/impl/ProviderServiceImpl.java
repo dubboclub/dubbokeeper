@@ -202,9 +202,10 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         Provider provider = getProviderById(id);
         if(provider.isDynamic()){
             provider.setDynamic(false);
-            provider.setEnabled(false);
         }
+        provider.setEnabled(false);
         URL url = SyncUtils.provider2URL(provider);
+        url=url.addParameter(Constants.TIMESTAMP_KEY,System.currentTimeMillis());
         add(url);
     }
 
