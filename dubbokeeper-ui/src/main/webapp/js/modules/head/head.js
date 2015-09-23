@@ -13,6 +13,7 @@ head.controller("headController",function($scope,$menu,$dkContext,$breadcrumb,$b
     $scope.currentTheme = $theme.getCurrentTheme();
     $scope.switchTheme=function(type){
         $theme.setTheme(type);
+        $scope.currentTheme = $theme.getCurrentTheme();
     }
     $scope.switchBar=function(barName){
         var menus=[];
