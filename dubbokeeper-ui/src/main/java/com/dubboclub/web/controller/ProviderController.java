@@ -3,6 +3,7 @@ package com.dubboclub.web.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,18 @@ public class ProviderController {
     @RequestMapping("/{serviceKey}/providers.htm")
     public @ResponseBody List<Provider> listProviderByService(@PathVariable("serviceKey") String serviceKey) throws UnsupportedEncodingException {
         return  providerService.listProviderByServiceKey(URLDecoder.decode(serviceKey,"utf-8"));
+    }
+    @RequestMapping("/{applicationName}/{host}/providers.htm")
+    public @ResponseBody List<Provider> listProviderByHost(@PathVariable("applicationName")String applicationName,@PathVariable("host") String host){
+        List<Provider> providers = providerService.listProviderByApplication(applicationName);
+        Iterator<Provider> iterator = providers.iterator();
+        while(iterator.hasNext()){
+            Provider provider = iterator.next();
+            if(!provider.getAddress().equals(host)){
+                iterator.remove();
+            }
+        }
+        return providers;
     }
     
     @RequestMapping("/{serviceKey}/service-readme.htm")

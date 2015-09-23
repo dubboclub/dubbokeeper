@@ -164,9 +164,10 @@ apps.controller("provideDetail",function($scope,$httpWrapper,$routeParams,$query
     $scope.details=[];
     $scope.isEmpty=false;
     $scope.application=$routeParams.application;
+    var requestUrl = "app/"+$routeParams.application+"/provides.htm";
     $breadcrumb.pushCrumb($scope.application,"查看"+$scope.application+"提供服务列表","provideDetail");
     $httpWrapper.post({
-        url:"app/"+$routeParams.application+"/provides.htm",
+        url:requestUrl,
         success:function(data){
             $scope.details=data;
             if(!data||data.length<=0){

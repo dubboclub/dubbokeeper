@@ -20,7 +20,7 @@
                 </tr>
                 <tr ng-show="details&&details.length>0" ng-repeat="detail in details | orderBy : 'nodeAddress' | filter:search"   class="ng-animation">
                     <td class="text-center">{{$index+1}}</td>
-                    <td class="text-left td-90-width">{{detail.nodeAddress}}</td>
+                    <td class="text-left td-90-width"><a href="#/admin/{{application}}/{{detail.nodeAddress | encodeUrl}}/providers">{{detail.nodeAddress}}</a></td>
                 </tr>
             </tbody>
         </table>

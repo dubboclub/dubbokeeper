@@ -1,6 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class="icon-cloud"></i> <span>服务<strong class='text-primary'>{{serviceKey}}</strong>提供者列表</span>
+        <i class="icon-cloud"></i> <span ng-show="{{!host}}">服务<strong class='text-primary'>{{serviceKey}}</strong>提供者列表</span><span ng-show="{{!serviceKey}}">应用<strong class='text-primary'>{{application | uppercase}}</strong>在<strong class='text-primary'>{{host}}</strong>提供的服务列表</span>
+        
     </div>
     <div class="panel-body">
         <div class="row" style="margin-top: 5px;margin-bottom: 8px;">
@@ -20,8 +21,11 @@
                     <thead>
                     <tr>
                         <th class="text-center"><strong><input type="checkbox" ng-click="select()" class="selector" title="全选"/></strong></th>
-                        <th class="text-left"  ><strong>机器IP</strong>
+                        <th ng-show="{{!host}}" class="text-left"  ><strong>机器IP</strong>
                             <input type="text" class="inner-form-element" ng-model="query.address" ng-change="filter()" placeholder="输入机器IP">
+                        </th>
+                        <th ng-show="{{!serviceKey}}" class="text-left"  ><strong>服务名</strong>
+                            <input type="text" class="inner-form-element" ng-model="query.serviceKey" ng-change="filter()" placeholder="输入服务名">
                         </th>
                         <th class="text-left" ><strong>权重</strong></th>
                         <th class="text-left"  ><strong>类型</strong>
@@ -45,7 +49,8 @@
                     <tr ng-show="details&&details.length>0" ng-repeat="provider in details | orderBy : 'address' | filter:search"
                         class="ng-animation">
                         <td class="text-center"><input type="checkbox" ng-model="selected" value="{{provider.id}}"></td>
-                        <td class="text-left td-30-width"><a href="#/admin/view/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/detail">{{provider.address}}</a></td>
+                        <td class="text-left td-30-width" ng-show="{{!host}}"><a href="#/admin/view/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/detail">{{provider.address}}</a></td>
+                        <td class="text-left td-30-width" ng-show="{{!serviceKey}}"><a href="#/admin/view/{{provider.serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/detail">{{provider.serviceKey}}</a></td>
                         <td class="text-left td-5-width">{{provider.weight}}</td>
                         <td class="text-left td-15-width"> <span class='{{provider.dynamic?"text-primary":"text-danger"}}'>{{provider.dynamic?"动态":"静态"}}</span></td>
                         <td class="text-left td-15-width"> <span class='{{provider.enabled?"text-primary":"text-danger"}}'>{{provider.enabled?"已启用":"禁用"}}</span></td>

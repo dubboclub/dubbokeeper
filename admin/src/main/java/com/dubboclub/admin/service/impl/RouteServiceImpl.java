@@ -55,6 +55,9 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
     @Override
     public void enable(Long id) {
         Route route = getRoute(id);
+        if(route.isEnabled()){
+            return ;
+        }
         route.setEnabled(true);
         updateRoute(route);
     }
@@ -62,6 +65,9 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
     @Override
     public void disable(Long id) {
         Route route = getRoute(id);
+        if(!route.isEnabled()){
+            return ;
+        }
         route.setEnabled(false);
         updateRoute(route);
     }

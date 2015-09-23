@@ -122,8 +122,8 @@ public class OverrideController {
         return response;
     }
 
-    @RequestMapping("/{ids}/batch/{type}.htm")
-    public @ResponseBody BasicResponse batchOperate(@PathVariable("ids")String ids,@PathVariable("type")String type){
+    @RequestMapping("/batch/{type}.htm")
+    public @ResponseBody BasicResponse batchOperate(@RequestParam("ids")String ids,@PathVariable("type")String type){
         BasicResponse response = new BasicResponse();
         String[] idArray = Constants.COMMA_SPLIT_PATTERN.split(ids);
         if("enable".equals(type)){
@@ -133,12 +133,8 @@ public class OverrideController {
                     continue;
                 }
                 override.setEnabled(true);
-                overrideService.add(override);
+                overrideService.update(override);
             }
-            for(String id :idArray){
-                overrideService.delete(Long.parseLong(id));
-            }
-
         }else if("disable".equals(type)){
             for(String id:idArray){
                 Override override = overrideService.getById(Long.parseLong(id));
@@ -146,10 +142,7 @@ public class OverrideController {
                     continue;
                 }
                 override.setEnabled(false);
-                overrideService.add(override);
-            }
-            for(String id :idArray){
-                overrideService.delete(Long.parseLong(id));
+                overrideService.update(override);
             }
         }else if("delete".equals(type)){
             for(String id :idArray){
@@ -180,7 +173,7 @@ public class OverrideController {
             overrideAbstractInfo.setServiceKey(provider.getServiceKey());
             overrideAbstractInfo.setApplicationName(provider.getApplication());
             overrideAbstractInfo.setOverrideCount( overrideService.listByServiceKey(overrideAbstractInfo.getServiceKey()).size());
-            if(overrideAbstractInfo.getOverrideCount()>0){
+            if(overrideAbstractInfo.getOverrideCount()>0&&!overrideAbstractInfos.contains(overrideAbstractInfo)){
                 overrideAbstractInfos.add(overrideAbstractInfo);
             }
         }

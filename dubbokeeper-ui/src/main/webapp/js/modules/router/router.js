@@ -400,8 +400,7 @@ router.controller('providerRoutes', function ($scope,$httpWrapper,$routeParams,$
             }
         }
     }
-    $scope.batchDelete=function(){
-
+    $scope.batchOperation=function(type){
         var selected=[];
         for(var i=0;i<$scope.details.length;i++){
             if($scope.details[i].checked){
@@ -415,22 +414,38 @@ router.controller('providerRoutes', function ($scope,$httpWrapper,$routeParams,$
             });
             return ;
         }
+        var operationName = "";
+        if('delete'==type){
+            operationName="删除";
+        }else if('disable'==type){
+            operationName='禁用';
+        }else if('enable'==type){
+            operationName='启用';
+        }
         $dialog.confirm({
-            content:"确认批量删除路由规则吗?",
+            content:"确认批量"+operationName+"路由规则吗?",
             size:"small",
             callback:function(){
                 $httpWrapper.post({
-                    url:"route/batch-delete-"+selected.join(",")+".htm",
+                    url:"route/batch-"+type+".htm",
+                    data:"ids="+selected.join(","),
+                    config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
                     success: function (data) {
                         if(data.result==ajaxResultStatu.SUCCESS){
                             $dialog.info({
-                                content:"批量删除配置成功！",
-                                size:"small"
+                                content:"批量"+operationName+"配置成功！",
+                                size:"small",
+                                callback:function(){
+                                    refreshData();
+                                }
                             });
                         }else{
                             $dialog.alert({
-                                content:"批量删除配置失败！",
-                                size:"small"
+                                content:"批量"+operationName+"配置失败！",
+                                size:"small",
+                                callback:function(){
+                                    refreshData();
+                                }
                             });
                         }
                     }

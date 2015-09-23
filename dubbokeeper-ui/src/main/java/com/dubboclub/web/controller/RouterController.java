@@ -10,10 +10,7 @@ import com.dubboclub.web.model.OverrideAbstractInfo;
 import com.dubboclub.web.model.RouteAbstractInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -49,12 +46,22 @@ public class RouterController {
         return response;
     }
 
-    @RequestMapping("batch-delete-{ids}.htm")
-    public @ResponseBody BasicResponse batchDelete(@PathVariable("ids")String ids){
+    @RequestMapping("batch-{type}.htm")
+    public @ResponseBody BasicResponse batchDelete(@RequestParam("ids")String ids,@PathVariable("type") String type){
         BasicResponse response = new BasicResponse();
         String[] idArray = Constants.COMMA_SPLIT_PATTERN.split(ids);
-        for(String id:idArray){
-            routeService.deleteRoute(Long.parseLong(id));
+        if("delete".equals(type)){
+            for(String id:idArray){
+                routeService.deleteRoute(Long.parseLong(id));
+            }
+        }else if("enable".equals(type)){
+            for(String id:idArray){
+                routeService.enable(Long.parseLong(id));
+            }
+        }else if("disable".equals(type)){
+            for(String id:idArray){
+                routeService.disable(Long.parseLong(id));
+            }
         }
         response.setResult(BasicResponse.SUCCESS);
         return response;

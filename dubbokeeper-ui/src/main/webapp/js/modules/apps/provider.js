@@ -16,6 +16,9 @@ serviceProvider.config(function($routeProvider){
     }).when("/admin/operation/:type/:service/:address/:id/provider",{
         templateUrl:"templates/apps/edit-provider.html",
         controller:"operateProvider"
+    }).when("/admin/:application/:host/providers",{
+        templateUrl:"templates/apps/service-providers.html",
+        controller:"serviceProviders"
     });
 });
 serviceProvider.controller("viewProvider",function($scope,$httpWrapper,$routeParams,$breadcrumb,$httpWrapper,$menu){
@@ -72,7 +75,12 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
     $menu.switchMenu("admin/apps");
     $scope.details=[];
     $scope.isEmpty=false;
-    $scope.serviceKey=decodeURIComponent($routeParams.serviceKey);
+    if($routeParams.serviceKey){
+        $scope.serviceKey=decodeURIComponent($routeParams.serviceKey);
+    }else{
+        $scope.host=decodeURIComponent($routeParams.host);
+        $scope.application=$routeParams.application;
+    }
     $scope.query={};
     $scope.dynamicOptios=[{
         val:true,
@@ -88,10 +96,19 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
         val:false,
         text:"已禁用"
     }];
-    $breadcrumb.pushCrumb($scope.serviceKey,"查看服务"+$scope.serviceKey+"提供者列表","serviceProviders");
+    if($scope.serviceKey){
+        $breadcrumb.pushCrumb($scope.serviceKey,"查看服务"+$scope.serviceKey+"提供者列表","serviceProviders");
+    }else{
+        $breadcrumb.pushCrumb($scope.application+"-"+decodeURIComponent($scope.host),"查看应用"+$scope.application+"在"+decodeURIComponent($scope.host)+"上的提供的服务列表","serviceProviders");
+    }
+
+    var requestUrl = "provider/"+encodeURIComponent($routeParams.serviceKey)+"/providers.htm";
+    if($routeParams.host){
+        requestUrl="provider/"+$routeParams.application+"/"+$routeParams.host+"/providers.htm";
+    }
     var refreshData = function(){
         $httpWrapper.post({
-            url:"provider/"+encodeURIComponent($routeParams.serviceKey)+"/providers.htm",
+            url:requestUrl,
             success:function(data){
                 $scope.details=data;
                 if(!data||data.length<=0){
@@ -114,7 +131,7 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
             $httpWrapper.post({
                 url:"provider/"+provider.id+"/"+type+"/operate.htm",
                 success:function(data){
-                    $dialog.info({content:"成功更新"+$scope.serviceKey+"服务信息！",callback:refreshData});
+                    $dialog.info({content:"成功更新服务信息！",callback:refreshData});
                 }
             });
         };
@@ -139,7 +156,7 @@ serviceProvider.controller("serviceProviders",function($scope,$http,$routeParams
                 data:"ids="+selected.join(","),
                 config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
                 success:function(){
-                    $dialog.info({content:"成功更新"+$scope.serviceKey+"服务信息！",callback:refreshData});
+                    $dialog.info({content:"成功更新服务信息！",callback:refreshData});
                     $("thead tr input[type='checkbox']")[0].checked=false;
                 }
             });

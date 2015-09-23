@@ -523,7 +523,9 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
                 size:"small",
                 callback:function(){
                     $httpWrapper.post({
-                        url:"override/"+selected.join(",")+"/batch/"+type+".htm" ,
+                        url:"override/batch/"+type+".htm" ,
+                        data:"ids="+selected.join(","),
+                        config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
                         success:function(data){
                             if(data.result==ajaxResultStatu.SUCCESS){
                                 $dialog.info({
