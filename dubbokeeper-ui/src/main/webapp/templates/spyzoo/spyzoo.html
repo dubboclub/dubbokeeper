@@ -1,0 +1,134 @@
+<div class="row">
+    <div class="col-md-4 col-xs-4 col-lg-4 col-sm-4">
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <select ng-model="currentZK" class="form-control" ng-change="changeZkHost()" ng-options="o.val as o.text for o in zkList">
+                    <option value="" selected="selected">选择查看的Zookeeper</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <div>/</div>
+                <div tree-view="structure" tree-view-options="options"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-xs-8 col-lg-8 col-sm-8" ng-show="currentSelectedNode">
+        <div class="panel panel-default" stickup>
+            <div class="panel-heading">
+                <i class="icon-list"></i><span>&nbsp;节点详情</span>
+            </div>
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <table class="table table-striped  table-condensed table-hover">
+                        <tr>
+                           <td class="td-25-width">
+                               父节点
+                           </td> 
+                            <td>
+                                {{currentSelectedNode.parent}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                节点名
+                            </td>
+                            <td>
+                                {{currentSelectedNode.name}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                aversion
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.aversion}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                ctime
+                            </td>
+                            <td >
+                                {{currentSelectedNode.nodeStat.ctime | date : 'yyyy-MM-dd HH:mm:ss'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                cversion
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.cversion}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                czxid
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.czxid}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                dataLength
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.dataLength}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                ephemeralOwner
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.ephemeralOwner}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                mtime
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.mtime | date : 'yyyy-MM-dd HH:mm:ss'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                mzxid
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.mzxid}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                numChildren
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.numChildren}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                pzxid
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.pzxid}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-25-width">
+                                version
+                            </td>
+                            <td>
+                                {{currentSelectedNode.nodeStat.version}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,275 @@
+/* tree control */
+.tree {
+	padding-left: 9px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	position: relative;
+}
+.tree:before {
+	display: inline-block;
+	content: "";
+	position: absolute;
+	top: -20px;
+	bottom: 16px;
+	left: 0;
+	border: 1px dotted #67b2dd;
+	border-width: 0 0 0 1px;
+	z-index: 1;
+}
+.tree .tree-folder {
+	width: auto;
+	min-height: 20px;
+}
+.tree .tree-folder .tree-folder-header {
+	position: relative;
+	height: 26px;
+	cursor: pointer;
+}
+.tree .tree-folder .tree-folder-header:hover,
+.tree .tree-folder .tree-folder-header:focus,
+.tree .tree-item:hover,
+.tree .tree-item:focus {
+	background-color: #F0F7FC;
+	outline: none;
+}
+.tree .tree-folder .tree-folder-header .tree-folder-name,
+.tree .tree-item .tree-item-name {
+	display: inline;
+	z-index: 2;
+}
+.tree .tree-folder .tree-folder-header > [class*="icon-"]:first-child,
+.tree .tree-item > [class*="icon-"]:first-child {
+	display: inline-block;
+	position: relative;
+	z-index: 2;
+	/* top: -1px; */
+	color: #80a6cd;
+}
+.tree .tree-folder .tree-folder-header .tree-folder-name {
+	margin-left: 2px;
+}
+
+.tree .tree-folder:last-child:after {
+	display: inline-block;
+	content: "";
+	position: absolute;
+	z-index: 1;
+	top: 15px;
+	bottom: 0;
+	left: -15px;
+	border-left: 1px solid #FFF;
+}
+.tree .tree-folder .tree-folder-content {
+	margin-left: 23px;
+	position: relative;
+}
+.tree .tree-folder .tree-folder-content:before {
+	display: inline-block;
+	content: "";
+	position: absolute;
+	z-index: 1;
+	top: -14px;
+	bottom: 16px;
+	left: -14px;
+	border: 1px dotted #67b2dd;
+	border-width: 0 0 0 1px;
+}
+.tree .tree-item {
+	position: relative;
+	height: 26px;
+	cursor: pointer;
+}
+.tree .tree-item .tree-item-name {
+	margin-left: 3px;
+}
+.tree .tree-item .tree-item-name > [class*="icon-"]:first-child {
+	margin-right: 3px;
+	color: #555;
+}
+.tree .tree-item > [class*="icon-"]:first-child {
+	margin-top: -1px;
+}
+.tree .tree-folder,
+.tree .tree-item {
+	position: relative;
+}
+.tree .tree-folder:before,
+.tree .tree-item:before {
+	display: inline-block;
+	content: "";
+	position: absolute;
+	top: 14px;
+	left: -13px;
+	width: 18px;
+	height: 0;
+	border-top: 1px dotted #67b2dd;
+	z-index: 1;
+}
+.tree .tree-selected {
+	background-color: rgba(98, 168, 209, 0.1);
+	color: #6398B0;
+}
+.tree .tree-selected:hover {
+	background-color: rgba(98, 168, 209, 0.1);
+}
+
+.tree .tree-item,
+.tree .tree-folder .tree-folder-header {
+	margin: 0;
+	padding: 5px 3px;
+	color: #4D6878;
+	border: 1px solid #FFF;
+	display: block;
+	text-decoration: none;
+}
+.tree .tree-item.selected,
+.tree .tree-folder .tree-folder-header.selected {
+	border-color: #62a8d1;
+	background-color: #F0F7FC;
+}
+.tree .tree-item:hover,
+.tree .tree-item.selected:focus,
+.tree .tree-folder .tree-folder-header:hover,
+.tree .tree-folder .tree-folder-header:focus {
+	text-decoration: none;
+}
+
+.tree .tree-item > [class*="icon-"]:first-child {
+	/* color: #F9E8CE; */
+	color: #80a6cd;
+	width: 13px;
+	height: 13px;
+	line-height: 13px;
+	font-size: 11px;
+	text-align: center;
+	border-radius: 3px;
+	background-color: #FAFAFA;
+	border: 1px solid #CCC;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.tree .tree-selected > [class*="icon-"]:first-child {
+	background-color: #F9A021;
+	border-color: #F9A021;
+	color: #FFF;
+}
+.tree .icon-plus[class*="icon-"]:first-child,
+.tree .icon-minus[class*="icon-"]:first-child {
+	border: 1px solid #DDD;
+	vertical-align: middle;
+	height: 11px;
+	width: 11px;
+	text-align: center;
+	border: 1px solid #8BAEBF;
+	line-height: 10px;
+	background-color: #FFF;
+	position: relative;
+	z-index: 1;
+}
+.tree .icon-plus[class*="icon-"]:first-child:before {
+	display: block;
+	content: "+";
+	font-family: "Open Sans";
+	font-size: 16px;
+	position: relative;
+	z-index: 1;
+}
+.tree .icon-minus[class*="icon-"]:first-child:before {
+	content: "";
+	display: block;
+	width: 7px;
+	height: 0;
+	border-top: 1px solid #4D6878;
+	position: absolute;
+	top: 5px;
+	left: 2px;
+}
+.tree .tree-unselectable .tree-item > [class*="icon-"]:first-child {
+	color: #5084A0;
+	width: 13px;
+	height: 13px;
+	line-height: 13px;
+	font-size: 10px;
+	text-align: center;
+	border-radius: 0;
+	background-color: transparent;
+	border: none;
+	box-shadow: none;
+}
+.tree [class*="icon-"][class*="-down"] {
+	transform: rotate(-45deg);
+}
+.tree .icon-spin {
+	height: auto;
+}
+.tree .tree-loading {
+	margin-left: 36px;
+}
+.tree img {
+	display: inline;
+	veritcal-align: middle;
+}
+
+.tree {
+	padding-left: 22px;
+}
+.tree:before {
+	margin-left: 9px;
+}
+.tree .tree-item {
+	/* padding: 5px 10px; */
+}
+.tree .tree-folder {
+	/* padding: 0 2px; */
+}
+.tree .tree-folder:before, .tree .tree-item:before {
+	width: 12px;
+}
+.tree .tree-item, .tree .tree-folder .tree-folder-header {
+	text-wrap: none;
+	white-space: nowrap;
+}
+.tree .input-append {
+	position: relative;
+	top: -2px;
+}
+.tree input {
+	font-size: 13px;
+	padding: 1px 6px;
+	margin: 0;
+}
+.tree input.edit {
+	position: relative;
+	top: -2px;
+}
+.tree .edit-pane {
+	margin-left: 4px;
+}
+.tree .edit-pane > span > i {
+	margin-left: 7px;
+}
+.folder-separator {
+	margin-left: 4px;
+	margin-right: 4px;
+}
+.tree-view-wrapper {
+	float: left;
+}
+.tree-view-wrapper2 {
+	border: 1px solid #ddd;
+	padding: 5px;
+	overflow-x: auto;
+}
+.tree-view2 {
+	display: inline-block;
+}
+
+.tree-folder-header.editing {
+	background-color: #f0f7fc !important;
+}
+
+.blue {
+	color: #478fca !important;
+}
+.orange {
+	color: #ff892a !important;
+}

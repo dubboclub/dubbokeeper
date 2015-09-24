@@ -29,6 +29,8 @@
     <![endif]-->
     <%--link rel="stylesheet" href="${pageContext.request.contextPath}/flat-ui/css/flat-ui.css">--%>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dubbokeeper.css">
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/libs/angularjs-ui-tree/style.css">
 </head>
 <body>
 

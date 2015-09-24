@@ -43,6 +43,9 @@ menu.$menu= function () {
             this.lastMenu=menu;
         }
     }
+    dubboKeeperMenu.prototype.switchBarOnly=function(barIdentify){
+        this.barProvider.switchBar(barIdentify);
+    }
     dubboKeeperMenu.prototype._switch=function(menu){
         if(this.scope.currentMenu==menu){
             return ;

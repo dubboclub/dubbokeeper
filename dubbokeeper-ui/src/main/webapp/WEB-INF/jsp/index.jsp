@@ -32,10 +32,12 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/override/override.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/statistics/statistics.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/monitor/monitor.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/spyzoo/spyzoo.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/filter.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/basic.module.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/http.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/dialog.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/stickup.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/breadcrumb/breadcrumb.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/provider.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/apps.js"></script>

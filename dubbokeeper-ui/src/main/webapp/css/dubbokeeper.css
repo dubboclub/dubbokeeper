@@ -48,7 +48,10 @@
     word-break: break-all;
     word-wrap: break-word;
 }
-
+td{
+    word-break: break-all;
+    word-wrap: break-word;
+}
 body{
     padding-top: 70px;
     font-size: 13px;
