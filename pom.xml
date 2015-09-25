@@ -18,7 +18,7 @@
         <dubbo.version>2.5.3</dubbo.version>
         <spring_version>4.1.6.RELEASE</spring_version>
         <servlet_version>2.5</servlet_version>
-	    <lucene_version>4.2.0</lucene_version>
+	    <lucene_version>5.3.0</lucene_version>
         <findbugs.excludeFilterFile>findbugs-exclude.xml</findbugs.excludeFilterFile>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -110,26 +110,25 @@
             <artifactId>spring-webmvc</artifactId>
             <version>${spring_version}</version>
         </dependency>
-	<dependency>
-		<groupId>org.apache.lucene</groupId>
-		<artifactId>lucene-core</artifactId>
-		<version>${lucene_version}</version>
-	</dependency>
-	<dependency>
-    		<groupId>org.apache.lucene</groupId>
-    		<artifactId>lucene-analyzers-common</artifactId>
-    		<version>${lucene_version}</version>
-	</dependency>
         <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-grouping</artifactId>
-                <version>${lucene_version}</version>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>${lucene_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>${lucene_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-grouping</artifactId>
+            <version>${lucene_version}</version>
         </dependency>
     </dependencies>
     <reporting>
         <plugins>
             <plugin>
-
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>2.5.3</version>

@@ -1,28 +1,57 @@
 package com.dubboclub.monitor.model;
 
+import org.springframework.context.ApplicationContextAware;
+
 import java.util.Date;
 
 public class Statistics {
-	Date timestamp;
-	String serviceInterface;
-	String method;
-	String type; // consumer/provider
-	String provider;
-	String consumer;
-	long success;
-	long failure;
-	long elapsed;
-	long concurrent;
-	long maxConcurrent;
-	long maxElapsed;
-	long maxInput;
-	long maxOutput;
+	//发生的时间戳
+	private long timestamp;
+	private String serviceInterface;
+	private String method;
+	private ApplicationType type;
+	//发生的服务端
+	private String host;
+	//发生的应用名称
+	private String application;
+	//本次请求是成功还是失败
+	private boolean invokeStat;
+	// 计算调用耗时
+	private long elapsed;
+	// 当前并发数
+	private long concurrent;
+	//当前请求的输入
+	private long input;
+	//当前请求的输出
+	private long output;
+	//调用的远程地址
+	private String remoteAddress;
+	//调用的远程应用类型
+	private ApplicationType remoteType;
 
-	public Date getTimestamp() {
+	public ApplicationType getRemoteType() {
+		return remoteType;
+	}
+
+	public void setRemoteType(ApplicationType remoteType) {
+		this.remoteType = remoteType;
+	}
+
+	public String getRemoteAddress() {
+		return remoteAddress;
+	}
+
+	public void setRemoteAddress(String remoteAddress) {
+		this.remoteAddress = remoteAddress;
+	}
+
+
+
+	public long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -42,36 +71,36 @@ public class Statistics {
 		this.method = method;
 	}
 
-	public String getType() {
+	public ApplicationType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(ApplicationType type) {
 		this.type = type;
 	}
 
-	public String getProvider() {
-		return provider;
+	public String getHost() {
+		return host;
 	}
 
-	public void setProvider(String provider) {
-		this.provider = provider;
+	public void setHost(String host) {
+		this.host = host;
 	}
 
-	public String getConsumer() {
-		return consumer;
+	public String getApplication() {
+		return application;
 	}
 
-	public void setConsumer(String consumer) {
-		this.consumer = consumer;
+	public void setApplication(String application) {
+		this.application = application;
 	}
 
-	public long getSuccess() {
-		return success;
+	public boolean isInvokeStat() {
+		return invokeStat;
 	}
 
-	public void setSuccess(long success) {
-		this.success = success;
+	public void setInvokeStat(boolean invokeStat) {
+		this.invokeStat = invokeStat;
 	}
 
 	public long getElapsed() {
@@ -90,43 +119,24 @@ public class Statistics {
 		this.concurrent = concurrent;
 	}
 
-	public long getMaxConcurrent() {
-		return maxConcurrent;
+	public long getInput() {
+		return input;
 	}
 
-	public void setMaxConcurrent(long maxConcurrent) {
-		this.maxConcurrent = maxConcurrent;
+	public void setInput(long input) {
+		this.input = input;
 	}
 
-	public long getMaxElapsed() {
-		return maxElapsed;
+	public long getOutput() {
+		return output;
 	}
 
-	public void setMaxElapsed(long maxElapsed) {
-		this.maxElapsed = maxElapsed;
+	public void setOutput(long output) {
+		this.output = output;
 	}
 
-	public long getMaxInput() {
-		return maxInput;
+	public static enum ApplicationType{
+		CONSUMER,PROVIDER
 	}
-
-	public void setMaxInput(long maxInput) {
-		this.maxInput = maxInput;
-	}
-
-	public long getMaxOutput() {
-		return maxOutput;
-	}
-
-	public void setMaxOutput(long maxOutput) {
-		this.maxOutput = maxOutput;
-	}
-
-	public long getFailure() {
-		return failure;
-	}
-
-	public void setFailure(long failure) {
-		this.failure = failure;
-	}
+	 
 }

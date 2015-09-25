@@ -36,24 +36,7 @@ public class MonitorService {
 	}
 
 	private Statistics getStaticsFromDocument(Document document) {
-		Statistics statistics = new Statistics();
-		statistics.setTimestamp(new Date(Long.valueOf(document.get("timestamp"))));
-		statistics.setServiceInterface(document.get("interface"));
-		statistics.setMethod(document.get("method"));
 
-		statistics.setType(document.get("type"));
-		statistics.setProvider(document.get("provider"));
-		statistics.setConsumer(document.get("consumer"));
-
-		statistics.setSuccess(Long.valueOf(document.get("success")));
-		statistics.setFailure(Long.valueOf(document.get("failure")));
-		statistics.setElapsed(Long.valueOf(document.get("elapsed")));
-		statistics.setConcurrent(Long.valueOf(document.get("concurrent")));
-		statistics.setMaxConcurrent(Long.valueOf(document.get("max.concurrent")));
-		statistics.setMaxElapsed(Long.valueOf(document.get("max.elapsed")));
-		// statistics.setMaxInput(Long.valueOf(document.get("max.input")));
-		// statistics.setMaxOutput(Long.valueOf(document.get("max.output")));
-
-		return statistics;
+		return null;
 	}
 }

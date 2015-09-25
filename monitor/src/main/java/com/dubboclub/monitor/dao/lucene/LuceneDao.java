@@ -98,8 +98,6 @@ public class LuceneDao {
 		DirectoryReader directoryReader = AppContext.getInstance().getDirectoryReader();
 		List<Document> documentList = new LinkedList<Document>();
 		if (directoryReader == null) {
-			// The directory reader is not yet initialized (probably because
-			// there is nothing indexed)
 			return documentList;
 		}
 		IndexSearcher searcher = new IndexSearcher(directoryReader);
@@ -115,35 +113,7 @@ public class LuceneDao {
 		return documentList;
 
 	}
-//	public List<Document> groupingSearch(Query query, Filter filter, int n, Sort sort ) throws Exception {
-//		
-//		GroupingSearch groupingSearch = new GroupingSearch(filter);  
-//        SortField sortField = new SortField("city", SortField.Type.STRING_VAL);  
-//        groupingSearch.setGroupSort(sort);  
-//        groupingSearch.setFillSortFields(true);  
-//        groupingSearch.setCachingInMB(4.0, true);  
-//        groupingSearch.setAllGroups(true);  
-//
-//        DirectoryReader directoryReader = AppContext.getInstance().getDirectoryReader();
-//		List<Document> documentList = new LinkedList<Document>();
-//		if (directoryReader == null) {
-//			// The directory reader is not yet initialized (probably because
-//			// there is nothing indexed)
-//			return documentList;
-//		}
-//		IndexSearcher searcher = new IndexSearcher(directoryReader);
-//        
-//        try {  
-//            TopGroups<BytesRef> result = groupingSearch.search(searcher,query, 0, searcher.getIndexReader().maxDoc());  
-//            // Render groupsResult...  
-//            GroupDocs<BytesRef>[] docs = result.groups;  
-//        } catch (IOException e) {  
-//            // TODO Auto-generated catch block  
-//            e.printStackTrace();  
-//        }  
-//		
-//		
-//	}
+
 
 	/**
 	 * Build Lucene document from statistics.
@@ -190,24 +160,6 @@ public class LuceneDao {
 		document.add(new StringField("type", type, Field.Store.YES));
 		document.add(new StringField("provider", provider, Field.Store.YES));
 		document.add(new StringField("consumer", consumer, Field.Store.YES));
-
-		// document.add(new LongField("success",
-		// statistics.getParameter("success", 0), Field.Store.YES));
-		// document.add(new LongField("failure",
-		// statistics.getParameter("failure", 0), Field.Store.YES));
-		// document.add(new LongField("elapsed",
-		// statistics.getParameter("elapsed", 0), Field.Store.YES));
-		// document.add(new LongField("concurrent",
-		// statistics.getParameter("concurrent", 0), Field.Store.YES));
-		// document.add(new LongField("max.concurrent",
-		// statistics.getParameter("max.concurrent", 0), Field.Store.YES));
-		// document.add(new LongField("max.elapsed",
-		// statistics.getParameter("max.elapsed", 0), Field.Store.YES));
-		// document.add(new LongField("max.input",
-		// statistics.getParameter("max.input", 0), Field.Store.YES));
-		// document.add(new LongField("max.output",
-		// statistics.getParameter("max.output", 0), Field.Store.YES));
-
 		for (String key : keys) {
 			document.add(new LongField(key, statistics.getParameter(key, 0), Field.Store.YES));
 		}
