@@ -1,16 +1,16 @@
-var spyzoo = angular.module('spyzoo',['ngRoute','AxelSoft','stickup']);
+var zoopeeper = angular.module('zoopeeper',['ngRoute','AxelSoft','stickup']);
 
-spyzoo.config(function($routeProvider){
-    $routeProvider.when("/spyZoo",{
-        templateUrl:"templates/spyzoo/spyzoo.html",
-        controller:"spyZooController"
+zoopeeper.config(function($routeProvider){
+    $routeProvider.when("/zoopeeper",{
+        templateUrl:"templates/zoopeeper/zoopeeper.html",
+        controller:"zooPeeperController"
     });
 });
-spyzoo.controller("spyZooController",function($scope,$httpWrapper,$breadcrumb,$menu,$dialog){
-    $menu.switchBarOnly("spyZoo");
+zoopeeper.controller("zooPeeperController",function($scope,$httpWrapper,$breadcrumb,$menu,$dialog){
+    $menu.switchBarOnly("zoopeeper");
     $scope.zkList=[];
     $httpWrapper.post({
-        url:"spy/listZookeepers.htm",
+        url:"peeper/listZookeepers.htm",
         success:function(data){
             for(var i=0;i<data.length;i++){
                 var option = {};
@@ -35,7 +35,7 @@ spyzoo.controller("spyZooController",function($scope,$httpWrapper,$breadcrumb,$m
         }
         parentNode=parentNode||$scope.structure;
         $httpWrapper.post({
-            url:"spy/"+$scope.currentZK+"/loadChildren.htm",
+            url:"peeper/"+$scope.currentZK+"/loadChildren.htm",
             data:"parent="+parentPath,
             config:{ headers: { 'Content-Type': 'application/x-www-form-urlencoded'}},
             success:function(data){

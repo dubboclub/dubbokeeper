@@ -1,4 +1,4 @@
-var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','spyzoo','httpWrapper','override','router','theme']);
+var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','zoopeeper','httpWrapper','override','router','theme']);
 dubbokeeper.controller("dubbokeeperCtrl",function($scope,$dkContext){
     $dkContext._init($scope);
     $scope.currentHome={};
@@ -43,9 +43,9 @@ dubbokeeper.barDataset=[{
         isHome:true
     }]
 },{
-    barShowName:"SPY-ZOO",
-    barIdentify:"spyZoo",
-    barHref:"/spyZoo",
+    barShowName:"ZooPeeper",
+    barIdentify:"zoopeeper",
+    barHref:"/zoopeeper",
     barIconClass:"icon-eye-open"
 },{
     barShowName:"AboutUs",

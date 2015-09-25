@@ -2,10 +2,8 @@ package com.dubboclub.web.controller;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.utils.ConfigUtils;
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.dubboclub.web.model.SpyZooNode;
 import com.dubboclub.web.model.SpyZooResponse;
-import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -26,20 +24,20 @@ import java.util.*;
  * Created by bieber on 2015/9/24.
  */
 @Controller
-@RequestMapping("/spy")
-public class SpyZooController implements InitializingBean{
+@RequestMapping("/peeper")
+public class ZooPeeperController implements InitializingBean{
 
     private static final Map<String,ZooKeeper> ZK_CLIENT_MAP = new HashMap<String, ZooKeeper>();
     
-    private static final Logger logger = LoggerFactory.getLogger(SpyZooController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZooPeeperController.class);
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        String zookeepers = ConfigUtils.getProperty("spy.zookeepers");
+        String zookeepers = ConfigUtils.getProperty("peeper.zookeepers");
         if(!StringUtils.isEmpty(zookeepers)){
             String[] zookeeperArray = Constants.COMMA_SPLIT_PATTERN.split(zookeepers);
             for(String zk:zookeeperArray){
-                ZooKeeper zooKeeper  = new ZooKeeper(zk, Integer.parseInt(ConfigUtils.getProperty("spy.zookeeper.session.timeout","60000")), new ZkWatcher(zk));
+                ZooKeeper zooKeeper  = new ZooKeeper(zk, Integer.parseInt(ConfigUtils.getProperty("peeper.zookeeper.session.timeout","60000")), new ZkWatcher(zk));
                 ZK_CLIENT_MAP.put(zk, zooKeeper);
             }
         }
