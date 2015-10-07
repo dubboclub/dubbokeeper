@@ -10,12 +10,14 @@ public class Statistics {
 	private String serviceInterface;
 	private String method;
 	private ApplicationType type;
+
+    private long tps;
+
+    private long kbps;
 	//发生的服务端
 	private String host;
 	//发生的应用名称
 	private String application;
-	//本次请求是成功还是失败
-	private boolean invokeStat;
 	// 计算调用耗时
 	private long elapsed;
 	// 当前并发数
@@ -24,12 +26,49 @@ public class Statistics {
 	private long input;
 	//当前请求的输出
 	private long output;
+
+    private int successCount;
+
+    private int failureCount;
+
 	//调用的远程地址
 	private String remoteAddress;
 	//调用的远程应用类型
 	private ApplicationType remoteType;
 
-	public ApplicationType getRemoteType() {
+    public int getSuccessCount() {
+        return successCount;
+    }
+
+    public void setSuccessCount(int successCount) {
+        this.successCount = successCount;
+    }
+
+    public int getFailureCount() {
+        return failureCount;
+    }
+
+    public void setFailureCount(int failureCount) {
+        this.failureCount = failureCount;
+    }
+
+    public long getKbps() {
+        return kbps;
+    }
+
+    public void setKbps(long kbps) {
+        this.kbps = kbps;
+    }
+
+    public long getTps() {
+        return tps;
+    }
+
+    public void setTps(long tps) {
+        this.tps = tps;
+    }
+
+    public ApplicationType getRemoteType() {
 		return remoteType;
 	}
 
@@ -95,13 +134,6 @@ public class Statistics {
 		this.application = application;
 	}
 
-	public boolean isInvokeStat() {
-		return invokeStat;
-	}
-
-	public void setInvokeStat(boolean invokeStat) {
-		this.invokeStat = invokeStat;
-	}
 
 	public long getElapsed() {
 		return elapsed;

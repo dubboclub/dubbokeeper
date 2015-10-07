@@ -30,6 +30,10 @@ public class DubboKeeperMonitorService implements MonitorService {
 	
 	public static final String APPLICATION_TYPE="applicationType";
 
+    public static final String TPS="tps";
+
+    public static final String KBPS="kbps";
+
 	private static ExecutorService WRITE_INTO_LUCENE_EXECUTOR;
 	
 	private StatisticsStorage statisticsStorage;
@@ -43,18 +47,30 @@ public class DubboKeeperMonitorService implements MonitorService {
 		Statistics statistics = new Statistics();
 		statistics.setTimestamp(System.currentTimeMillis());
 		statistics.setApplication(statisticsURL.getParameter(MonitorService.APPLICATION));
-		statistics.setConcurrent(statisticsURL.getParameter(MonitorService.CONCURRENT, 0));
-		statistics.setElapsed(statisticsURL.getParameter(MonitorService.ELAPSED, 0));
+		statistics.setConcurrent(statisticsURL.getParameter(MonitorService.CONCURRENT, 1));
+
 		statistics.setHost(statisticsURL.getHost());
 		statistics.setServiceInterface(statisticsURL.getParameter(MonitorService.INTERFACE));
 		statistics.setMethod(statisticsURL.getParameter(MonitorService.METHOD));
-		statistics.setInput(statisticsURL.getParameter(MonitorService.INPUT,0));
-		statistics.setOutput(statisticsURL.getParameter(MonitorService.OUTPUT,0));
-		if(statisticsURL.hasParameter(MonitorService.FAILURE)){
-			statistics.setInvokeStat(false);
-		}else{
-			statistics.setInvokeStat(true);
-		}
+
+        int failureCount = statisticsURL.getParameter(MonitorService.FAILURE,0);
+        int successCount = statisticsURL.getParameter(MonitorService.SUCCESS,0);
+        statistics.setFailureCount(failureCount);
+        statistics.setSuccessCount(successCount);
+        int totalCount = failureCount+successCount;
+        if(totalCount<=0){
+            return;
+        }
+        statistics.setElapsed(statisticsURL.getParameter(MonitorService.ELAPSED, 0)/totalCount);
+        statistics.setInput(statisticsURL.getParameter(MonitorService.INPUT,0)/totalCount);
+        statistics.setOutput(statisticsURL.getParameter(MonitorService.OUTPUT,0)/totalCount);
+        statistics.setTps((long) (((double)successCount/(double)statistics.getElapsed())*1000));//每秒能够处理的请求数量
+        if(statistics.getInput()!=0){
+            statistics.setKbps((long) (((double)statisticsURL.getParameter(MonitorService.INPUT,0)/(double)statistics.getElapsed()/1024)*1000));
+        }else{
+            statistics.setKbps((long) (((double)statisticsURL.getParameter(MonitorService.OUTPUT, 0)/(double)statistics.getElapsed()/1024)*1000));
+        }
+
 		if(statisticsURL.hasParameter(MonitorService.PROVIDER)){
 			statistics.setType(Statistics.ApplicationType.CONSUMER);
 			statistics.setRemoteType(Statistics.ApplicationType.PROVIDER);

@@ -1,7 +1,9 @@
 package com.dubboclub.monitor.storage;
 
+import com.dubboclub.monitor.model.MethodMonitorOverview;
 import com.dubboclub.monitor.model.Statistics;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,13 +12,40 @@ import java.util.List;
 public interface StatisticsStorage {
     
     public void storeStatistics(Statistics statistics);
- 
-    public List<Statistics> queryStatisticsByHost(String application,String host,long startTime,long endTime);
-    
-    public List<Statistics> queryStatisticsForInterface(String application,String serviceInterface,long startTime,long endTime);
-    
-    public List<Statistics> queryAllApplicationAbstractInfo();
-    
+
+
+    /**
+     * 查看某个应用的某个接口在制定区间内的监控情况
+     * @param application
+     * @param serviceInterface
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public List<Statistics> queryStatisticsForMethod(String application, String serviceInterface,String method, long startTime, long endTime);
+
+
+
+    /**
+     * 查看某个服务的监控概要
+     * @param application
+     * @param serviceInterface
+     * @return
+     */
+    public Collection<MethodMonitorOverview> queryMethodMonitorOverview(String application,String serviceInterface,int methodSize,long startTime,long endTime);
+
+
+    /**
+     * 查看所有应用在指定时间内的监控信息
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public List<Statistics> queryAllApplicationAbstractInfo(long startTime,long endTime);
+
+
+
+
     
     
     
