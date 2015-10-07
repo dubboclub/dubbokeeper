@@ -64,10 +64,12 @@ public class DubboKeeperMonitorService implements MonitorService {
         statistics.setElapsed(statisticsURL.getParameter(MonitorService.ELAPSED, 0)/totalCount);
         statistics.setInput(statisticsURL.getParameter(MonitorService.INPUT,0)/totalCount);
         statistics.setOutput(statisticsURL.getParameter(MonitorService.OUTPUT,0)/totalCount);
-        statistics.setTps((long) (((double)successCount/(double)statistics.getElapsed())*1000));//每秒能够处理的请求数量
-        if(statistics.getInput()!=0){
+        if(statistics.getElapsed()!=0){
+            statistics.setTps((long) (((double)successCount/(double)statistics.getElapsed())*1000));//每秒能够处理的请求数量
+        }
+        if(statistics.getInput()!=0&&statistics.getElapsed()!=0){
             statistics.setKbps((long) (((double)statisticsURL.getParameter(MonitorService.INPUT,0)/(double)statistics.getElapsed()/1024)*1000));
-        }else{
+        }else if(statistics.getElapsed()!=0){
             statistics.setKbps((long) (((double)statisticsURL.getParameter(MonitorService.OUTPUT, 0)/(double)statistics.getElapsed()/1024)*1000));
         }
 

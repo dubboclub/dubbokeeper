@@ -84,7 +84,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                             require(['echarts/theme/shine'], function(curTheme){
                                 var option =statistics._generatePieOption({'P':data[0],'C':data[1],'P.AND.C':data[2]},'应用类型分布图','应用类型');
                                 var myChart = echarts.init(document.getElementById('statisticsAppsTypes'));
-                                myChart.setTheme(curTheme)
+                                myChart.setTheme(curTheme);
                                 myChart.setOption(option);
                             });
                         });

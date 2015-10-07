@@ -40,8 +40,6 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
 
     private static final ConcurrentHashMap<String, Directory> LUCENE_DIRECTORY_MAP = new ConcurrentHashMap<String, Directory>();
 
-    private static final ConcurrentHashMap<String, IndexSearcher> LUCENE_SEARCHER_MAP = new ConcurrentHashMap<String, IndexSearcher>();
-
     private static final ConcurrentHashMap<String, IndexWriter> LUCENE_WRITER_MAP = new ConcurrentHashMap<String, IndexWriter>();
 
     private static final ConcurrentHashMap<String, Semaphore> APPLICATION_WRITE_SEMAPHORE = new ConcurrentHashMap<String, Semaphore>();
@@ -73,7 +71,6 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
                         logger.error("failed to close index writer", e);
                     }
                 }
-                LUCENE_SEARCHER_MAP.clear();
                 Collection<Directory> directories = LUCENE_DIRECTORY_MAP.values();
                 for (Directory directory : directories) {
                     try {
@@ -144,11 +141,8 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
 
     @Override
     public List<Statistics> queryStatisticsForMethod(String application, String serviceInterface, String method, long startTime, long endTime) {
-        IndexSearcher searcher = generateSearcher(application);
-        if (searcher == null) {
-            return new ArrayList<Statistics>();
-        }
         try {
+            IndexSearcher searcher = generateSearcher(application);
             TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
             TermQuery interfaceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(serviceInterface)));
             TermQuery methodQuery = new TermQuery(new Term(DubboKeeperMonitorService.METHOD, new BytesRef(method)));
@@ -186,13 +180,15 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         statistics.setInput(Long.parseLong(document.get(DubboKeeperMonitorService.INPUT)));
         statistics.setOutput(Long.parseLong(document.get(DubboKeeperMonitorService.OUTPUT)));
         statistics.setRemoteAddress(document.getBinaryValue(DubboKeeperMonitorService.REMOTE_ADDRESS).utf8ToString());
-        statistics.setRemoteType(Statistics.ApplicationType.valueOf(document.getBinaryValue(DubboKeeperMonitorService.APPLICATION_TYPE).utf8ToString()));
+        statistics.setRemoteType(Statistics.ApplicationType.valueOf(document.getBinaryValue(DubboKeeperMonitorService.REMOTE_TYPE).utf8ToString()));
         statistics.setTimestamp(Long.parseLong(document.get(DubboKeeperMonitorService.TIMESTAMP)));
         statistics.setServiceInterface(document.getBinaryValue(DubboKeeperMonitorService.INTERFACE).utf8ToString());
         statistics.setKbps(Long.parseLong(document.get(DubboKeeperMonitorService.KBPS)));
         statistics.setTps(Long.parseLong(document.get(DubboKeeperMonitorService.TPS)));
         statistics.setFailureCount(Integer.parseInt(document.get(DubboKeeperMonitorService.FAILURE)));
         statistics.setSuccessCount(Integer.parseInt(document.get(DubboKeeperMonitorService.SUCCESS)));
+        statistics.setMethod(document.getBinaryValue(DubboKeeperMonitorService.METHOD).utf8ToString());
+        statistics.setType(Statistics.ApplicationType.valueOf(document.getBinaryValue(DubboKeeperMonitorService.APPLICATION_TYPE).utf8ToString()));
         return statistics;
     }
 
@@ -357,17 +353,8 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         return null;
     }
 
-    private IndexSearcher generateSearcher(String application) {
-        if (!LUCENE_SEARCHER_MAP.containsKey(application)) {
-            try {
-                DirectoryReader reader = DirectoryReader.open(getDirectory(application));
-                IndexSearcher searcher = new IndexSearcher(reader);
-                LUCENE_SEARCHER_MAP.putIfAbsent(application, searcher);
-            } catch (IOException e) {
-                logger.error("failed to generate index searcher", e);
-            }
-        }
-        return LUCENE_SEARCHER_MAP.get(application);
+    private IndexSearcher generateSearcher(String application) throws IOException {
+        return new IndexSearcher(DirectoryReader.open(generateLuceneDirectory(application)));
     }
 
     private Directory generateLuceneDirectory(String application) throws IOException {

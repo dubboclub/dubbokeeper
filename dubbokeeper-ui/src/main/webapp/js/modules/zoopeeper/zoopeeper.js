@@ -25,6 +25,9 @@ zoopeeper.controller("zooPeeperController",function($scope,$httpWrapper,$breadcr
     }
     $scope.structure = { nodeList:[]};
     $scope.loadChildren=function(parentNode){
+        if(!$scope.currentZK||$scope.currentZK==""){
+            return;
+        }
         var parentPath="/";
         if(parentNode){
             if(parentNode.parent!='/'){

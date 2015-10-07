@@ -1,164 +1,450 @@
 var monitor = angular.module("monitor",['ngRoute']);
 
 monitor.config(function($routeProvider){
-    $routeProvider.when("/monitor/elapsed",{
-        templateUrl:"templates/monitor/monitor.html",
-        controller:"monitorElapsed"
-    }).when("/monitor/elapsed/:service",{
-        templateUrl:"templates/monitor/monitor.html",
-        controller:"monitorElapsed"
+    $routeProvider.when("/admin/monitor/:application/:service/overview",{
+        templateUrl:"templates/monitor/monitor-overview.html",
+        controller:"monitorOverview"
+    }).when("/admin/monitor/:application/:service/:method/charts",{
+        templateUrl:"templates/monitor/monitor-charts.html",
+        controller:"monitorCharts"
     });
 });
-monitor._generateElapsedOption = function(data){
-	var xAxis = [];
-	var elapsed = [];
-	var maxElapsed = [];
-	angular.forEach(data, function(item){
-		var timestamp = new Date();
-		timestamp.setTime(item.timestamp);
-		xAxis.push(timestamp.toLocaleTimeString().replace(/^\D*/,''));
-		
-		elapsed.push(item.elapsed);
-		maxElapsed.push(item.maxElapsed);
-	});
-	var option = {
-	    title : {
-	        text: '服务调用耗时',
-	        subtext: '单位(ms)'
-	    },
-	    tooltip : {
-	        trigger: 'axis'
-	    },
-	    legend: {
-	        data:['平均耗时', '最大耗时']
-	    },
-	    toolbox: {
-	        show : true,
-	        feature : {
-	            mark : {show: true},
-	            dataView : {show: true, readOnly: false},
-	            magicType : {show: true, type: ['line', 'bar']},
-	            restore : {show: true},
-	            saveAsImage : {show: true}
-	        }
-	    },
-	    dataZoom : {
-	        show : false,
-	        start : 0,
-	        end : 100
-	    },
-	    xAxis : [
-	        {
-	            type : 'category',
-	            boundaryGap : true,
-	            data : xAxis
-	        }
-	    ],
-	    yAxis : [
-	        {
-	            type : 'value',
-	            scale: true,
-	            name : '时间 (ms)',
-	            boundaryGap: [0.2, 0.2]
-	        }
-	    ],
-	    series : [
-	        {
-	            name:'平均耗时',
-	            type:'line',
-	            data:elapsed
-	        },
-	        {
-	            name:'最大耗时',
-	            type:'line',
-	            data:maxElapsed
-	        }
-	    ]
-	};
-	return option;
-}
-monitor.controller("monitorElapsed",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
-    $menu.switchMenu("monitor/elapsed");
-    $breadcrumb.pushCrumb($routeParams.address,"查看服务"+$routeParams.service+"的执行耗时","monitor/elapsed");
-    var dataUrl = "monitor/" + $routeParams.service + "/monitors.htm";
-    var stop;
-    var lastTimestamp;
-    $scope.refresh = function() {
-        // Don't start a new refresh if we are already refreshing
-        if ( angular.isDefined(stop) ) return;
-        stop = $interval(function() {
-        	$httpWrapper.post({
-                url: dataUrl,
-                data: {lastTimestamp: lastTimestamp},
-                success:function(data){
-                	if(data.length == 0){
-                		return;
-                	}
-            		lastTimestamp = data[data.length -1].timestamp;
-                	var xAxis = [];
-                	var elapsed = [];
-                	var maxElapsed = [];
-                	angular.forEach(data, function(item){
-                		var timestamp = new Date();
-                		timestamp.setTime(item.timestamp);
-                		xAxis.push(timestamp.toLocaleTimeString().replace(/^\D*/,''));
-                		
-                		elapsed.push(item.elapsed);
-                		maxElapsed.push(item.maxElapsed);
-                	});
-                	var i = 0;
-                	while(i < elapsed.length){
-	                	$scope.chart.addData([
-	                	                      [
-	                	                       0,        // 系列索引
-	                	                       elapsed[i], // 新增数据
-	                	                       false,     // 新增数据是否从队列头部插入
-	                	                       true     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
-	                	                       ],
-	                	                       [
-	                	                        1,        // 系列索引
-	                	                        maxElapsed[i], // 新增数据
-	                	                        false,    // 新增数据是否从队列头部插入
-	                	                        true,    // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
-	                	                        xAxis[i]  // 坐标轴标签
-	                	                        ]
-	                	                      ]);
-	                	i++;
-                	}
-            	}
-            });
-        }, 2000);
-    };
-    $scope.stopRefresh = function() {
-    	if (angular.isDefined(stop)) {
-    		$interval.cancel(stop);
-    		stop = undefined;
-	    }
-	};
-	$scope.$on('$destroy', function() {
-		// Make sure that the interval is destroyed too
-        $scope.stopRefresh();
-    });
-    $httpWrapper.post({
-        url: dataUrl,
-        success:function(data){
-        	if(data.lenght > 0){
-        		lastTimpstamp = data[data.length -1].timpstamp;
-        	}
-        	
-            require( [
-                'echarts',
-                'echarts/chart/line', 
-                'echarts/chart/bar'
-            ], function (echarts) {
-                require(['echarts/theme/shine'], function(curTheme){
-                	var option = monitor._generateElapsedOption(data);
-            		$scope.chart = echarts.init(document.getElementById('elapsed'));
-            		$scope.chart.setTheme(curTheme)
-                    $scope.chart.setOption(option);
-            		$scope.refresh();
-                });
-            });
+
+monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
+    $scope.service = $routeParams.service;
+    $scope.application=$routeParams.application;
+    $scope.method=$routeParams.method;
+    $menu.switchMenu("admin/apps");
+    $breadcrumb.pushCrumb("方法"+$routeParams.service+"."+$routeParams.method+"监控室","方法"+$routeParams.service+"."+$routeParams.method+"监控室","monitor-charts");
+    $scope.timeRange=1;
+    var loadStatisticsData = function(){
+        $httpWrapper.post({
+            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange+"/monitors.htm",
+            success:function(statistics){
+                generateElapsedOptions(statistics);
+                generateConcurrentOptions(statistics);
+                generateKBPS(statistics);
+                generateTps(statistics);
+                generateFailureAndSuccess(statistics);
+                generateInputAndOutPut(statistics);
+            }
+        });
+    }
+    var generateRendingData =function(statistics,dataKeys){
+        var rendingData={};
+        var xAxisData =[];
+        for(var i=0;i<statistics.length;i++){
+            var date = new Date(statistics[i].timestamp);
+            xAxisData.push(date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds());
         }
-    });
+        rendingData.xAxisData=xAxisData;
+        rendingData.mainData=[];
+        for(var i=0;i<dataKeys.length;i++){
+            var data=[];
+            for(var j=0;j<statistics.length;j++){
+                data.push(statistics[j][dataKeys[i]]);
+            }
+            rendingData.mainData.push(data);
+        }
+        return rendingData;
+    }
+
+    var generateElapsedOptions = function(statistics){
+        require( [
+            'echarts',
+            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+        ], function (echarts) {
+            require(['echarts/theme/macarons'], function(curTheme){
+                var rendingData = generateRendingData(statistics,["elapsed"]);
+                var option = {
+                    title : {
+                        text: '方法耗时监控',
+                        subtext: '来自应用端'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['耗时']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : rendingData.xAxisData,
+                            show:false
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'耗时',
+                            type:'line',
+                            data:rendingData.mainData[0],
+                            markLine : {
+                                data : [
+                                    {type : 'average', name : '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                var myChart = echarts.init(document.getElementById('elapsed'));
+                myChart.setTheme(curTheme)
+                myChart.setOption(option);
+            });
+        });
+    }
+
+    var generateConcurrentOptions = function(statistics){
+        require( [
+            'echarts',
+            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+        ], function (echarts) {
+            require(['echarts/theme/macarons'], function(curTheme){
+                var rendingData = generateRendingData(statistics,["concurrent"]);
+                var option = {
+                    title : {
+                        text: '方法并发监控',
+                        subtext: '来自应用端'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['并发']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : rendingData.xAxisData,
+                            show:false
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'耗时',
+                            type:'line',
+                            data:rendingData.mainData[0],
+                            markLine : {
+                                data : [
+                                    {type : 'average', name : '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                var myChart = echarts.init(document.getElementById('concurrent'));
+                myChart.setTheme(curTheme)
+                myChart.setOption(option);
+            });
+        });
+    }
+
+    var generateTps = function(statistics){
+        require( [
+            'echarts',
+            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+        ], function (echarts) {
+            require(['echarts/theme/macarons'], function(curTheme){
+                var rendingData = generateRendingData(statistics,["tps"]);
+                var option = {
+                    title : {
+                        text: 'TPS',
+                        subtext: '来自应用端'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['TPS']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : rendingData.xAxisData,
+                            show:false
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'tps',
+                            type:'line',
+                            data:rendingData.mainData[0],
+                            markLine : {
+                                data : [
+                                    {type : 'average', name : '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                var myChart = echarts.init(document.getElementById('tps'));
+                myChart.setTheme(curTheme)
+                myChart.setOption(option);
+            });
+        });
+    }
+    
+    var generateKBPS = function (statistics) {
+        require( [
+            'echarts',
+            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+        ], function (echarts) {
+            require(['echarts/theme/macarons'], function(curTheme){
+                var rendingData = generateRendingData(statistics,["kbps"]);
+                var option = {
+                    title : {
+                        text: 'KBPS',
+                        subtext: '来自应用端'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['KBPS']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : rendingData.xAxisData,
+                            show:false
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'KBPS',
+                            type:'line',
+                            data:rendingData.mainData[0],
+                            markLine : {
+                                data : [
+                                    {type : 'average', name : '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                var myChart = echarts.init(document.getElementById('kbps'));
+                myChart.setTheme(curTheme)
+                myChart.setOption(option);
+            });
+        });
+    }
+    var generateInputAndOutPut = function (statistics) {
+        require( [
+            'echarts',
+            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+        ], function (echarts) {
+            require(['echarts/theme/macarons'], function(curTheme){
+                var rendingData = generateRendingData(statistics,["input","output"]);
+                var option = {
+                    title : {
+                        text: '方法数据传输监控',
+                        subtext: '来自应用端'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['输出数据','输入数据']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : rendingData.xAxisData,
+                            show:false
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'输出数据',
+                            type:'line',
+                            data:rendingData.mainData[0],
+                            markLine : {
+                                data : [
+                                    {type : 'average', name : '平均值'}
+                                ]
+                            }
+                        }, {
+                            name:'输入数据',
+                            type:'line',
+                            data:rendingData.mainData[1],
+                            markLine : {
+                                data : [
+                                    {type : 'average', name : '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                var myChart = echarts.init(document.getElementById('input-output'));
+                myChart.setTheme(curTheme)
+                myChart.setOption(option);
+            });
+        });
+    }
+    var generateFailureAndSuccess = function(statistics){
+        require( [
+            'echarts',
+            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+        ], function (echarts) {
+            require(['echarts/theme/macarons'], function(curTheme){
+                var rendingData = generateRendingData(statistics,["successCount","failureCount"]);
+                var option = {
+                    title : {
+                        text: '方法调用成功率',
+                        subtext: '来自应用端'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['成功次数','失败次数']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : rendingData.xAxisData,
+                            show:false
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'成功次数',
+                            type:'line',
+                            data:rendingData.mainData[0],
+                            markLine : {
+                                data : [
+                                    {type : 'average', name : '平均值'}
+                                ]
+                            }
+                        }, {
+                            name:'失败次数',
+                            type:'line',
+                            data:rendingData.mainData[1],
+                            markLine : {
+                                data : [
+                                    {type : 'average', name : '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                var myChart = echarts.init(document.getElementById('failure-success'));
+                myChart.setTheme(curTheme)
+                myChart.setOption(option);
+            });
+        });
+    }
+    loadStatisticsData();
+});
+
+monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
+    $menu.switchMenu("admin/apps");
+    $breadcrumb.pushCrumb("查看服务"+$routeParams.service+"监控信息概要列表","查看服务"+$routeParams.service+"监控信息概要列表","monitor-overview");
+    $scope.service=$routeParams.service;
+    $scope.application=$routeParams.application;
+    $scope.timeRange=1;
+    var loadOverviewData = function(){
+        $httpWrapper.post({
+            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$scope.timeRange+"/monitors.htm",
+            success:function(data){
+                if(data.length>0){
+                    $scope.details=data;
+                }else{
+                    $scope.isEmpty=true;
+                }
+            }
+        });
+    }
+    loadOverviewData();
+
 });

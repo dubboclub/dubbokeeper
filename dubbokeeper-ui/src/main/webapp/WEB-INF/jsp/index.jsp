@@ -38,6 +38,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/http.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/dialog.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/stickup.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/echarts.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/breadcrumb/breadcrumb.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/provider.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/apps.js"></script>

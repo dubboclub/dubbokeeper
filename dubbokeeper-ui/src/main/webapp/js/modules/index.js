@@ -1,4 +1,4 @@
-var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','zoopeeper','httpWrapper','override','router','theme']);
+var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','zoopeeper','httpWrapper','override','router','theme','echarts']);
 dubbokeeper.controller("dubbokeeperCtrl",function($scope,$dkContext){
     $dkContext._init($scope);
     $scope.currentHome={};
@@ -29,18 +29,6 @@ dubbokeeper.barDataset=[{
         identify:"admin/routeConfig",
         href:"/admin/route/list",
         icon:"icon-random"
-    }]
-},{
-    barShowName:"Monitor",
-    barIdentify:"monitor",
-    barHref:"/monitor/elapsed",
-    barIconClass:"icon-bar-chart",
-    menus:[{
-        showName:"耗时",
-        identify:"monitor/elapsed",
-        href:"/monitor/elapsed",
-        icon:"glyphicon glyphicon-home",
-        isHome:true
     }]
 },{
     barShowName:"ZooPeeper",
