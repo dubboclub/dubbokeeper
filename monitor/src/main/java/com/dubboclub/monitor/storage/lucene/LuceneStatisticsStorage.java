@@ -166,6 +166,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
                     Document document = searcher.doc(scoreDocs[i].doc);
                     statisticsList.add(parseDocToStatistics(document));
                 }
+                Collections.sort(statisticsList);
                 return statisticsList;
             }
         } catch (IOException e) {

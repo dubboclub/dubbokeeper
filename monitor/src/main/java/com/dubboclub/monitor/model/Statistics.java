@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.util.Date;
 
-public class Statistics {
+public class Statistics implements Comparable<Statistics> {
 	//发生的时间戳
 	private long timestamp;
 	private String serviceInterface;
@@ -167,7 +167,12 @@ public class Statistics {
 		this.output = output;
 	}
 
-	public static enum ApplicationType{
+    @Override
+    public int compareTo(Statistics o) {
+        return this.getTimestamp()>o.getTimestamp()?1:0;
+    }
+
+    public static enum ApplicationType{
 		CONSUMER,PROVIDER
 	}
 	 

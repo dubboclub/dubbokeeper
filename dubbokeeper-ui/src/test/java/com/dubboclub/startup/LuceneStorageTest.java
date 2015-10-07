@@ -22,7 +22,7 @@ public class LuceneStorageTest {
         properties.load(LuceneStorageTest.class.getClassLoader().getResourceAsStream("dubbo.properties"));
         com.alibaba.dubbo.common.utils.ConfigUtils.setProperties(properties);
         long start = System.currentTimeMillis();
-        List<Statistics> statisticsList = statisticsStorage.queryStatisticsForMethod("dubbo-consumer-demo", "com.bieber.dubbo.service.MyFirstDubboService", "sayHello", System.currentTimeMillis() - 60 * 1000*10, System.currentTimeMillis());
+        List<Statistics> statisticsList = statisticsStorage.queryStatisticsForMethod("dubbo-consumer-demo", "com.bieber.dubbo.service.MyFirstDubboService", "sayHello", System.currentTimeMillis() - 60 * 1000*2, System.currentTimeMillis());
         System.out.println(JSON.toJSONString(statisticsList));
         System.out.println("size:"+statisticsList.size());
         System.out.println("elapsed:" + (System.currentTimeMillis() - start));
