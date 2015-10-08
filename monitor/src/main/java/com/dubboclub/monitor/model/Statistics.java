@@ -10,10 +10,8 @@ public class Statistics implements Comparable<Statistics> {
 	private String serviceInterface;
 	private String method;
 	private ApplicationType type;
-
-    private long tps;
-
-    private long kbps;
+    private double tps;
+    private double kbps;
 	//发生的服务端
 	private String host;
 	//发生的应用名称
@@ -52,23 +50,23 @@ public class Statistics implements Comparable<Statistics> {
         this.failureCount = failureCount;
     }
 
-    public long getKbps() {
-        return kbps;
-    }
+	public double getTps() {
+		return tps;
+	}
 
-    public void setKbps(long kbps) {
-        this.kbps = kbps;
-    }
+	public void setTps(double tps) {
+		this.tps = tps;
+	}
 
-    public long getTps() {
-        return tps;
-    }
+	public double getKbps() {
+		return kbps;
+	}
 
-    public void setTps(long tps) {
-        this.tps = tps;
-    }
+	public void setKbps(double kbps) {
+		this.kbps = kbps;
+	}
 
-    public ApplicationType getRemoteType() {
+	public ApplicationType getRemoteType() {
 		return remoteType;
 	}
 

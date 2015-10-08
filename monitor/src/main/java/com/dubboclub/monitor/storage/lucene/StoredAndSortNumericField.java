@@ -29,5 +29,8 @@ public class StoredAndSortNumericField extends Field {
         super(name, TYPE_STORED_SORT);
         fieldsData = Integer.valueOf(value);
     }
-
+    public StoredAndSortNumericField(String name,double value){
+        super(name, TYPE_STORED_SORT);
+        fieldsData = Double.valueOf(value);
+    }
 }

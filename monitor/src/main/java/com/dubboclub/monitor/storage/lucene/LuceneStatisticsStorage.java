@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.dubboclub.monitor.DubboKeeperMonitorService;
 import com.dubboclub.monitor.model.MethodMonitorOverview;
 import com.dubboclub.monitor.model.Statistics;
+import com.dubboclub.monitor.model.Usage;
 import com.dubboclub.monitor.storage.StatisticsStorage;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -46,6 +47,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
 
     private static final ConcurrentHashMap<String, AtomicInteger> APPLICATION_WRITE_COUNTER = new ConcurrentHashMap<String, AtomicInteger>();
 
+    private static final int MAX_GROUP_SIZE=100000;
 
     private static final String LUCENE_COMMIT_FREQUENCY = "monitor.lucene.commit.frequency";
 
@@ -105,8 +107,6 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
                 LUCENE_WRITER_MAP.putIfAbsent(statistics.getApplication(), indexWriter);
             }
             IndexWriter indexWriter = LUCENE_WRITER_MAP.get(statistics.getApplication());
-
-
             Document document = new Document();
             document.add(new StoredAndSortStringField(DubboKeeperMonitorService.APPLICATION, statistics.getApplication()));
             document.add(new StoredAndSortStringField(DubboKeeperMonitorService.INTERFACE, statistics.getServiceInterface()));
@@ -224,7 +224,6 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
                     methodMonitorOverview.setMaxElapsed(Long.parseLong(searcher.doc(doc.doc).get(DubboKeeperMonitorService.ELAPSED)));
                     methodMonitorOverviews.put(method,methodMonitorOverview);
                 }
-
                 groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.ELAPSED, false, searcher, query, groupSort);
                 for (GroupDocs group : groupDocs) {
                     ScoreDoc doc = group.scoreDocs[0];
@@ -338,6 +337,90 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         return new ArrayList<MethodMonitorOverview>();
     }
 
+    @Override
+    public Collection<Usage> queryMethodUsage(String application, String service, String method, long startTime, long endTime) {
+        if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
+            return new ArrayList<Usage>();
+        }
+        TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
+        TermQuery interfaceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
+        TermQuery methodQuery = new TermQuery(new Term(DubboKeeperMonitorService.METHOD, new BytesRef(method)));
+        NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, startTime, endTime, true, true);
+        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+        queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
+        queryBuilder.add(new BooleanClause(interfaceQuery, BooleanClause.Occur.MUST));
+        queryBuilder.add(new BooleanClause(methodQuery, BooleanClause.Occur.MUST));
+        queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
+        Sort groupSort = new Sort();
+        SortField groupSortField = new SortField(DubboKeeperMonitorService.REMOTE_ADDRESS, SortField.Type.STRING);
+        groupSort.setSort(groupSortField);
+        try{
+            TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.REMOTE_ADDRESS, groupSort, MAX_GROUP_SIZE);
+            IndexSearcher searcher = generateSearcher(application);
+            Query query = queryBuilder.build();
+            searcher.search(query, firstPassCollector);
+            Collection<SearchGroup<BytesRef>> topSearchGroups = firstPassCollector.getTopGroups(0, false);
+            GroupDocs[] groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.REMOTE_ADDRESS, false, searcher, query, groupSort);
+            return generateUsage(groupDocs,searcher);
+        }catch (IOException e) {
+            logger.error("failed to grouping search", e);
+        }
+        return new ArrayList<Usage>();
+    }
+    
+
+    @Override
+    public Collection<Usage> queryServiceUsage(String application, String service, long startTime, long endTime) {
+        if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
+            return new ArrayList<Usage>();
+        }
+        TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
+        TermQuery interfaceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
+        NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, startTime, endTime, true, true);
+        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+        queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
+        queryBuilder.add(new BooleanClause(interfaceQuery, BooleanClause.Occur.MUST));
+        queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
+        Sort groupSort = new Sort();
+        SortField groupSortField = new SortField(DubboKeeperMonitorService.REMOTE_ADDRESS, SortField.Type.STRING);
+        groupSort.setSort(groupSortField);
+        try{
+            TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.REMOTE_ADDRESS, groupSort, MAX_GROUP_SIZE);
+            IndexSearcher searcher = generateSearcher(application);
+            Query query = queryBuilder.build();
+            searcher.search(query, firstPassCollector);
+            Collection<SearchGroup<BytesRef>> topSearchGroups = firstPassCollector.getTopGroups(0, false);
+            GroupDocs[] groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.REMOTE_ADDRESS, false, searcher, query, groupSort);
+            return generateUsage(groupDocs,searcher);
+        }catch (IOException e) {
+            logger.error("failed to grouping search", e);
+        }
+        return new ArrayList<Usage>();
+    }
+    private List<Usage> generateUsage(GroupDocs[] groupDocs ,IndexSearcher searcher) throws IOException {
+        List<Usage> usages = new ArrayList<Usage>();
+        if(groupDocs==null||groupDocs.length<=0){
+            return usages;
+        }
+        Set<String> fields = new HashSet<String>();
+        fields.add(DubboKeeperMonitorService.FAILURE);
+        fields.add(DubboKeeperMonitorService.SUCCESS);
+        for(GroupDocs group:groupDocs){
+            Usage usage = new Usage();
+            usage.setRemoteAddress(((BytesRef)group.groupValue).utf8ToString());
+            ScoreDoc[] docs = group.scoreDocs;
+            long count=0;
+            for(ScoreDoc doc :docs){
+                Document document = searcher.doc(doc.doc, fields);
+                count+=Long.parseLong(document.get(DubboKeeperMonitorService.FAILURE));
+                count+=Long.parseLong(document.get(DubboKeeperMonitorService.SUCCESS));
+            }
+            usage.setCount(count);
+            usages.add(usage);
+        }
+        return usages;
+    }
+
     private GroupDocs[] groupSearch(Collection<SearchGroup<BytesRef>> topSearchGroups, String withinGroupField, boolean reverse, IndexSearcher searcher, Query query, Sort groupSort) throws IOException {
         Sort withinGroupSort = new Sort();
         SortField withinGroupSortField = new SortField(withinGroupField, SortField.Type.LONG, reverse);
@@ -348,11 +431,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         return secondPassCollector.getTopGroups(0).groups;
     }
 
-    @Override
-    public List<Statistics> queryAllApplicationAbstractInfo(long startTime, long endTime) {
-        return null;
-    }
-
+   
     private IndexSearcher generateSearcher(String application) throws IOException {
         return new IndexSearcher(DirectoryReader.open(generateLuceneDirectory(application)));
     }

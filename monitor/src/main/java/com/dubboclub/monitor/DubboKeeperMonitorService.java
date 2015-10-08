@@ -1,5 +1,6 @@
 package com.dubboclub.monitor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -24,8 +25,6 @@ public class DubboKeeperMonitorService implements MonitorService {
 	
 	public static final String REMOTE_ADDRESS="remoteAddress";
 	
-	public static final String INVOKE_STAT="invokeStat";
-	
 	public static final String REMOTE_TYPE="remoteType";
 	
 	public static final String APPLICATION_TYPE="applicationType";
@@ -48,7 +47,9 @@ public class DubboKeeperMonitorService implements MonitorService {
 		statistics.setTimestamp(System.currentTimeMillis());
 		statistics.setApplication(statisticsURL.getParameter(MonitorService.APPLICATION));
 		statistics.setConcurrent(statisticsURL.getParameter(MonitorService.CONCURRENT, 1));
-
+		if(statistics.getConcurrent()==0){
+			statistics.setConcurrent(1);
+		}
 		statistics.setHost(statisticsURL.getHost());
 		statistics.setServiceInterface(statisticsURL.getParameter(MonitorService.INTERFACE));
 		statistics.setMethod(statisticsURL.getParameter(MonitorService.METHOD));
@@ -65,14 +66,22 @@ public class DubboKeeperMonitorService implements MonitorService {
         statistics.setInput(statisticsURL.getParameter(MonitorService.INPUT,0)/totalCount);
         statistics.setOutput(statisticsURL.getParameter(MonitorService.OUTPUT,0)/totalCount);
         if(statistics.getElapsed()!=0){
-            statistics.setTps((long) (((double)successCount/(double)statistics.getElapsed())*1000));//每秒能够处理的请求数量
+			//TPS=并发数/响应时间
+			BigDecimal tps = new BigDecimal(statistics.getConcurrent());
+			tps=tps.divide(BigDecimal.valueOf(statistics.getElapsed()));
+			tps=tps.multiply(BigDecimal.valueOf(1000));
+			tps.setScale(2,BigDecimal.ROUND_HALF_UP);
+            statistics.setTps(tps.doubleValue());//每秒能够处理的请求数量
         }
+		BigDecimal kbps = new BigDecimal(statistics.getTps());
         if(statistics.getInput()!=0&&statistics.getElapsed()!=0){
-            statistics.setKbps((long) (((double)statisticsURL.getParameter(MonitorService.INPUT,0)/(double)statistics.getElapsed()/1024)*1000));
+			//kbps=tps*平均每次传输的数据量
+			kbps=kbps.multiply(BigDecimal.valueOf(statistics.getInput()).divide(BigDecimal.valueOf(1024)));
         }else if(statistics.getElapsed()!=0){
-            statistics.setKbps((long) (((double)statisticsURL.getParameter(MonitorService.OUTPUT, 0)/(double)statistics.getElapsed()/1024)*1000));
+			kbps=kbps.multiply(BigDecimal.valueOf(statistics.getOutput()).divide(BigDecimal.valueOf(1024)));
         }
-
+		kbps.setScale(2,BigDecimal.ROUND_HALF_UP);
+		statistics.setKbps(kbps.doubleValue());
 		if(statisticsURL.hasParameter(MonitorService.PROVIDER)){
 			statistics.setType(Statistics.ApplicationType.CONSUMER);
 			statistics.setRemoteType(Statistics.ApplicationType.PROVIDER);
