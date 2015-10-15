@@ -16,7 +16,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
     $scope.method=$routeParams.method;
     $menu.switchMenu("admin/apps");
     $breadcrumb.pushCrumb("方法"+$routeParams.service+"."+$routeParams.method+"监控室","方法"+$routeParams.service+"."+$routeParams.method+"监控室","monitor-charts");
-    $scope.timeRange=1;
+    $scope.timeRange=100;
     var loadStatisticsData = function(){
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange+"/monitors.htm",
@@ -91,6 +91,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                     ],
                     series : [
                         {
+                            symbolSize:0,
                             name:'耗时',
                             type:'line',
                             data:rendingData.mainData[0],
@@ -98,6 +99,13 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                                 data : [
                                     {type : 'average', name : '平均值'}
                                 ]
+                            },
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:false
+                                    }
+                                }
                             }
                         }
                     ]
@@ -151,13 +159,21 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                     ],
                     series : [
                         {
-                            name:'耗时',
+                            symbolSize:0,
+                            name:'并发',
                             type:'line',
                             data:rendingData.mainData[0],
                             markLine : {
                                 data : [
                                     {type : 'average', name : '平均值'}
                                 ]
+                            },
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:false
+                                    }
+                                }
                             }
                         }
                     ]
@@ -211,13 +227,21 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                     ],
                     series : [
                         {
-                            name:'tps',
+                            symbolSize:0,
+                            name:'TPS',
                             type:'line',
                             data:rendingData.mainData[0],
                             markLine : {
                                 data : [
                                     {type : 'average', name : '平均值'}
                                 ]
+                            },
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:false
+                                    }
+                                }
                             }
                         }
                     ]
@@ -271,6 +295,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                     ],
                     series : [
                         {
+                            symbolSize:0,
                             name:'KBPS',
                             type:'line',
                             data:rendingData.mainData[0],
@@ -278,6 +303,13 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                                 data : [
                                     {type : 'average', name : '平均值'}
                                 ]
+                            },
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:false
+                                    }
+                                }
                             }
                         }
                     ]
@@ -330,6 +362,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                     ],
                     series : [
                         {
+                            symbolSize:0,
                             name:'输出数据',
                             type:'line',
                             data:rendingData.mainData[0],
@@ -337,8 +370,16 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                                 data : [
                                     {type : 'average', name : '平均值'}
                                 ]
+                            },
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:false
+                                    }
+                                }
                             }
                         }, {
+                            symbolSize:0,
                             name:'输入数据',
                             type:'line',
                             data:rendingData.mainData[1],
@@ -346,6 +387,13 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                                 data : [
                                     {type : 'average', name : '平均值'}
                                 ]
+                            },
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:false
+                                    }
+                                }
                             }
                         }
                     ]
@@ -398,6 +446,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                     ],
                     series : [
                         {
+                            symbolSize:0,
                             name:'成功次数',
                             type:'line',
                             data:rendingData.mainData[0],
@@ -405,8 +454,16 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                                 data : [
                                     {type : 'average', name : '平均值'}
                                 ]
+                            },
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:false
+                                    }
+                                }
                             }
                         }, {
+                            symbolSize:0,
                             name:'失败次数',
                             type:'line',
                             data:rendingData.mainData[1],
@@ -414,6 +471,13 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                                 data : [
                                     {type : 'average', name : '平均值'}
                                 ]
+                            },
+                            itemStyle:{
+                                normal:{
+                                    label:{
+                                        show:false
+                                    }
+                                }
                             }
                         }
                     ]
@@ -432,7 +496,7 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
     $breadcrumb.pushCrumb("查看服务"+$routeParams.service+"监控信息概要列表","查看服务"+$routeParams.service+"监控信息概要列表","monitor-overview");
     $scope.service=$routeParams.service;
     $scope.application=$routeParams.application;
-    $scope.timeRange=1;
+    $scope.timeRange=100;
     var loadOverviewData = function(){
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$scope.timeRange+"/monitors.htm",

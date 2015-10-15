@@ -194,9 +194,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
 
     @Override
     public Collection<MethodMonitorOverview> queryMethodMonitorOverview(String application, String serviceInterface, int methodSize,long startTime,long endTime) {
-        if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
+        /*if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
             return new ArrayList<MethodMonitorOverview>();
-        }
+        }*/
         TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
         TermQuery interfaceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(serviceInterface)));
         NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, startTime, endTime, true, true);
@@ -337,11 +337,12 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         return new ArrayList<MethodMonitorOverview>();
     }
 
+
     @Override
     public Collection<Usage> queryMethodUsage(String application, String service, String method, long startTime, long endTime) {
-        if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
+        /*if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
             return new ArrayList<Usage>();
-        }
+        }*/
         TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
         TermQuery interfaceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
         TermQuery methodQuery = new TermQuery(new Term(DubboKeeperMonitorService.METHOD, new BytesRef(method)));
@@ -371,9 +372,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
 
     @Override
     public Collection<Usage> queryServiceUsage(String application, String service, long startTime, long endTime) {
-        if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
+       /* if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
             return new ArrayList<Usage>();
-        }
+        }*/
         TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
         TermQuery interfaceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
         NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, startTime, endTime, true, true);
