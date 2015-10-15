@@ -31,13 +31,13 @@ public class MethodMonitorOverview {
 
     private int maxSuccess;
 
-    private long maxTps;
+    private double maxTps;
 
-    private long minTps;
+    private double minTps;
 
-    private long maxKbps;
+    private double maxKbps;
 
-    private long minKbps;
+    private double minKbps;
 
     public int getMinFailure() {
         return minFailure;
@@ -71,35 +71,35 @@ public class MethodMonitorOverview {
         this.maxSuccess = maxSuccess;
     }
 
-    public long getMaxTps() {
+    public double getMaxTps() {
         return maxTps;
     }
 
-    public void setMaxTps(long maxTps) {
+    public void setMaxTps(double maxTps) {
         this.maxTps = maxTps;
     }
 
-    public long getMinTps() {
+    public double getMinTps() {
         return minTps;
     }
 
-    public void setMinTps(long minTps) {
+    public void setMinTps(double minTps) {
         this.minTps = minTps;
     }
 
-    public long getMaxKbps() {
+    public double getMaxKbps() {
         return maxKbps;
     }
 
-    public void setMaxKbps(long maxKbps) {
+    public void setMaxKbps(double maxKbps) {
         this.maxKbps = maxKbps;
     }
 
-    public long getMinKbps() {
+    public double getMinKbps() {
         return minKbps;
     }
 
-    public void setMinKbps(long minKbps) {
+    public void setMinKbps(double minKbps) {
         this.minKbps = minKbps;
     }
 

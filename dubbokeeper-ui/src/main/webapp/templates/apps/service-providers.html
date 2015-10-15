@@ -57,8 +57,8 @@
                         <td class="text-left">
                             <span><a href="#/admin/edit/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('halfWeight',provider)"><i class="icon-arrow-down" title="半权"></i> </a></span>
-                            <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('copy',provider)"><i class="icon-copy" title="复制"></i> </a></span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('doubleWeight',provider)"><i class="icon-arrow-up" title="倍权"></i> </a> </span>
+                            <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('copy',provider)"><i class="icon-copy" title="复制"></i> </a></span>
                             <span ng-show="!provider.enabled">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('enable',provider)"><i class="glyphicon glyphicon-ok" title="启用"></i> </a> </span>
                             <span ng-show="!provider.dynamic">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('delete',provider)"><i class="glyphicon glyphicon-trash"  title="删除"></i> </a> </span>
                             <span ng-show="provider.enabled">&nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('disable',provider)"><i class="glyphicon glyphicon-ban-circle" title="禁用"></i> </a></span>

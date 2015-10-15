@@ -68,19 +68,17 @@ public class DubboKeeperMonitorService implements MonitorService {
         if(statistics.getElapsed()!=0){
 			//TPS=并发数/响应时间
 			BigDecimal tps = new BigDecimal(statistics.getConcurrent());
-			tps=tps.divide(BigDecimal.valueOf(statistics.getElapsed()));
+			tps=tps.divide(BigDecimal.valueOf(statistics.getElapsed()),2,BigDecimal.ROUND_HALF_DOWN);
 			tps=tps.multiply(BigDecimal.valueOf(1000));
-			tps.setScale(2,BigDecimal.ROUND_HALF_UP);
             statistics.setTps(tps.doubleValue());//每秒能够处理的请求数量
         }
 		BigDecimal kbps = new BigDecimal(statistics.getTps());
         if(statistics.getInput()!=0&&statistics.getElapsed()!=0){
 			//kbps=tps*平均每次传输的数据量
-			kbps=kbps.multiply(BigDecimal.valueOf(statistics.getInput()).divide(BigDecimal.valueOf(1024)));
+			kbps=kbps.multiply(BigDecimal.valueOf(statistics.getInput()).divide(BigDecimal.valueOf(1024),2,BigDecimal.ROUND_HALF_DOWN));
         }else if(statistics.getElapsed()!=0){
-			kbps=kbps.multiply(BigDecimal.valueOf(statistics.getOutput()).divide(BigDecimal.valueOf(1024)));
+			kbps=kbps.multiply(BigDecimal.valueOf(statistics.getOutput()).divide(BigDecimal.valueOf(1024),2,BigDecimal.ROUND_HALF_DOWN));
         }
-		kbps.setScale(2,BigDecimal.ROUND_HALF_UP);
 		statistics.setKbps(kbps.doubleValue());
 		if(statisticsURL.hasParameter(MonitorService.PROVIDER)){
 			statistics.setType(Statistics.ApplicationType.CONSUMER);

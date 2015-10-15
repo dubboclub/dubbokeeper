@@ -183,8 +183,8 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         statistics.setRemoteType(Statistics.ApplicationType.valueOf(document.getBinaryValue(DubboKeeperMonitorService.REMOTE_TYPE).utf8ToString()));
         statistics.setTimestamp(Long.parseLong(document.get(DubboKeeperMonitorService.TIMESTAMP)));
         statistics.setServiceInterface(document.getBinaryValue(DubboKeeperMonitorService.INTERFACE).utf8ToString());
-        statistics.setKbps(Long.parseLong(document.get(DubboKeeperMonitorService.KBPS)));
-        statistics.setTps(Long.parseLong(document.get(DubboKeeperMonitorService.TPS)));
+        statistics.setKbps(Double.parseDouble(document.get(DubboKeeperMonitorService.KBPS)));
+        statistics.setTps(Double.parseDouble(document.get(DubboKeeperMonitorService.TPS)));
         statistics.setFailureCount(Integer.parseInt(document.get(DubboKeeperMonitorService.FAILURE)));
         statistics.setSuccessCount(Integer.parseInt(document.get(DubboKeeperMonitorService.SUCCESS)));
         statistics.setMethod(document.getBinaryValue(DubboKeeperMonitorService.METHOD).utf8ToString());
@@ -305,7 +305,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
                 for (GroupDocs group : groupDocs) {
                     ScoreDoc doc = group.scoreDocs[0];
                     String method = ((BytesRef) group.groupValue).utf8ToString();
-                    methodMonitorOverviews.get(method).setMaxTps(Long.parseLong(searcher.doc(doc.doc).get(DubboKeeperMonitorService.TPS)));
+                    methodMonitorOverviews.get(method).setMaxTps(Double.parseDouble(searcher.doc(doc.doc).get(DubboKeeperMonitorService.TPS)));
                 }
 
 
@@ -313,21 +313,21 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
                 for (GroupDocs group : groupDocs) {
                     ScoreDoc doc = group.scoreDocs[0];
                     String method = ((BytesRef) group.groupValue).utf8ToString();
-                    methodMonitorOverviews.get(method).setMinTps(Long.parseLong(searcher.doc(doc.doc).get(DubboKeeperMonitorService.TPS)));
+                    methodMonitorOverviews.get(method).setMinTps(Double.parseDouble(searcher.doc(doc.doc).get(DubboKeeperMonitorService.TPS)));
                 }
 
                 groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.KBPS, true, searcher, query, groupSort);
                 for (GroupDocs group : groupDocs) {
                     ScoreDoc doc = group.scoreDocs[0];
                     String method = ((BytesRef) group.groupValue).utf8ToString();
-                    methodMonitorOverviews.get(method).setMaxKbps(Long.parseLong(searcher.doc(doc.doc).get(DubboKeeperMonitorService.KBPS)));
+                    methodMonitorOverviews.get(method).setMaxKbps(Double.parseDouble(searcher.doc(doc.doc).get(DubboKeeperMonitorService.KBPS)));
                 }
 
                 groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.KBPS, false, searcher, query, groupSort);
                 for (GroupDocs group : groupDocs) {
                     ScoreDoc doc = group.scoreDocs[0];
                     String method = ((BytesRef) group.groupValue).utf8ToString();
-                    methodMonitorOverviews.get(method).setMinKbps(Long.parseLong(searcher.doc(doc.doc).get(DubboKeeperMonitorService.KBPS)));
+                    methodMonitorOverviews.get(method).setMinKbps(Double.parseDouble(searcher.doc(doc.doc).get(DubboKeeperMonitorService.KBPS)));
                 }
                 return methodMonitorOverviews.values();
             }

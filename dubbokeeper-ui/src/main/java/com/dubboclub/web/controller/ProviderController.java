@@ -2,11 +2,9 @@ package com.dubboclub.web.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.dubboclub.admin.service.OverrideService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +31,8 @@ public class ProviderController {
 
     @Autowired
     private ProviderService providerService;
+    @Autowired
+    private OverrideService overrideService;
 
 
     @RequestMapping("/{serviceKey}/providers.htm")
@@ -43,13 +43,16 @@ public class ProviderController {
     public @ResponseBody List<Provider> listProviderByHost(@PathVariable("applicationName")String applicationName,@PathVariable("host") String host){
         List<Provider> providers = providerService.listProviderByApplication(applicationName);
         Iterator<Provider> iterator = providers.iterator();
+        List<Provider> providerList = new ArrayList<Provider>();
         while(iterator.hasNext()){
             Provider provider = iterator.next();
             if(!provider.getAddress().equals(host)){
                 iterator.remove();
+            }else{
+                providerList.add(overrideService.configProvider(provider));
             }
         }
-        return providers;
+        return providerList;
     }
     
     @RequestMapping("/{serviceKey}/service-readme.htm")
