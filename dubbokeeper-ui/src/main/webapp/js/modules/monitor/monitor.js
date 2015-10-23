@@ -1,4 +1,4 @@
-var monitor = angular.module("monitor",['ngRoute']);
+var monitor = angular.module("monitor",['ngRoute','lineChart']);
 
 monitor.config(function($routeProvider){
     $routeProvider.when("/admin/monitor/:application/:service/overview",{
@@ -15,8 +15,14 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
     $scope.application=$routeParams.application;
     $scope.method=$routeParams.method;
     $menu.switchMenu("admin/apps");
+    $scope.elapsedOptions={};
+    $scope.concurrentOptions={};
+    $scope.tpsOptions={};
+    $scope.kbpsOptions={};
+    $scope.inputoutputOptions={};
+    $scope.failuresuccessOptions={};
     $breadcrumb.pushCrumb("方法"+$routeParams.service+"."+$routeParams.method+"监控室","方法"+$routeParams.service+"."+$routeParams.method+"监控室","monitor-charts");
-    $scope.timeRange=100;
+    $scope.timeRange=1000;
     var loadStatisticsData = function(){
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange+"/monitors.htm",
@@ -48,31 +54,52 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
         }
         return rendingData;
     }
-
-    var generateElapsedOptions = function(statistics){
+    var generateChart = function(title,subTitle,seriesConfig,xAxisData,targetDom){
+        var legends=[];
+        var series=[];
+        for(var i=0;i<seriesConfig.length;i++){
+            var seriesTpl = {
+                symbolSize:0,
+                name:seriesConfig[i].name,
+                type:'line',
+                data:seriesConfig[i].data,
+                markLine : {
+                    data : [
+                        {type : 'average', name : '平均值'}
+                    ]
+                },
+                itemStyle:{
+                    normal:{
+                        label:{
+                            show:false
+                        }
+                    }
+                }
+            };
+            series.push(seriesTpl);
+            legends.push(seriesConfig[i].name);
+        }
         require( [
             'echarts',
             'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
             'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
         ], function (echarts) {
             require(['echarts/theme/macarons'], function(curTheme){
-                var rendingData = generateRendingData(statistics,["elapsed"]);
                 var option = {
                     title : {
-                        text: '方法耗时监控',
-                        subtext: '来自应用端'
+                        text: title,
+                        subtext: subTitle
                     },
                     tooltip : {
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['耗时']
+                        data:legends
                     },
                     toolbox: {
                         show : true,
                         feature : {
                             magicType : {show: true, type: ['line', 'bar']},
-                            restore : {show: true},
                             saveAsImage : {show: true}
                         }
                     },
@@ -80,7 +107,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                     xAxis : [
                         {
                             type : 'category',
-                            data : rendingData.xAxisData,
+                            data : xAxisData,
                             show:false
                         }
                     ],
@@ -89,404 +116,71 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                             type : 'value'
                         }
                     ],
-                    series : [
-                        {
-                            symbolSize:0,
-                            name:'耗时',
-                            type:'line',
-                            data:rendingData.mainData[0],
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
-                                ]
-                            },
-                            itemStyle:{
-                                normal:{
-                                    label:{
-                                        show:false
-                                    }
-                                }
-                            }
-                        }
-                    ]
+                    series : series
                 };
-                var myChart = echarts.init(document.getElementById('elapsed'));
+                var myChart = echarts.init(targetDom);
                 myChart.setTheme(curTheme)
                 myChart.setOption(option);
             });
         });
+    }
+    var generateElapsedOptions = function(statistics){
+        var rendingData = generateRendingData(statistics,["elapsed"]);
+        var options = {};
+        options.title="方法耗时监控";
+        options.subTitle="来自应用端";
+        options.seriesConfig=[{name:'耗时(ms)',data:rendingData.mainData[0]}];
+        options.xAxis=rendingData.xAxisData;
+        $scope.elapsedOptions=options;
     }
 
     var generateConcurrentOptions = function(statistics){
-        require( [
-            'echarts',
-            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
-            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
-        ], function (echarts) {
-            require(['echarts/theme/macarons'], function(curTheme){
-                var rendingData = generateRendingData(statistics,["concurrent"]);
-                var option = {
-                    title : {
-                        text: '方法并发监控',
-                        subtext: '来自应用端'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['并发']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            magicType : {show: true, type: ['line', 'bar']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : rendingData.xAxisData,
-                            show:false
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : [
-                        {
-                            symbolSize:0,
-                            name:'并发',
-                            type:'line',
-                            data:rendingData.mainData[0],
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
-                                ]
-                            },
-                            itemStyle:{
-                                normal:{
-                                    label:{
-                                        show:false
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                };
-                var myChart = echarts.init(document.getElementById('concurrent'));
-                myChart.setTheme(curTheme)
-                myChart.setOption(option);
-            });
-        });
+        var rendingData = generateRendingData(statistics,["concurrent"]);
+        var options = {};
+        options.title="方法并发监控";
+        options.subTitle="来自应用端";
+        options.seriesConfig=[{name:'并发',data:rendingData.mainData[0]}];
+        options.xAxis=rendingData.xAxisData;
+        $scope.concurrentOptions=options;
     }
 
     var generateTps = function(statistics){
-        require( [
-            'echarts',
-            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
-            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
-        ], function (echarts) {
-            require(['echarts/theme/macarons'], function(curTheme){
-                var rendingData = generateRendingData(statistics,["tps"]);
-                var option = {
-                    title : {
-                        text: 'TPS',
-                        subtext: '来自应用端'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['TPS']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            magicType : {show: true, type: ['line', 'bar']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : rendingData.xAxisData,
-                            show:false
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : [
-                        {
-                            symbolSize:0,
-                            name:'TPS',
-                            type:'line',
-                            data:rendingData.mainData[0],
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
-                                ]
-                            },
-                            itemStyle:{
-                                normal:{
-                                    label:{
-                                        show:false
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                };
-                var myChart = echarts.init(document.getElementById('tps'));
-                myChart.setTheme(curTheme)
-                myChart.setOption(option);
-            });
-        });
+        var rendingData = generateRendingData(statistics,["tps"]);
+        var options = {};
+        options.title="TPS";
+        options.subTitle="来自应用端";
+        options.seriesConfig=[{name:'TPS',data:rendingData.mainData[0]}];
+        options.xAxis=rendingData.xAxisData;
+        $scope.tpsOptions=options;
     }
     
     var generateKBPS = function (statistics) {
-        require( [
-            'echarts',
-            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
-            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
-        ], function (echarts) {
-            require(['echarts/theme/macarons'], function(curTheme){
-                var rendingData = generateRendingData(statistics,["kbps"]);
-                var option = {
-                    title : {
-                        text: 'KBPS',
-                        subtext: '来自应用端'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['KBPS']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            magicType : {show: true, type: ['line', 'bar']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : rendingData.xAxisData,
-                            show:false
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : [
-                        {
-                            symbolSize:0,
-                            name:'KBPS',
-                            type:'line',
-                            data:rendingData.mainData[0],
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
-                                ]
-                            },
-                            itemStyle:{
-                                normal:{
-                                    label:{
-                                        show:false
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                };
-                var myChart = echarts.init(document.getElementById('kbps'));
-                myChart.setTheme(curTheme)
-                myChart.setOption(option);
-            });
-        });
+        var rendingData = generateRendingData(statistics,["kbps"]);
+        var options = {};
+        options.title="KBPS";
+        options.subTitle="来自应用端";
+        options.seriesConfig=[{name:'KBPS',data:rendingData.mainData[0]}];
+        options.xAxis=rendingData.xAxisData;
+        $scope.kbpsOptions=options;
     }
     var generateInputAndOutPut = function (statistics) {
-        require( [
-            'echarts',
-            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
-            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
-        ], function (echarts) {
-            require(['echarts/theme/macarons'], function(curTheme){
-                var rendingData = generateRendingData(statistics,["input","output"]);
-                var option = {
-                    title : {
-                        text: '方法数据传输监控',
-                        subtext: '来自应用端'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['输出数据','输入数据']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            magicType : {show: true, type: ['line', 'bar']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : rendingData.xAxisData,
-                            show:false
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : [
-                        {
-                            symbolSize:0,
-                            name:'输出数据',
-                            type:'line',
-                            data:rendingData.mainData[0],
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
-                                ]
-                            },
-                            itemStyle:{
-                                normal:{
-                                    label:{
-                                        show:false
-                                    }
-                                }
-                            }
-                        }, {
-                            symbolSize:0,
-                            name:'输入数据',
-                            type:'line',
-                            data:rendingData.mainData[1],
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
-                                ]
-                            },
-                            itemStyle:{
-                                normal:{
-                                    label:{
-                                        show:false
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                };
-                var myChart = echarts.init(document.getElementById('input-output'));
-                myChart.setTheme(curTheme)
-                myChart.setOption(option);
-            });
-        });
+        var rendingData = generateRendingData(statistics,["input","output"]);
+        var options = {};
+        options.title="方法数据传输监控";
+        options.subTitle="来自应用端";
+        options.seriesConfig=[{name:'输出数据',data:rendingData.mainData[0]},{name:'输入数据',data:rendingData.mainData[1]}];
+        options.xAxis=rendingData.xAxisData;
+        $scope.inputoutputOptions=options;
+        //generateChart('方法数据传输监控','来自应用端',[{name:'输出数据',data:rendingData.mainData[0]},{name:'输入数据',data:rendingData.mainData[1]}],rendingData.xAxisData,document.getElementById('input-output'));
     }
     var generateFailureAndSuccess = function(statistics){
-        require( [
-            'echarts',
-            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
-            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
-        ], function (echarts) {
-            require(['echarts/theme/macarons'], function(curTheme){
-                var rendingData = generateRendingData(statistics,["successCount","failureCount"]);
-                var option = {
-                    title : {
-                        text: '方法调用成功率',
-                        subtext: '来自应用端'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['成功次数','失败次数']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            magicType : {show: true, type: ['line', 'bar']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : rendingData.xAxisData,
-                            show:false
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : [
-                        {
-                            symbolSize:0,
-                            name:'成功次数',
-                            type:'line',
-                            data:rendingData.mainData[0],
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
-                                ]
-                            },
-                            itemStyle:{
-                                normal:{
-                                    label:{
-                                        show:false
-                                    }
-                                }
-                            }
-                        }, {
-                            symbolSize:0,
-                            name:'失败次数',
-                            type:'line',
-                            data:rendingData.mainData[1],
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
-                                ]
-                            },
-                            itemStyle:{
-                                normal:{
-                                    label:{
-                                        show:false
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                };
-                var myChart = echarts.init(document.getElementById('failure-success'));
-                myChart.setTheme(curTheme)
-                myChart.setOption(option);
-            });
-        });
+        var rendingData = generateRendingData(statistics,["successCount","failureCount"]);
+        var options = {};
+        options.title="方法调用成功率";
+        options.subTitle="来自应用端";
+        options.seriesConfig=[{name:'成功次数',data:rendingData.mainData[0]},{name:'失败次数',data:rendingData.mainData[1]}];
+        options.xAxis=rendingData.xAxisData;
+        $scope.failuresuccessOptions=options;
     }
     loadStatisticsData();
 });

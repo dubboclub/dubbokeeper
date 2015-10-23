@@ -5,7 +5,7 @@ package com.dubboclub.monitor.storage.lucene;
  */
 public enum LuceneDirectoryType {
     
-    RAM("ram"),MMAP("mmap"),NIOFS("niofs"),SIMPLE("simple");
+    MMAP("mmap"),NIOFS("niofs"),SIMPLE("simple");
     
     private String name;
     
@@ -20,6 +20,6 @@ public enum LuceneDirectoryType {
                 return type;
             }
         }
-        return RAM;
+        return NIOFS;
     }
 }

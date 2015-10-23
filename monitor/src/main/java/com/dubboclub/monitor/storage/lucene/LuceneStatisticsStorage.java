@@ -442,9 +442,6 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         String directory = ConfigUtils.getProperty("monitor.lucene.directory", System.getProperty("user.home") + "/monitor");
         LuceneDirectoryType type = LuceneDirectoryType.typeOf(directoryType);
         Directory luceneDirectory = null;
-        if (StringUtils.isEmpty(directory) && type != LuceneDirectoryType.RAM) {
-            throw new IllegalStateException("current lucene directory type is " + type + " must config monitor.lucene.directory");
-        }
         Path path = null;
         if (!StringUtils.isEmpty(directory)) {
             path = Paths.get(directory + File.separator + application);
@@ -453,9 +450,6 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
             }
         }
         switch (type) {
-            case RAM:
-                luceneDirectory = new RAMDirectory();
-                break;
             case MMAP:
                 luceneDirectory = new MMapDirectory(path);
                 break;
