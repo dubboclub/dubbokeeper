@@ -1,0 +1,130 @@
+
+<div class="row date-time-picker">
+    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+        <div class="row">
+            <div  class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <div class="input-group">
+                    <span class="form-control">{{startDate}} {{startHourTxt}}:{{startMinuteTxt}}-{{endDate}} {{endHourTxt}}:{{endMinuteTxt}}</span>
+                    <span class="input-group-addon select-range" ng-click="toggleRangeBlock()">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row date-time-range-picker-wrapper time-range-picker"  ng-show="rangeSlipUp">
+            <div class=" col-md-12 col-xs-12 col-lg-12 col-sm-12">
+               <div class="row date-picker-range-picker-container">
+                   <div class=" col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                       <table style="width: 100%;">
+                           <tr>
+                               <td class="data-picker-td">
+                                   <label>开始时间：</label>
+                               </td>
+                               <td style="width: 57%;">
+                                   <input readonly ng-model="startDate" class="date-time-picker-input form-control start">
+                               </td>
+                               <td style="width: 30%; padding-left: 5px;">
+                                   <div class="row number-spinner-group">
+                                       <div  class="col-md-5 col-xs-5 col-lg-5 col-sm-5 hour">
+                                           <div class="input-group input-group-sm">
+                                               <input  type="text" class="form-control date-picker-number-spinner-input" value="{{startHourTxt}}">
+                                                <span class="date-picker-number-spinner-wrapper input-group-addon">
+                                                   <button type="button" class="date-picker-number-spinner plus" ng-click="startHourEvent('plus')">
+                                                       <span class="glyphicon glyphicon-menu-up"></span>
+                                                   </button>
+                                                     <button type="button" class="date-picker-number-spinner reduce" ng-click="startHourEvent('reduce')">
+                                                         <span class="glyphicon glyphicon-menu-down"></span>
+                                                     </button>
+                                                </span>
+                                           </div>
+                                       </div>
+                                       <div  class="col-md-1 col-xs-1 col-lg-1 col-sm-1 data-picker-number-slip">
+                                           <strong>:</strong>
+                                       </div>
+                                       <div  class="col-md-5 col-xs-5 col-lg-5 col-sm-5 minute">
+                                           <div class="input-group input-group-sm">
+                                               <input name="end" type="text"  class="form-control date-picker-number-spinner-input" value="{{startMinuteTxt}}">
+                                                <span class="date-picker-number-spinner-wrapper input-group-addon">
+                                                   <button type="button" class="date-picker-number-spinner plus"  ng-click="startMinuteEvent('plus')">
+                                                       <span class="glyphicon glyphicon-menu-up"></span>
+                                                   </button>
+                                                     <button type="button" class="date-picker-number-spinner reduce" ng-click="startMinuteEvent('reduce')">
+                                                         <span class="glyphicon glyphicon-menu-down"></span>
+                                                     </button>
+                                                </span>
+                                           </div>
+                                       </div>
+                                   </div>
+
+                               </td>
+                           </tr>
+                           <tr>
+                               <td class="data-picker-td">
+                                   <label>结束时间：</label>
+                               </td>
+                               <td style="width: 57%;">
+                                   <input readonly ng-model="endDate" class="date-time-picker-input form-control end">
+                               </td>
+                               <td style="width: 30%; padding-left: 5px;">
+                                   <div class="row">
+                                       <div  class="col-md-5 col-xs-5 col-lg-5 col-sm-5">
+                                           <div class="input-group input-group-sm">
+                                               <input type="text" class="form-control date-picker-number-spinner-input" value="{{endHourTxt}}">
+                                                <span class="date-picker-number-spinner-wrapper input-group-addon">
+                                                   <button type="button" class="date-picker-number-spinner" ng-click="endHourEvent('plus')">
+                                                       <span class="glyphicon glyphicon-menu-up"></span>
+                                                   </button>
+                                                     <button type="button" class="date-picker-number-spinner"  ng-click="endHourEvent('reduce')">
+                                                         <span class="glyphicon glyphicon-menu-down"></span>
+                                                     </button>
+                                                </span>
+                                           </div>
+                                       </div>
+                                       <div  class="col-md-1 col-xs-1 col-lg-1 col-sm-1 data-picker-number-slip">
+                                           <strong>:</strong>
+                                       </div>
+                                       <div  class="col-md-5 col-xs-5 col-lg-5 col-sm-5">
+                                           <div class="input-group input-group-sm">
+                                               <input type="text" class="form-control date-picker-number-spinner-input" value="{{endMinuteTxt}}">
+                                                <span class="date-picker-number-spinner-wrapper input-group-addon" >
+                                                   <button type="button" class="date-picker-number-spinner" ng-click="endMinuteEvent('plus')">
+                                                       <span class="glyphicon glyphicon-menu-up"></span>
+                                                   </button>
+                                                     <button type="button" class="date-picker-number-spinner" ng-click="endMinuteEvent('reduce')">
+                                                         <span class="glyphicon glyphicon-menu-down"></span>
+                                                     </button>
+                                                </span>
+                                           </div>
+                                       </div>
+                                   </div>
+
+                               </td>
+
+                           </tr>
+                           <tr>
+                               <td colspan="3">
+                                    <div class="row date-time-picker-bottom">
+                                        <div class="col-md-4 col-xs-4 col-lg-4 col-sm-4">
+                                            <div class="btn-group btn-group-xs">
+                                                <button type="button" ng-click="changeRange(1)" class="btn btn-default">1小时</button>
+                                                <button type="button" ng-click="changeRange(6)" class="btn btn-default">6小时</button>
+                                                <button type="button" ng-click="changeRange(24)" class="btn btn-default">1天</button>
+                                                <button type="button" ng-click="changeRange(168)" class="btn btn-default">7天</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 date-time-picker-tip">
+
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 col-lg-2 col-sm-2">
+                                            <button type="button" class="date-time-picker-submit btn btn-primary btn-xs" ng-click="submitRange()">确定</button>
+                                        </div>
+                                    </div>
+                               </td>
+                           </tr>
+                       </table>
+                   </div>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>

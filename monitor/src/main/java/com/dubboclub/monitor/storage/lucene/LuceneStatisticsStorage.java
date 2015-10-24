@@ -208,7 +208,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         SortField groupSortField = new SortField(DubboKeeperMonitorService.METHOD, SortField.Type.STRING);
         groupSort.setSort(groupSortField);
         try {
-            TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.METHOD, groupSort, methodSize);
+            TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.METHOD, groupSort, methodSize==0?MAX_GROUP_SIZE:methodSize);
             IndexSearcher searcher = generateSearcher(application);
             Query query = queryBuilder.build();
             searcher.search(query, firstPassCollector);

@@ -21,11 +21,16 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
     $scope.kbpsOptions={};
     $scope.inputoutputOptions={};
     $scope.failuresuccessOptions={};
+    $scope.timeRange={};
+    var currentDate = new Date();
+    $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
+    $scope.timeRange.endTime=currentDate.getTime();
+    $scope.statMsg="准备加载数据...";
     $breadcrumb.pushCrumb("方法"+$routeParams.service+"."+$routeParams.method+"监控室","方法"+$routeParams.service+"."+$routeParams.method+"监控室","monitor-charts");
-    $scope.timeRange=1000;
     var loadStatisticsData = function(){
+        $scope.statMsg="正在查询....";
         $httpWrapper.post({
-            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange+"/monitors.htm",
+            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
             success:function(statistics){
                 generateElapsedOptions(statistics);
                 generateConcurrentOptions(statistics);
@@ -33,9 +38,15 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                 generateTps(statistics);
                 generateFailureAndSuccess(statistics);
                 generateInputAndOutPut(statistics);
+                intervalLoadStatistics();
+                $scope.statMsg="暂停查询";
             }
         });
     }
+    $scope.$watch("timeRange",function(){
+        clearTimeout($scope.intervalLoad);
+        loadStatisticsData();
+    });
     var generateRendingData =function(statistics,dataKeys){
         var rendingData={};
         var xAxisData =[];
@@ -53,76 +64,6 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
             rendingData.mainData.push(data);
         }
         return rendingData;
-    }
-    var generateChart = function(title,subTitle,seriesConfig,xAxisData,targetDom){
-        var legends=[];
-        var series=[];
-        for(var i=0;i<seriesConfig.length;i++){
-            var seriesTpl = {
-                symbolSize:0,
-                name:seriesConfig[i].name,
-                type:'line',
-                data:seriesConfig[i].data,
-                markLine : {
-                    data : [
-                        {type : 'average', name : '平均值'}
-                    ]
-                },
-                itemStyle:{
-                    normal:{
-                        label:{
-                            show:false
-                        }
-                    }
-                }
-            };
-            series.push(seriesTpl);
-            legends.push(seriesConfig[i].name);
-        }
-        require( [
-            'echarts',
-            'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
-            'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
-        ], function (echarts) {
-            require(['echarts/theme/macarons'], function(curTheme){
-                var option = {
-                    title : {
-                        text: title,
-                        subtext: subTitle
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:legends
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            magicType : {show: true, type: ['line', 'bar']},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : xAxisData,
-                            show:false
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : series
-                };
-                var myChart = echarts.init(targetDom);
-                myChart.setTheme(curTheme)
-                myChart.setOption(option);
-            });
-        });
     }
     var generateElapsedOptions = function(statistics){
         var rendingData = generateRendingData(statistics,["elapsed"]);
@@ -183,6 +124,18 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
         $scope.failuresuccessOptions=options;
     }
     loadStatisticsData();
+    $scope.stopInterval=function(){
+        if($scope.intervalLoad){
+            clearTimeout($scope.intervalLoad);
+        }
+        $scope.statMsg="已暂停查询";
+    }
+    var intervalLoadStatistics = function(){
+        $scope.intervalLoad = setTimeout(function(){
+            loadStatisticsData();
+        },10000);
+    }
+
 });
 
 monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
@@ -190,19 +143,42 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
     $breadcrumb.pushCrumb("查看服务"+$routeParams.service+"监控信息概要列表","查看服务"+$routeParams.service+"监控信息概要列表","monitor-overview");
     $scope.service=$routeParams.service;
     $scope.application=$routeParams.application;
-    $scope.timeRange=100;
+    $scope.timeRange={};
+    var currentDate = new Date();
+    $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
+    $scope.timeRange.endTime=currentDate.getTime();
+    $scope.statMsg="准备加载数据...";
     var loadOverviewData = function(){
+        $scope.statMsg="正在查询....";
         $httpWrapper.post({
-            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$scope.timeRange+"/monitors.htm",
+            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
             success:function(data){
                 if(data.length>0){
                     $scope.details=data;
                 }else{
                     $scope.isEmpty=true;
                 }
+                $scope.statMsg="暂停查询";
+                intervalLoad();
             }
         });
     }
     loadOverviewData();
+    $scope.$watch("timeRange",function(){
+        clearTimeout($scope.loadTimeout);
+        loadOverviewData();
+    });
+    $scope.stopInterval=function(){
+        if($scope.loadTimeout){
+            clearTimeout($scope.loadTimeout);
+        }
+        $scope.statMsg="已暂停查询";
+    }
+    var intervalLoad= function(){
+        $scope.loadTimeout =  setTimeout(function(){
+            loadOverviewData();
+        },10000);
+    }
+
 
 });

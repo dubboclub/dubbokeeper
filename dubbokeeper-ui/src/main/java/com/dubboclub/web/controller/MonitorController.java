@@ -38,9 +38,9 @@ public class MonitorController {
 		return new ArrayList<Statistics>();
 	}
 
-    @RequestMapping("/{application}/{service}/{timeRange}/monitors.htm")
+    @RequestMapping("/{application}/{service}/{startTime}-{endTime}/monitors.htm")
     public @ResponseBody
-    Collection<MethodMonitorOverview> overviewService(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("timeRange")int timeRange){
+    Collection<MethodMonitorOverview> overviewService(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("startTime")long startTime,@PathVariable("endTime") long endTime){
         List<Provider> providers = providerService.listProviderByServiceKey(service);
         List<String> methods = new ArrayList<String>();
         if(providers.size()>0){
@@ -54,11 +54,11 @@ public class MonitorController {
                 }
             }
         }
-        return statisticsStorage.queryMethodMonitorOverview(application,service,methods.size(),System.currentTimeMillis()-60*1000*timeRange,System.currentTimeMillis());
+        return statisticsStorage.queryMethodMonitorOverview(application,service,methods.size(),startTime,endTime);
     }
 
-    @RequestMapping("/{application}/{service}/{method}/{timeRange}/monitors.htm")
-    public @ResponseBody Collection<Statistics> queryMethodStatistics(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("method")String method,@PathVariable("timeRange")int timeRange){
-        return statisticsStorage.queryStatisticsForMethod(application,service,method,System.currentTimeMillis()-60*1000*timeRange,System.currentTimeMillis());
+    @RequestMapping("/{application}/{service}/{method}/{startTime}-{endTime}/monitors.htm")
+    public @ResponseBody Collection<Statistics> queryMethodStatistics(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("method")String method,@PathVariable("startTime")long startTime,@PathVariable("endTime") long endTime){
+        return statisticsStorage.queryStatisticsForMethod(application,service,method,startTime,endTime);
     }
 }

@@ -6,15 +6,25 @@ lineChart.directive('lineChart', function() {
             chartOptions:"=chartOptions"
         },
         replace:true,
-        template:"<div  class=\"col-md-12 col-sm-12 col-xs-12 col-lg-12\" style=\"height: 300px;\"></div>",
+        template:"<div  class=\"col-md-12 col-sm-12 col-xs-12 col-lg-12\" style=\"height: 300px;\">暂时没有数据展示</div>",
         link:function($scope,element){
             $scope.$watch("chartOptions",function(){
                 if(!$scope.chartOptions.seriesConfig||$scope.chartOptions.seriesConfig.length<=0){
+                    if($scope.myChart){
+                        $scope.myChart=undefined;
+                        $scope.myChart.dispose();
+                    }
                     return ;
                 }
                 var legends=[];
                 var series=[];
                 for(var i=0;i<$scope.chartOptions.seriesConfig.length;i++){
+                    if(!$scope.chartOptions.seriesConfig[i].data||$scope.chartOptions.seriesConfig[i].data.length<=0){
+                        if($scope.myChart){
+                            $scope.myChart.dispose();
+                        }
+                        return;
+                    }
                     var seriesTpl = {
                         symbolSize:0,
                         name:$scope.chartOptions.seriesConfig[i].name,
@@ -35,6 +45,10 @@ lineChart.directive('lineChart', function() {
                     };
                     series.push(seriesTpl);
                     legends.push($scope.chartOptions.seriesConfig[i].name);
+                }
+                if($scope.myChart){
+                    $scope.myChart=undefined;
+                    $scope.myChart.dispose();
                 }
                 require( [
                     'echarts',
@@ -75,9 +89,9 @@ lineChart.directive('lineChart', function() {
                             ],
                             series : series
                         };
-                        var myChart = echarts.init(element.get(0));
-                        myChart.setTheme(curTheme);
-                        myChart.setOption(option);
+                        $scope.myChart = echarts.init(element.get(0));
+                        $scope.myChart.setTheme(curTheme);
+                        $scope.myChart.setOption(option);
                     });
                 });
             });

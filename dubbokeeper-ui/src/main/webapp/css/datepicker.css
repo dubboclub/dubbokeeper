@@ -1,0 +1,74 @@
+.date-picker-number-spinner{
+    background: white;
+    width: 14px;
+    height: 14px;
+    overflow: hidden;
+    line-height: 16px;
+    font-size: 12px;
+    border: 0px;
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+    display: block;
+    color: #999;
+    text-align: center;
+    outline: 0px;
+    border-top: 1px solid #E3E3E3;
+}
+.date-picker-number-spinner-wrapper{
+    background: white !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+}
+.date-picker-number-spinner-input{
+    width: 39px !important;
+    float: right !important;
+
+}
+.date-time-picker-input{
+    margin-top: 6px;
+    margin-bottom: 3px;
+}
+.data-picker-td{
+    padding-top: 10px;
+    width: 13px;
+}
+.data-picker-number-slip{
+    vertical-align: middle;
+    margin-top: 4px;
+    font-weight: bolder;
+    font-size: 14px;
+    padding-left: 9px !important;
+    padding-right: 0px !important;
+}
+
+.date-picker-range-picker-container{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-background-clip: padding-box;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 10px 0px;
+}
+.date-time-picker{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.date-time-range-picker-wrapper{
+    padding-left: 15px;  padding-right: 15px;
+    display: block;
+    z-index: 1000;
+    position: absolute;
+    background: white;
+}
+.date-time-picker-submit{
+    margin-right: 3px;
+    float: right;
+}
+.date-time-picker-tip{
+    padding-top: 2px;
+    text-align: left;
+}
+.date-time-picker-bottom{
+    padding-bottom: 5px;
+}
