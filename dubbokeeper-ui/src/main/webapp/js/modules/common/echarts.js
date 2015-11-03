@@ -1,4 +1,80 @@
 var lineChart = angular.module('lineChart', []);
+lineChart.directive('pipChart',function(){
+    return {
+        restrict:"EA",
+        scope: {
+            chartOptions:"=chartOptions"
+        },
+        replace:true,
+        template:"<div  class=\"col-md-12 col-sm-12 col-xs-12 col-lg-12\" style=\"height: 300px;\">暂时没有数据展示</div>",
+        link:function($scope,element){
+            $scope.$watch("chartOptions",function(){
+                if(!$scope.chartOptions.dataset||$scope.chartOptions.dataset.length<=0){
+                    if($scope.myChart){
+                        $scope.myChart=undefined;
+                        $scope.myChart.dispose();
+                    }
+                    return ;
+                }
+                var option = {
+                    title : {
+                        text: $scope.chartOptions.title,
+                        x:'center'
+                    },
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient : 'vertical',
+                        x : 'left',
+                        data:$scope.chartOptions.keys
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {
+                                show: true,
+                                type: ['pie', 'funnel'],
+                                option: {
+                                    funnel: {
+                                        x: '25%',
+                                        width: '50%',
+                                        funnelAlign: 'left',
+                                        max: 1548
+                                    }
+                                }
+                            },
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    series : [
+                        {
+                            name:$scope.chartOptions.name,
+                            type:'pie',
+                            radius : '55%',
+                            center: ['50%', '60%'],
+                            data:$scope.chartOptions.dataset
+                        }
+                    ]
+                };
+                require( [
+                    'echarts',
+                    'echarts/chart/pie',// 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/funnel' // 使用柱状图就加载bar模块，按需加载
+                ], function (echarts) {
+                    require(['echarts/theme/macarons'], function(curTheme){
+                        $scope.myChart = echarts.init(element.get(0));
+                        $scope.myChart.setTheme(curTheme);
+                        $scope.myChart.setOption(option);
+                    })
+                });
+            });
+        }
+    }
+});
 lineChart.directive('lineChart', function() {
     return {
         restrict:"EA",

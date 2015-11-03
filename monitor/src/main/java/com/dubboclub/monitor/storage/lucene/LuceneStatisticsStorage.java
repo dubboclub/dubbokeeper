@@ -353,7 +353,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         queryBuilder.add(new BooleanClause(methodQuery, BooleanClause.Occur.MUST));
         queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
         Sort groupSort = new Sort();
-        SortField groupSortField = new SortField(DubboKeeperMonitorService.REMOTE_ADDRESS, SortField.Type.STRING);
+        SortField groupSortField = new SortField(DubboKeeperMonitorService.SUCCESS, SortField.Type.LONG);
         groupSort.setSort(groupSortField);
         try{
             TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.REMOTE_ADDRESS, groupSort, MAX_GROUP_SIZE);
@@ -361,7 +361,10 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
             Query query = queryBuilder.build();
             searcher.search(query, firstPassCollector);
             Collection<SearchGroup<BytesRef>> topSearchGroups = firstPassCollector.getTopGroups(0, false);
-            GroupDocs[] groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.REMOTE_ADDRESS, false, searcher, query, groupSort);
+            if(topSearchGroups==null){
+                return new ArrayList<Usage>();
+            }
+            GroupDocs[] groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.SUCCESS, false, searcher, query, groupSort);
             return generateUsage(groupDocs,searcher);
         }catch (IOException e) {
             logger.error("failed to grouping search", e);

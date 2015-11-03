@@ -21,6 +21,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
     $scope.kbpsOptions={};
     $scope.inputoutputOptions={};
     $scope.failuresuccessOptions={};
+    $scope.pipOptions={};
     $scope.timeRange={};
     var currentDate = new Date();
     $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
@@ -32,12 +33,13 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
             success:function(statistics){
-                generateElapsedOptions(statistics);
-                generateConcurrentOptions(statistics);
-                generateKBPS(statistics);
-                generateTps(statistics);
-                generateFailureAndSuccess(statistics);
-                generateInputAndOutPut(statistics);
+                generateElapsedOptions(statistics.statisticsCollection);
+                generateConcurrentOptions(statistics.statisticsCollection);
+                generateKBPS(statistics.statisticsCollection);
+                generateTps(statistics.statisticsCollection);
+                generateFailureAndSuccess(statistics.statisticsCollection);
+                generateInputAndOutPut(statistics.statisticsCollection);
+                generateUsagePipe(statistics.usageCollection);
                 intervalLoadStatistics();
                 $scope.statMsg="暂停查询";
             }
@@ -47,6 +49,23 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
         clearTimeout($scope.intervalLoad);
         loadStatisticsData();
     });
+    var generateUsagePipe=function(usages){
+        var options = {};
+        options.title="方法调用情况统计";
+        options.name="方法调用情况统计";
+        var keys = [];
+        var dataset = [];
+        for(var i=0;i<usages.length;i++){
+            keys.push(usages[i].remoteAddress);
+            var item={};
+            item.name=usages[i].remoteAddress;
+            item.value=usages[i].count;
+            dataset.push(item);
+        }
+        options.keys=keys;
+        options.dataset=dataset;
+        $scope.pipOptions=options;
+    }
     var generateRendingData =function(statistics,dataKeys){
         var rendingData={};
         var xAxisData =[];
