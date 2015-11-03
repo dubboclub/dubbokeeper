@@ -55,7 +55,8 @@
                         <td class="text-left td-15-width"> <span class='{{provider.dynamic?"text-primary":"text-danger"}}'>{{provider.dynamic?"动态":"静态"}}</span></td>
                         <td class="text-left td-15-width"> <span class='{{provider.enabled?"text-primary":"text-danger"}}'>{{provider.enabled?"已启用":"禁用"}}</span></td>
                         <td class="text-left">
-                            <span><a href="#/admin/edit/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
+                            <span ng-show="{{!serviceKey}}"><a href="#/admin/edit/{{provider.serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
+                            <span ng-show="{{!host}}"><a href="#/admin/edit/{{serviceKey | encodeUrl}}/{{provider.address}}/{{provider.id}}/provider"><i class="icon-pencil" title="编辑"></i> </a></span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('halfWeight',provider)"><i class="icon-arrow-down" title="半权"></i> </a></span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('doubleWeight',provider)"><i class="icon-arrow-up" title="倍权"></i> </a> </span>
                             <span> &nbsp;| &nbsp;<a href="javascript:void(0);" ng-click="operation('copy',provider)"><i class="icon-copy" title="复制"></i> </a></span>
