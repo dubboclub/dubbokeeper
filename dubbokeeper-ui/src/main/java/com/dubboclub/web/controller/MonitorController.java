@@ -41,7 +41,7 @@ public class MonitorController {
     @RequestMapping("/{application}/{service}/{timeRange}/monitors.htm")
     public @ResponseBody
     Collection<MethodMonitorOverview> overviewService(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("timeRange")int timeRange){
-        List<Provider> providers = providerService.listProviderByServiceKey(service);
+        List<Provider> providers = providerService.listProviderByService(service);
         List<String> methods = new ArrayList<String>();
         if(providers.size()>0){
             Provider provider = providers.get(0);
