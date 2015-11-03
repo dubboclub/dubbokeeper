@@ -1,6 +1,5 @@
 package com.dubboclub.web.controller;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -64,6 +63,11 @@ public class MonitorController {
         methodStatistics.setStatisticsCollection(statisticsStorage.queryStatisticsForMethod(application,service,method,startTime,endTime));
         methodStatistics.setUsageCollection(statisticsStorage.queryMethodUsage(application,service,method,startTime,endTime));
         return methodStatistics;
+    }
+
+    @RequestMapping("/index.htm")
+    public @ResponseBody Collection<String> monitorIndex(){
+        return statisticsStorage.queryApplications();
     }
 
 }

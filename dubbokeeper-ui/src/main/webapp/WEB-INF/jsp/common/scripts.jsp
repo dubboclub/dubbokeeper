@@ -30,6 +30,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/jquery/stickUp.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/datepicker/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/datepicker/locale/bootstrap-datepicker.zh-CN.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/multiselect/isteven-multi-select.js"></script>
 <script type="text/javascript">
     // 路径配置
     require.config({

@@ -1,4 +1,4 @@
-var monitor = angular.module("monitor",['ngRoute','lineChart']);
+var monitor = angular.module("monitor",['ngRoute','lineChart','isteven-multi-select']);
 
 monitor.config(function($routeProvider){
     $routeProvider.when("/admin/monitor/:application/:service/overview",{
@@ -7,7 +7,30 @@ monitor.config(function($routeProvider){
     }).when("/admin/monitor/:application/:service/:method/charts",{
         templateUrl:"templates/monitor/monitor-charts.html",
         controller:"monitorCharts"
+    }).when("/monitor",{
+        templateUrl:"templates/monitor/index.html",
+        controller:"index"
     });
+});
+
+monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
+    $menu.switchBarOnly("monitor");
+    $httpWrapper.post({
+        url:"monitor/index.htm",
+        success:function(data){
+            if(data){
+                $scope.appOptions = [];
+                for(var i=0;i<data.length;i++){
+                    var option = {};
+                    option.name=data[i];
+                    option.ticked=true;
+                    $scope.appOptions.push(option);
+                }
+                $scope.applications = $scope.appOptions;
+            }
+        }
+        }
+    );
 });
 
 monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){

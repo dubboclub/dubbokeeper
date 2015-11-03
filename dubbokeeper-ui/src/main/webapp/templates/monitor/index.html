@@ -1,0 +1,39 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class=" icon-home"></i> 监控室
+    </div>
+    <div class="panel-body">
+        <div class="row" style="padding-bottom: 10px;">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <div  isteven-multi-select
+                        input-model="appOptions"
+                        output-model="applications"
+                        button-label="name"
+                        item-label="name"
+                        tick-property="ticked"
+                        orientation="horizontal"  >
+                </div>
+            </div>
+        </div>
+        <div class="row"  ng-repeat="app in applications">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="icon-cloud"></i> {{app.name}}</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-4 col-lg-4 col-sm-4">
+
+                            </div>
+                            <div class="col-md-4 col-xs-4 col-lg-4 col-sm-4">
+
+                            </div>
+                            <div class="col-md-4 col-xs-4 col-lg-4 col-sm-4">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

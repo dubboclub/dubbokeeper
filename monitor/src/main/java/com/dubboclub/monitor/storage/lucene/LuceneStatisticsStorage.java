@@ -5,6 +5,7 @@ import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.dubbo.common.utils.ConfigUtils;
 import com.alibaba.fastjson.JSON;
 import com.dubboclub.monitor.DubboKeeperMonitorService;
+import com.dubboclub.monitor.model.ApplicationOverview;
 import com.dubboclub.monitor.model.MethodMonitorOverview;
 import com.dubboclub.monitor.model.Statistics;
 import com.dubboclub.monitor.model.Usage;
@@ -25,10 +26,12 @@ import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.BytesRef;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
@@ -37,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by bieber on 2015/9/25.
  */
-public class LuceneStatisticsStorage implements StatisticsStorage {
+public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBean {
 
     private static final ConcurrentHashMap<String, Directory> LUCENE_DIRECTORY_MAP = new ConcurrentHashMap<String, Directory>();
 
@@ -401,6 +404,17 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         }
         return new ArrayList<Usage>();
     }
+
+    @Override
+    public Collection<String> queryApplications() {
+        return LUCENE_DIRECTORY_MAP.keySet();
+    }
+
+    @Override
+    public ApplicationOverview queryApplicationOverview(String application) {
+        return null;
+    }
+
     private List<Usage> generateUsage(GroupDocs[] groupDocs ,IndexSearcher searcher) throws IOException {
         List<Usage> usages = new ArrayList<Usage>();
         if(groupDocs==null||groupDocs.length<=0){
@@ -441,10 +455,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
     }
 
     private Directory generateLuceneDirectory(String application) throws IOException {
-        String directoryType = ConfigUtils.getProperty("monitor.lucene.directory.type");
+
         String directory = ConfigUtils.getProperty("monitor.lucene.directory", System.getProperty("user.home") + "/monitor");
-        LuceneDirectoryType type = LuceneDirectoryType.typeOf(directoryType);
-        Directory luceneDirectory = null;
+
         Path path = null;
         if (!StringUtils.isEmpty(directory)) {
             path = Paths.get(directory + File.separator + application);
@@ -452,6 +465,12 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
                 Files.createDirectories(path);
             }
         }
+        return generateLuceneDirectory(path);
+    }
+    private Directory generateLuceneDirectory(Path path) throws IOException {
+        String directoryType = ConfigUtils.getProperty("monitor.lucene.directory.type");
+        LuceneDirectoryType type = LuceneDirectoryType.typeOf(directoryType);
+        Directory luceneDirectory = null;
         switch (type) {
             case MMAP:
                 luceneDirectory = new MMapDirectory(path);
@@ -464,7 +483,6 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
                 break;
         }
         return luceneDirectory;
-
     }
 
     private int getCommitFrequency() {
@@ -482,4 +500,39 @@ public class LuceneStatisticsStorage implements StatisticsStorage {
         return LUCENE_DIRECTORY_MAP.get(application);
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        String directory = ConfigUtils.getProperty("monitor.lucene.directory", System.getProperty("user.home") + "/monitor");
+        final Path path = Paths.get(directory);
+        if(Files.exists(path)&&Files.isDirectory(path)){
+            Files.walkFileTree(path, new FileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    if(dir.equals(path)){
+                        return FileVisitResult.CONTINUE;
+                    }
+                    LUCENE_DIRECTORY_MAP.put(dir.getFileName().toString(), generateLuceneDirectory(dir));
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    return FileVisitResult.TERMINATE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    return FileVisitResult.TERMINATE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    if(dir.equals(path)){
+                        return FileVisitResult.CONTINUE;
+                    }
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
+            });
+        }
+    }
 }

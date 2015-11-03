@@ -1,4 +1,4 @@
-var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','zoopeeper','httpWrapper','override','router','theme','lineChart','dateRangePicker']);
+var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'dialog','statistics','monitor','isteven-multi-select','zoopeeper','httpWrapper','override','router','theme','lineChart','dateRangePicker']);
 dubbokeeper.controller("dubbokeeperCtrl",function($scope,$dkContext){
     $dkContext._init($scope);
     $scope.currentHome={};
@@ -30,6 +30,11 @@ dubbokeeper.barDataset=[{
         href:"/admin/route/list",
         icon:"icon-random"
     }]
+},{
+    barShowName:"Monitor",
+    barIdentify:"monitor",
+    barHref:"/monitor",
+    barIconClass:"icon-bar-chart"
 },{
     barShowName:"ZooPeeper",
     barIdentify:"zoopeeper",

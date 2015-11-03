@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/js/libs/angularjs-ui-tree/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/js/libs/datepicker/css/bootstrap-datepicker3.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/datepicker.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/libs/multiselect/isteven-multi-select.css">
 </head>
 <body>
 
