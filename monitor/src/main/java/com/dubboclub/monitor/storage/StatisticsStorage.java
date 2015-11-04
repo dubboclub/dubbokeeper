@@ -34,27 +34,6 @@ public interface StatisticsStorage {
      */
     public Collection<MethodMonitorOverview> queryMethodMonitorOverview(String application,String serviceInterface,int methodSize,long startTime,long endTime);
 
-    /**
-     * 查看某个方法使用情况
-     * @param application
-     * @param service
-     * @param method
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    public Collection<Usage> queryMethodUsage(String application,String service,String method,long startTime,long endTime);
-
-    /**
-     * 查看某个服务使用情况
-     * @param application
-     * @param service
-     * @param method
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    public Collection<Usage> queryServiceUsage(String application,String service,long startTime,long endTime);
 
 
     /**
@@ -69,7 +48,7 @@ public interface StatisticsStorage {
      * @param application
      * @return
      */
-    public ApplicationOverview queryApplicationOverview(String application);
+    public ApplicationOverview queryApplicationOverview(String application,long start,long end);
 
 
 

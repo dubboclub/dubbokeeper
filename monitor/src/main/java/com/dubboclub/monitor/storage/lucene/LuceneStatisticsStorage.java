@@ -5,10 +5,7 @@ import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.dubbo.common.utils.ConfigUtils;
 import com.alibaba.fastjson.JSON;
 import com.dubboclub.monitor.DubboKeeperMonitorService;
-import com.dubboclub.monitor.model.ApplicationOverview;
-import com.dubboclub.monitor.model.MethodMonitorOverview;
-import com.dubboclub.monitor.model.Statistics;
-import com.dubboclub.monitor.model.Usage;
+import com.dubboclub.monitor.model.*;
 import com.dubboclub.monitor.storage.StatisticsStorage;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -342,78 +339,122 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
 
 
     @Override
-    public Collection<Usage> queryMethodUsage(String application, String service, String method, long startTime, long endTime) {
-        /*if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
-            return new ArrayList<Usage>();
-        }*/
-        TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
-        TermQuery interfaceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
-        TermQuery methodQuery = new TermQuery(new Term(DubboKeeperMonitorService.METHOD, new BytesRef(method)));
-        NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, startTime, endTime, true, true);
-        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
-        queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
-        queryBuilder.add(new BooleanClause(interfaceQuery, BooleanClause.Occur.MUST));
-        queryBuilder.add(new BooleanClause(methodQuery, BooleanClause.Occur.MUST));
-        queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
-        Sort groupSort = new Sort();
-        SortField groupSortField = new SortField(DubboKeeperMonitorService.SUCCESS, SortField.Type.LONG);
-        groupSort.setSort(groupSortField);
-        try{
-            TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.REMOTE_ADDRESS, groupSort, MAX_GROUP_SIZE);
-            IndexSearcher searcher = generateSearcher(application);
-            Query query = queryBuilder.build();
-            searcher.search(query, firstPassCollector);
-            Collection<SearchGroup<BytesRef>> topSearchGroups = firstPassCollector.getTopGroups(0, false);
-            if(topSearchGroups==null){
-                return new ArrayList<Usage>();
-            }
-            GroupDocs[] groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.SUCCESS, false, searcher, query, groupSort);
-            return generateUsage(groupDocs,searcher);
-        }catch (IOException e) {
-            logger.error("failed to grouping search", e);
-        }
-        return new ArrayList<Usage>();
-    }
-    
-
-    @Override
-    public Collection<Usage> queryServiceUsage(String application, String service, long startTime, long endTime) {
-       /* if(!LUCENE_DIRECTORY_MAP.containsKey(application)){
-            return new ArrayList<Usage>();
-        }*/
-        TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
-        TermQuery interfaceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
-        NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, startTime, endTime, true, true);
-        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
-        queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
-        queryBuilder.add(new BooleanClause(interfaceQuery, BooleanClause.Occur.MUST));
-        queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
-        Sort groupSort = new Sort();
-        SortField groupSortField = new SortField(DubboKeeperMonitorService.REMOTE_ADDRESS, SortField.Type.STRING);
-        groupSort.setSort(groupSortField);
-        try{
-            TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.REMOTE_ADDRESS, groupSort, MAX_GROUP_SIZE);
-            IndexSearcher searcher = generateSearcher(application);
-            Query query = queryBuilder.build();
-            searcher.search(query, firstPassCollector);
-            Collection<SearchGroup<BytesRef>> topSearchGroups = firstPassCollector.getTopGroups(0, false);
-            GroupDocs[] groupDocs = groupSearch(topSearchGroups, DubboKeeperMonitorService.REMOTE_ADDRESS, false, searcher, query, groupSort);
-            return generateUsage(groupDocs,searcher);
-        }catch (IOException e) {
-            logger.error("failed to grouping search", e);
-        }
-        return new ArrayList<Usage>();
-    }
-
-    @Override
     public Collection<String> queryApplications() {
         return LUCENE_DIRECTORY_MAP.keySet();
     }
 
     @Override
-    public ApplicationOverview queryApplicationOverview(String application) {
-        return null;
+    public ApplicationOverview queryApplicationOverview(String application,long start,long end) {
+        TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
+        NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, start, end, true, true);
+        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+        queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
+        queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
+        ApplicationOverview applicationOverview = new ApplicationOverview();
+        int maxSize = 200;
+
+        try{
+            IndexSearcher searcher = generateSearcher(application);
+            Query query = queryBuilder.build();
+            SortField sortField = new SortField(DubboKeeperMonitorService.CONCURRENT, SortField.Type.LONG,true);
+            Sort sort = new Sort();
+            sort.setSort(sortField);
+            TopFieldDocs resultDocs =  searcher.search(query, maxSize, sort);
+            ScoreDoc[] docs = resultDocs.scoreDocs;
+            if(docs.length<=0){
+                return applicationOverview;
+            }
+            Set<String> needFields = generateQueryField(DubboKeeperMonitorService.CONCURRENT);
+            List<ConcurrentItem> concurrentItems = new ArrayList<ConcurrentItem>(docs.length);
+            applicationOverview.setConcurrentItems(concurrentItems);
+            for(int i=0;i<docs.length;i++){
+                ScoreDoc doc = docs[i];
+                Document document = searcher.doc(doc.doc,needFields);
+                ConcurrentItem concurrentItem = new ConcurrentItem();
+                convertItem(concurrentItem,document);
+                concurrentItem.setConcurrent(Long.parseLong(document.get(DubboKeeperMonitorService.CONCURRENT)));
+                concurrentItems.add(concurrentItem);
+            }
+            needFields.clear();
+
+            needFields = generateQueryField(DubboKeeperMonitorService.ELAPSED);
+            sortField = new SortField(DubboKeeperMonitorService.ELAPSED,SortField.Type.LONG,true);
+            sort.setSort(sortField);
+            resultDocs = searcher.search(query,maxSize,sort);
+            docs = resultDocs.scoreDocs;
+            List<ElapsedItem> elapsedItems = new ArrayList<ElapsedItem>(docs.length);
+            applicationOverview.setElapsedItems(elapsedItems);
+            for(int i=0;i<docs.length;i++){
+                ScoreDoc doc = docs[i];
+                Document document = searcher.doc(doc.doc, needFields);
+                ElapsedItem elapsedItem = new ElapsedItem();
+                convertItem(elapsedItem,document);
+                elapsedItem.setElapsed(Long.parseLong(document.get(DubboKeeperMonitorService.ELAPSED)));
+                elapsedItems.add(elapsedItem);
+            }
+            needFields.clear();
+
+
+
+            needFields = generateQueryField(DubboKeeperMonitorService.FAILURE);
+            sortField = new SortField(DubboKeeperMonitorService.FAILURE,SortField.Type.INT,true);
+            sort.setSort(sortField);
+            resultDocs = searcher.search(query,maxSize,sort);
+            docs = resultDocs.scoreDocs;
+            List<FaultItem> faultItems = new ArrayList<FaultItem>(docs.length);
+            applicationOverview.setFaultItems(faultItems);
+            for(int i=0;i<docs.length;i++){
+                ScoreDoc doc = docs[i];
+                Document document = searcher.doc(doc.doc, needFields);
+                FaultItem faultItem = new FaultItem();
+                convertItem(faultItem,document);
+                faultItem.setFault(Integer.parseInt(document.get(DubboKeeperMonitorService.FAILURE)));
+                if(faultItem.getFault()>0){
+                    faultItems.add(faultItem);
+                }
+            }
+            needFields.clear();
+
+
+            needFields = generateQueryField(DubboKeeperMonitorService.SUCCESS);
+            sortField = new SortField(DubboKeeperMonitorService.SUCCESS,SortField.Type.INT,true);
+            sort.setSort(sortField);
+            resultDocs = searcher.search(query,maxSize,sort);
+            List<SuccessItem> successItems = new ArrayList<SuccessItem>(docs.length);
+            applicationOverview.setSuccessItems(successItems);
+            docs = resultDocs.scoreDocs;
+            for(int i=0;i<docs.length;i++){
+                ScoreDoc doc = docs[i];
+                Document document = searcher.doc(doc.doc, needFields);
+                SuccessItem successItem = new SuccessItem();
+                convertItem(successItem,document);
+                successItem.setSuccess(Integer.parseInt(document.get(DubboKeeperMonitorService.SUCCESS)));
+                if(successItem.getSuccess()>0){
+                    successItems.add(successItem);
+                }
+            }
+        }catch (IOException e){
+            logger.error("failed to grouping search", e);
+        }
+        return applicationOverview;
     }
+
+
+    private Set<String> generateQueryField(String field){
+        Set<String> needFields = new HashSet<String>();
+        needFields.add(field);
+        needFields.add(DubboKeeperMonitorService.INTERFACE);
+        needFields.add(DubboKeeperMonitorService.METHOD);
+        needFields.add(DubboKeeperMonitorService.TIMESTAMP);
+        return needFields;
+    }
+
+    private void convertItem(BaseItem item,Document doc){
+        item.setMethod( doc.getBinaryValue(DubboKeeperMonitorService.METHOD).utf8ToString());
+        item.setService(doc.getBinaryValue(DubboKeeperMonitorService.INTERFACE).utf8ToString());
+        item.setTimestamp(Long.parseLong(doc.get(DubboKeeperMonitorService.TIMESTAMP)));
+    }
+
 
     private List<Usage> generateUsage(GroupDocs[] groupDocs ,IndexSearcher searcher) throws IOException {
         List<Usage> usages = new ArrayList<Usage>();
@@ -499,6 +540,8 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         }
         return LUCENE_DIRECTORY_MAP.get(application);
     }
+
+
 
     @Override
     public void afterPropertiesSet() throws Exception {
