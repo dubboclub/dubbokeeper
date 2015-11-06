@@ -11,6 +11,16 @@ public class BaseItem {
 
     private long timestamp;
 
+    private String remoteType;
+
+    public String getRemoteType() {
+        return remoteType;
+    }
+
+    public void setRemoteType(String remoteType) {
+        this.remoteType = remoteType;
+    }
+
     public String getMethod() {
         return method;
     }

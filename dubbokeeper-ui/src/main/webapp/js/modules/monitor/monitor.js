@@ -15,6 +15,8 @@ monitor.config(function($routeProvider){
 
 monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
     $menu.switchBarOnly("monitor");
+    var oneDay=24*60*60*1000;
+    $scope.dayRange=30;
     $httpWrapper.post({
         url:"monitor/index.htm",
         success:function(data){
@@ -24,6 +26,15 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
                     var option = {};
                     option.name=data[i];
                     option.ticked=true;
+                    option.elapsed={};
+                    option.concurrent={};
+                    option.fault={};
+                    option.success={};
+                    if(i==0){
+                        option.show=true;
+                        loadApplicationOverview(option);
+                    }
+                    option.showType='chart';
                     $scope.appOptions.push(option);
                 }
                 $scope.applications = $scope.appOptions;
@@ -31,6 +42,68 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
         }
         }
     );
+    $scope.switchView = function(app,type){
+        app.showType=type;
+    }
+    var loadApplicationOverview=function(app){
+        $httpWrapper.post({
+            url:"monitor/"+app.name+"/"+$scope.dayRange+"/overview.htm",
+            success:function(data){
+                app.overview=data;
+                generateOptions(app,data.elapsedItems,'elapsed','耗时(ms)');
+                generateOptions(app,data.concurrentItems,'concurrent','并发');
+                generateOptions(app,data.faultItems,'fault','失败次数');
+                generateOptions(app,data.successItems,'success','成功次数');
+            }
+        })
+    }
+
+    var generateOptions=function(app,values,prop,name){
+        var options = {};
+        if(!values){
+            app[prop]=options;
+            return;
+        }
+        options.title="在"+$scope.dayRange+"天内的"+name+"TOP200";
+        options.subTitle="来自应用端";
+        options.seriesConfig=[{name:name,data:generateMainData(values,prop)}];
+        options.xAxis=generateXAxisData(values);
+        app[prop]=options;
+    }
+
+    var generateMainData = function(items,prop){
+        var values = [];
+        for(var i=0;i<items.length;i++){
+            values.push(items[i][prop]);
+        }
+        return values;
+    }
+    var generateXAxisData=function(items){
+        var xAxisData = [];
+        for(var i=0;i<items.length;i++){
+            var date = new Date(items[i].timestamp);
+            var item = items[i].service+"."+items[i].method+"于"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
+            xAxisData.push(item);
+        }
+        return xAxisData;
+    }
+    $scope.toggleAppCharts=function(app){
+        if(app.show){
+            app.show=false;
+        }else{
+            loadApplicationOverview(app);
+            app.show=true;
+        }
+    }
+    $scope.switchTimeRange=function(dayRange){
+        $scope.dayRange=dayRange;
+        for(var i=0;i<$scope.applications.length;i++){
+            if($scope.applications[i].show){
+                loadApplicationOverview($scope.applications[i]);
+            }
+        }
+
+    }
 });
 
 monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){

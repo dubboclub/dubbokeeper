@@ -374,6 +374,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 convertItem(concurrentItem,document);
                 concurrentItem.setConcurrent(Long.parseLong(document.get(DubboKeeperMonitorService.CONCURRENT)));
                 concurrentItems.add(concurrentItem);
+                if(concurrentItem.getConcurrent()<=0){
+                    break;
+                }
             }
             needFields.clear();
 
@@ -391,6 +394,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 convertItem(elapsedItem,document);
                 elapsedItem.setElapsed(Long.parseLong(document.get(DubboKeeperMonitorService.ELAPSED)));
                 elapsedItems.add(elapsedItem);
+                if(elapsedItem.getElapsed()<=0){
+                    break;
+                }
             }
             needFields.clear();
 
@@ -409,8 +415,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 FaultItem faultItem = new FaultItem();
                 convertItem(faultItem,document);
                 faultItem.setFault(Integer.parseInt(document.get(DubboKeeperMonitorService.FAILURE)));
-                if(faultItem.getFault()>0){
-                    faultItems.add(faultItem);
+                faultItems.add(faultItem);
+                if(faultItem.getFault()<=0){
+                    break;
                 }
             }
             needFields.clear();
@@ -429,8 +436,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 SuccessItem successItem = new SuccessItem();
                 convertItem(successItem,document);
                 successItem.setSuccess(Integer.parseInt(document.get(DubboKeeperMonitorService.SUCCESS)));
-                if(successItem.getSuccess()>0){
-                    successItems.add(successItem);
+                successItems.add(successItem);
+                if(successItem.getSuccess()<=0){
+                    break;
                 }
             }
         }catch (IOException e){
@@ -446,6 +454,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         needFields.add(DubboKeeperMonitorService.INTERFACE);
         needFields.add(DubboKeeperMonitorService.METHOD);
         needFields.add(DubboKeeperMonitorService.TIMESTAMP);
+        needFields.add(DubboKeeperMonitorService.REMOTE_TYPE);
         return needFields;
     }
 
@@ -453,32 +462,10 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         item.setMethod( doc.getBinaryValue(DubboKeeperMonitorService.METHOD).utf8ToString());
         item.setService(doc.getBinaryValue(DubboKeeperMonitorService.INTERFACE).utf8ToString());
         item.setTimestamp(Long.parseLong(doc.get(DubboKeeperMonitorService.TIMESTAMP)));
+        item.setRemoteType(doc.getBinaryValue(DubboKeeperMonitorService.REMOTE_TYPE).utf8ToString());
     }
 
 
-    private List<Usage> generateUsage(GroupDocs[] groupDocs ,IndexSearcher searcher) throws IOException {
-        List<Usage> usages = new ArrayList<Usage>();
-        if(groupDocs==null||groupDocs.length<=0){
-            return usages;
-        }
-        Set<String> fields = new HashSet<String>();
-        fields.add(DubboKeeperMonitorService.FAILURE);
-        fields.add(DubboKeeperMonitorService.SUCCESS);
-        for(GroupDocs group:groupDocs){
-            Usage usage = new Usage();
-            usage.setRemoteAddress(((BytesRef)group.groupValue).utf8ToString());
-            ScoreDoc[] docs = group.scoreDocs;
-            long count=0;
-            for(ScoreDoc doc :docs){
-                Document document = searcher.doc(doc.doc, fields);
-                count+=Long.parseLong(document.get(DubboKeeperMonitorService.FAILURE));
-                count+=Long.parseLong(document.get(DubboKeeperMonitorService.SUCCESS));
-            }
-            usage.setCount(count);
-            usages.add(usage);
-        }
-        return usages;
-    }
 
     private GroupDocs[] groupSearch(Collection<SearchGroup<BytesRef>> topSearchGroups, String withinGroupField, boolean reverse, IndexSearcher searcher, Query query, Sort groupSort) throws IOException {
         Sort withinGroupSort = new Sort();

@@ -80,3 +80,11 @@ body{
 .app-container a{
     font-size: 12px;
 }
+
+.can-click{
+    cursor: pointer;
+}
+.max-view-height{
+    max-height: 600px;
+    overflow: auto;
+}

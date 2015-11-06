@@ -31,6 +31,8 @@ public class MonitorController {
     @Autowired
     private ProviderService providerService;
 
+    private static final long ONE_DAY=24*60*60*1000;
+
 
 	@RequestMapping("/{service}/monitors.htm")
 	public @ResponseBody List<Statistics> listElapsedByService(@PathVariable String service,
@@ -62,10 +64,11 @@ public class MonitorController {
         return statisticsStorage.queryApplications();
     }
 
-    @RequestMapping("/{application}/{start}-{end}/overview.htm")
+    @RequestMapping("/{application}/{dayRange}/overview.htm")
     public @ResponseBody
-    ApplicationOverview queryApplicationOverview(@PathVariable("application")String application,@PathVariable("start")long start,@PathVariable("end")long end){
-        return statisticsStorage.queryApplicationOverview(application,start,end);
+    ApplicationOverview queryApplicationOverview(@PathVariable("application")String application,@PathVariable("dayRange")int dayRange){
+        long currentTime = System.currentTimeMillis();
+        return statisticsStorage.queryApplicationOverview(application,currentTime-(dayRange*ONE_DAY),currentTime);
     }
 
 }

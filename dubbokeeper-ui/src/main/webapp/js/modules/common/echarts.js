@@ -6,13 +6,13 @@ lineChart.directive('pipChart',function(){
             chartOptions:"=chartOptions"
         },
         replace:true,
-        template:"<div  class=\"col-md-12 col-sm-12 col-xs-12 col-lg-12\" style=\"height: 300px;\">暂时没有数据展示</div>",
+        template:"<div  class=\"col-md-12 col-sm-12 col-xs-12 col-lg-12\" style=\"height: 300px;text-align: center;\">暂时没有数据展示</div>",
         link:function($scope,element){
             $scope.$watch("chartOptions",function(){
                 if(!$scope.chartOptions.dataset||$scope.chartOptions.dataset.length<=0){
                     if($scope.myChart){
-                        $scope.myChart=undefined;
                         $scope.myChart.dispose();
+                        $scope.myChart=undefined;
                     }
                     return ;
                 }
@@ -82,13 +82,13 @@ lineChart.directive('lineChart', function() {
             chartOptions:"=chartOptions"
         },
         replace:true,
-        template:"<div  class=\"col-md-12 col-sm-12 col-xs-12 col-lg-12\" style=\"height: 300px;\">暂时没有数据展示</div>",
+        template:"<div  class=\"col-md-12 col-sm-12 col-xs-12 col-lg-12\" style=\"height: 300px; text-align: center;\">暂时没有数据展示</div>",
         link:function($scope,element){
             $scope.$watch("chartOptions",function(){
                 if(!$scope.chartOptions.seriesConfig||$scope.chartOptions.seriesConfig.length<=0){
                     if($scope.myChart){
-                        $scope.myChart=undefined;
                         $scope.myChart.dispose();
+                        $scope.myChart=undefined;
                     }
                     return ;
                 }
@@ -123,8 +123,8 @@ lineChart.directive('lineChart', function() {
                     legends.push($scope.chartOptions.seriesConfig[i].name);
                 }
                 if($scope.myChart){
-                    $scope.myChart=undefined;
                     $scope.myChart.dispose();
+                    $scope.myChart=undefined;
                 }
                 require( [
                     'echarts',
