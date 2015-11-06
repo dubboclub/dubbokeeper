@@ -1,22 +1,57 @@
 var monitor = angular.module("monitor",['ngRoute','lineChart','isteven-multi-select']);
 
 monitor.config(function($routeProvider){
-    $routeProvider.when("/admin/monitor/:application/:service/overview",{
+    $routeProvider.when("/monitor/:application/:service/overview",{
         templateUrl:"templates/monitor/monitor-overview.html",
         controller:"monitorOverview"
-    }).when("/admin/monitor/:application/:service/:method/charts",{
+    }).when("/monitor/:application/:service/:method/charts",{
         templateUrl:"templates/monitor/monitor-charts.html",
         controller:"monitorCharts"
+    }).when("/monitor/:application/index",{
+        templateUrl:"templates/monitor/application-index.html",
+        controller:"applicationOverview"
     }).when("/monitor",{
         templateUrl:"templates/monitor/index.html",
         controller:"index"
     });
 });
 
+monitor.controller("applicationOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
+    $menu.switchBarOnly("monitor");
+    var oneDay=24*60*60*1000;
+    $scope.app=$routeParams.application;
+    $scope.dayRange=1;
+    $httpWrapper.post({
+            url:"monitor/"+$scope.app+"/services.htm",
+            success:function(data){
+                if(data){
+                    $scope.serviceOptions = [];
+                    for(var i=0;i<data.length;i++){
+                        var option = {};
+                        option.name=data[i];
+                        option.ticked=true;
+                        option.elapsed={};
+                        option.concurrent={};
+                        option.fault={};
+                        option.success={};
+                        if(i==0){
+                            option.show=true;
+                            //loadApplicationOverview(option);
+                        }
+                        option.showType='chart';
+                        $scope.serviceOptions.push(option);
+                    }
+                    $scope.services = $scope.serviceOptions;
+                }
+            }
+        }
+    );
+})
+
 monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
     $menu.switchBarOnly("monitor");
     var oneDay=24*60*60*1000;
-    $scope.dayRange=30;
+    $scope.dayRange=1;
     $httpWrapper.post({
         url:"monitor/index.htm",
         success:function(data){
@@ -110,7 +145,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
     $scope.service = $routeParams.service;
     $scope.application=$routeParams.application;
     $scope.method=$routeParams.method;
-    $menu.switchMenu("admin/apps");
+    $menu.switchBarOnly("monitor");
     $scope.elapsedOptions={};
     $scope.concurrentOptions={};
     $scope.tpsOptions={};
@@ -123,7 +158,6 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
     $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
     $scope.timeRange.endTime=currentDate.getTime();
     $scope.statMsg="准备加载数据...";
-    $breadcrumb.pushCrumb("方法"+$routeParams.service+"."+$routeParams.method+"监控室","方法"+$routeParams.service+"."+$routeParams.method+"监控室","monitor-charts");
     var loadStatisticsData = function(){
         $scope.statMsg="正在查询....";
         $httpWrapper.post({
@@ -135,7 +169,6 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
                 generateTps(statistics.statisticsCollection);
                 generateFailureAndSuccess(statistics.statisticsCollection);
                 generateInputAndOutPut(statistics.statisticsCollection);
-                generateUsagePipe(statistics.usageCollection);
                 intervalLoadStatistics();
                 $scope.statMsg="暂停查询";
             }
@@ -145,23 +178,6 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
         clearTimeout($scope.intervalLoad);
         loadStatisticsData();
     });
-    var generateUsagePipe=function(usages){
-        var options = {};
-        options.title="方法调用情况统计";
-        options.name="方法调用情况统计";
-        var keys = [];
-        var dataset = [];
-        for(var i=0;i<usages.length;i++){
-            keys.push(usages[i].remoteAddress);
-            var item={};
-            item.name=usages[i].remoteAddress;
-            item.value=usages[i].count;
-            dataset.push(item);
-        }
-        options.keys=keys;
-        options.dataset=dataset;
-        $scope.pipOptions=options;
-    }
     var generateRendingData =function(statistics,dataKeys){
         var rendingData={};
         var xAxisData =[];
@@ -254,8 +270,7 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
 });
 
 monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
-    $menu.switchMenu("admin/apps");
-    $breadcrumb.pushCrumb("查看服务"+$routeParams.service+"监控信息概要列表","查看服务"+$routeParams.service+"监控信息概要列表","monitor-overview");
+    $menu.switchBarOnly("monitor");
     $scope.service=$routeParams.service;
     $scope.application=$routeParams.application;
     $scope.timeRange={};

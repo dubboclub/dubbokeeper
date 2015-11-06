@@ -51,6 +51,14 @@ public interface StatisticsStorage {
     public ApplicationOverview queryApplicationOverview(String application,long start,long end);
 
 
+    /**
+     * 查询某个应用里面提供的服务列表
+     * @param application
+     * @return
+     */
+    public Collection<String> queryServiceByApp(String application);
+
+
 
     
 }

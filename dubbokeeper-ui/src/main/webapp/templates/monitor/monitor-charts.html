@@ -1,107 +1,105 @@
-<div class="row">
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-        <date-range-picker time-range="timeRange"></date-range-picker>
-    </div>
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6" style="padding-top: 10px;">
-        <button class="btn btn-primary"  ng-click="stopInterval()">{{statMsg}}</button>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-3 col-xs-3 col-lg-3 col-sm-3">
 
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-bar-chart"></i> <span><strong class='text-primary'>{{service}}.{{method}}</strong>方法监控大盘</span>
     </div>
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-        <pip-chart chart-options="pipOptions"></pip-chart>
-    </div>
-    <div class="col-md-3 col-xs-3 col-lg-3 col-sm-3">
-
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>耗时详情</span>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                <date-range-picker time-range="timeRange"></date-range-picker>
             </div>
-            <div class="panel-body">
-                <div class="row">
-                    <line-chart chart-options="elapsedOptions">
-                        
-                    </line-chart>
+            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6" style="padding-top: 10px;">
+                <button class="btn btn-primary"  ng-click="stopInterval()">{{statMsg}}</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>耗时详情</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <line-chart chart-options="elapsedOptions">
+
+                            </line-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>并发情况</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <line-chart chart-options="concurrentOptions">
+
+                            </line-chart>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>并发情况</span>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <line-chart chart-options="concurrentOptions">
+        <div class="row">
+            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>TPS</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <line-chart chart-options="tpsOptions">
 
-                    </line-chart>
+                            </line-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>KBPS</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <line-chart chart-options="kbpsOptions">
+
+                            </line-chart>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>TPS</span>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <line-chart chart-options="tpsOptions">
+        <div class="row">
+            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>接收/发送数据</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <line-chart chart-options="inputoutputOptions">
 
-                    </line-chart>
+                            </line-chart>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>KBPS</span>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <line-chart chart-options="kbpsOptions">
+            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>调用成功率</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <line-chart chart-options="failuresuccessOptions">
 
-                    </line-chart>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>接收/发送数据</span>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <line-chart chart-options="inputoutputOptions">
-
-                    </line-chart>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>调用成功率</span>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <line-chart chart-options="failuresuccessOptions">
-
-                    </line-chart>
+                            </line-chart>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

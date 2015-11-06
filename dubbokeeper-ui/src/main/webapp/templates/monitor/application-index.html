@@ -1,13 +1,13 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class=" icon-home"></i> 应用大盘
+        <i class=" icon-home"></i> {{app}}应用大盘
     </div>
     <div class="panel-body">
         <div class="row" style="padding-bottom: 10px;">
             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                 <div  isteven-multi-select
-                        input-model="appOptions"
-                        output-model="applications"
+                        input-model="serviceOptions"
+                        output-model="services"
                         button-label="name"
                         item-label="name"
                         tick-property="ticked"
@@ -29,43 +29,43 @@
                 <span class="label  {{dayRange==1?'label-warning':'label-danger'}} can-click" ng-click="switchTimeRange(1)">一天以内</span>
             </div>
         </div>
-        <div class="row"  ng-repeat="app in applications">
+        <div class="row"  ng-repeat="service in services">
             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><i class="icon-cloud"></i> {{app.name}} <span style="float: right;cursor: pointer;"><a href="#/monitor/{{app.name}}/index">详细信息>></a>&nbsp;&nbsp;<i class="glyphicon {{app.show?'glyphicon-chevron-up':'glyphicon-chevron-down'}}"  ng-click="toggleAppCharts(app)"></i></span></div>
-                    <div class="panel-body" ng-show="app.show">
+                    <div class="panel-heading"><i class="icon-cloud"></i> {{service.name}} <span style="float: right;cursor: pointer;"><a href="#/monitor/{{app}}/{{service.name}}/overview">详细信息>></a>&nbsp;&nbsp;<i class="glyphicon {{service.show?'glyphicon-chevron-up':'glyphicon-chevron-down'}}"  ng-click="toggleAppCharts(service)"></i></span></div>
+                    <div class="panel-body" ng-show="service.show">
                         <div class="row">
                             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                                 <ul class="nav nav-tabs">
-                                    <li role="presentation" ng-click="switchView(app,'chart')" class="{{app.showType=='chart'?'active':''}} can-click"><a href="javascript:void(0);">图表</a></li>
-                                    <li role="presentation" ng-click="switchView(app,'elapsed')" class="{{app.showType=='elapsed'?'active':''}} can-click"><a href="javascript:void(0);">耗时详细列表</a></li>
-                                    <li role="presentation" ng-click="switchView(app,'concurrent')" class="{{app.showType=='concurrent'?'active':''}} can-click"><a href="javascript:void(0);">并发详细列表</a></li>
-                                    <li role="presentation" ng-click="switchView(app,'fault')" class="{{app.showType=='fault'?'active':''}} can-click"><a href="javascript:void(0);">失败详细列表</a></li>
-                                    <li role="presentation" ng-click="switchView(app,'success')" class="{{app.showType=='success'?'active':''}} can-click"><a href="javascript:void(0);">成功详细列表</a></li>
+                                    <li role="presentation" ng-click="switchView(service,'chart')" class="{{app.showType=='chart'?'active':''}} can-click"><a href="javascript:void(0);">图表</a></li>
+                                    <li role="presentation" ng-click="switchView(service,'elapsed')" class="{{app.showType=='elapsed'?'active':''}} can-click"><a href="javascript:void(0);">耗时详细列表</a></li>
+                                    <li role="presentation" ng-click="switchView(service,'concurrent')" class="{{app.showType=='concurrent'?'active':''}} can-click"><a href="javascript:void(0);">并发详细列表</a></li>
+                                    <li role="presentation" ng-click="switchView(service,'fault')" class="{{app.showType=='fault'?'active':''}} can-click"><a href="javascript:void(0);">失败详细列表</a></li>
+                                    <li role="presentation" ng-click="switchView(service,'success')" class="{{app.showType=='success'?'active':''}} can-click"><a href="javascript:void(0);">成功详细列表</a></li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="row" ng-show="app.showType=='chart'">
+                        <div class="row" ng-show="service.showType=='chart'">
                             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
                                 <div class="row" >
                                     <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                                        <line-chart chart-options="app.elapsed"></line-chart>
+                                        <line-chart chart-options="service.elapsed"></line-chart>
                                     </div>
                                     <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                                        <line-chart chart-options="app.concurrent"></line-chart>
+                                        <line-chart chart-options="service.concurrent"></line-chart>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                                        <line-chart chart-options="app.fault"></line-chart>
+                                        <line-chart chart-options="service.fault"></line-chart>
                                     </div>
                                     <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                                        <line-chart chart-options="app.success"></line-chart>
+                                        <line-chart chart-options="service.success"></line-chart>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row" ng-show="app.showType=='elapsed'">
+                        <div class="row" ng-show="service.showType=='elapsed'">
                             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
                                 <table class="table table-hover table-condensed">
                                      <thead>
@@ -78,7 +78,7 @@
                                      </tr>
                                      </thead>
                                     <tbody>
-                                        <tr class="{{elapsed.remoteType=='CONSUMER'?'success':''}}" title="{{elapsed.remoteType=='CONSUMER'?'提供端':'消费端'}}" ng-repeat="elapsed in app.overview.elapsedItems">
+                                        <tr class="{{elapsed.remoteType=='CONSUMER'?'success':''}}" title="{{elapsed.remoteType=='CONSUMER'?'提供端':'消费端'}}" ng-repeat="elapsed in service.overview.elapsedItems">
                                             <td>{{$index+1}}</td>
                                             <td>{{elapsed.elapsed}}</td>
                                             <td>{{elapsed.service}}</td>
@@ -89,7 +89,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row" ng-show="app.showType=='concurrent' ">
+                        <div class="row" ng-show="service.showType=='concurrent' ">
                             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
                                 <table class="table table-hover table-condensed">
                                     <thead>
@@ -113,7 +113,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row" ng-show="app.showType=='fault'">
+                        <div class="row" ng-show="service.showType=='fault'">
                             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
                                 <table class="table table-hover table-condensed">
                                     <thead>
@@ -137,7 +137,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row" ng-show="app.showType=='success'">
+                        <div class="row" ng-show="service.showType=='success'">
                             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
                                 <table class="table table-hover table-condensed">
                                     <thead>

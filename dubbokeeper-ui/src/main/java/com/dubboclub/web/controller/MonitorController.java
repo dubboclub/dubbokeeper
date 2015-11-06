@@ -12,6 +12,7 @@ import com.dubboclub.admin.service.ProviderService;
 import com.dubboclub.monitor.model.ApplicationOverview;
 import com.dubboclub.monitor.model.MethodMonitorOverview;
 import com.dubboclub.monitor.storage.StatisticsStorage;
+import com.dubboclub.web.model.MethodStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,13 @@ public class MonitorController {
 			@RequestParam(value = "lastTimestamp", required = false, defaultValue = "0") long lastTimestamp) {
 		return new ArrayList<Statistics>();
 	}
-
+    @RequestMapping("/{application}/{service}/{method}/{startTime}-{endTime}/monitors.htm")
+    public @ResponseBody
+    MethodStatistics queryMethodStatistics(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("method")String method,@PathVariable("startTime")long startTime,@PathVariable("endTime") long endTime){
+        MethodStatistics methodStatistics = new MethodStatistics();
+        methodStatistics.setStatisticsCollection(statisticsStorage.queryStatisticsForMethod(application,service,method,startTime,endTime));
+        return methodStatistics;
+    }
     @RequestMapping("/{application}/{service}/{startTime}-{endTime}/monitors.htm")
     public @ResponseBody
     Collection<MethodMonitorOverview> overviewService(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("startTime")long startTime,@PathVariable("endTime") long endTime){
@@ -69,6 +76,12 @@ public class MonitorController {
     ApplicationOverview queryApplicationOverview(@PathVariable("application")String application,@PathVariable("dayRange")int dayRange){
         long currentTime = System.currentTimeMillis();
         return statisticsStorage.queryApplicationOverview(application,currentTime-(dayRange*ONE_DAY),currentTime);
+    }
+
+
+    @RequestMapping("/{application}/services.htm")
+    public @ResponseBody Collection<String> queryServiceByApp(@PathVariable("application")String application){
+        return statisticsStorage.queryServiceByApp(application);
     }
 
 }

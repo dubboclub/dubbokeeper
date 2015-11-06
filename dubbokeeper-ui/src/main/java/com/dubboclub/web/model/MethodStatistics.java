@@ -12,7 +12,6 @@ public class MethodStatistics {
 
     private Collection<Statistics> statisticsCollection;
 
-    private Collection<Usage> usageCollection;
 
     public Collection<Statistics> getStatisticsCollection() {
         return statisticsCollection;
@@ -22,11 +21,5 @@ public class MethodStatistics {
         this.statisticsCollection = statisticsCollection;
     }
 
-    public Collection<Usage> getUsageCollection() {
-        return usageCollection;
-    }
 
-    public void setUsageCollection(Collection<Usage> usageCollection) {
-        this.usageCollection = usageCollection;
-    }
 }

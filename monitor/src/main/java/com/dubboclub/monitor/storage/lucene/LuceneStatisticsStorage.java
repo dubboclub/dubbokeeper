@@ -447,6 +447,31 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         return applicationOverview;
     }
 
+    @Override
+    public Collection<String> queryServiceByApp(String application) {
+        TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
+        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+        queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
+        Sort groupSort = new Sort();
+        SortField groupSortField = new SortField(DubboKeeperMonitorService.INTERFACE, SortField.Type.STRING);
+        groupSort.setSort(groupSortField);
+        try {
+            TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.INTERFACE, groupSort,MAX_GROUP_SIZE);
+            IndexSearcher searcher = generateSearcher(application);
+            Query query = queryBuilder.build();
+            searcher.search(query, firstPassCollector);
+            Collection<SearchGroup<BytesRef>> topSearchGroups = firstPassCollector.getTopGroups(0, false);
+            List<String> apps = new ArrayList<String>();
+            for(SearchGroup<BytesRef> group:topSearchGroups){
+                apps.add(group.groupValue.utf8ToString());
+            }
+            return apps;
+        } catch (IOException e) {
+            logger.error("failed to grouping search", e);
+        }
+        return new ArrayList<String>();
+    }
+
 
     private Set<String> generateQueryField(String field){
         Set<String> needFields = new HashSet<String>();
