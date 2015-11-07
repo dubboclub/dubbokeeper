@@ -9,7 +9,8 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dubboclub.admin.model.Provider;
 import com.dubboclub.admin.service.ProviderService;
-import com.dubboclub.monitor.model.ApplicationOverview;
+import com.dubboclub.monitor.model.ServiceInfo;
+import com.dubboclub.monitor.model.StatisticsOverview;
 import com.dubboclub.monitor.model.MethodMonitorOverview;
 import com.dubboclub.monitor.storage.StatisticsStorage;
 import com.dubboclub.web.model.MethodStatistics;
@@ -73,14 +74,21 @@ public class MonitorController {
 
     @RequestMapping("/{application}/{dayRange}/overview.htm")
     public @ResponseBody
-    ApplicationOverview queryApplicationOverview(@PathVariable("application")String application,@PathVariable("dayRange")int dayRange){
+    StatisticsOverview queryApplicationOverview(@PathVariable("application")String application,@PathVariable("dayRange")int dayRange){
         long currentTime = System.currentTimeMillis();
         return statisticsStorage.queryApplicationOverview(application,currentTime-(dayRange*ONE_DAY),currentTime);
     }
+    @RequestMapping("/{application}/{service}/{dayRange}/overview.htm")
+    public @ResponseBody
+    StatisticsOverview queryServiceOverview(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("dayRange")int dayRange){
+        long currentTime = System.currentTimeMillis();
+        return statisticsStorage.queryServiceOverview(application, service, currentTime - (dayRange * ONE_DAY), currentTime);
+    }
+
 
 
     @RequestMapping("/{application}/services.htm")
-    public @ResponseBody Collection<String> queryServiceByApp(@PathVariable("application")String application){
+    public @ResponseBody Collection<ServiceInfo> queryServiceByApp(@PathVariable("application")String application){
         return statisticsStorage.queryServiceByApp(application);
     }
 

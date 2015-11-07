@@ -1,9 +1,9 @@
 package com.dubboclub.monitor.storage;
 
-import com.dubboclub.monitor.model.ApplicationOverview;
+import com.dubboclub.monitor.model.ServiceInfo;
+import com.dubboclub.monitor.model.StatisticsOverview;
 import com.dubboclub.monitor.model.MethodMonitorOverview;
 import com.dubboclub.monitor.model.Statistics;
-import com.dubboclub.monitor.model.Usage;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +48,18 @@ public interface StatisticsStorage {
      * @param application
      * @return
      */
-    public ApplicationOverview queryApplicationOverview(String application,long start,long end);
+    public StatisticsOverview queryApplicationOverview(String application,long start,long end);
+
+
+    /**
+     * 查询某个应用下面某个服务的统计信息
+     * @param application
+     * @param service
+     * @param start
+     * @param end
+     * @return
+     */
+    public StatisticsOverview queryServiceOverview(String application,String service,long start,long end);
 
 
     /**
@@ -56,7 +67,9 @@ public interface StatisticsStorage {
      * @param application
      * @return
      */
-    public Collection<String> queryServiceByApp(String application);
+    public Collection<ServiceInfo> queryServiceByApp(String application);
+
+
 
 
 

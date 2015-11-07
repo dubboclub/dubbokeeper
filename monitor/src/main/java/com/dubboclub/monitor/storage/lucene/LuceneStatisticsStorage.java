@@ -14,14 +14,12 @@ import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.grouping.GroupDocs;
-import org.apache.lucene.search.grouping.GroupingSearch;
 import org.apache.lucene.search.grouping.SearchGroup;
 import org.apache.lucene.search.grouping.term.TermFirstPassGroupingCollector;
 import org.apache.lucene.search.grouping.term.TermSecondPassGroupingCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -344,13 +342,21 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
     }
 
     @Override
-    public ApplicationOverview queryApplicationOverview(String application,long start,long end) {
+    public StatisticsOverview queryApplicationOverview(String application,long start,long end) {
         TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
+        return queryOverview(application,start,end,applicationQuery);
+    }
+
+    private StatisticsOverview queryOverview(String application,long start,long end,TermQuery... queries){
         NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, start, end, true, true);
         BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
-        queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
+        if(queries.length>0){
+            for(TermQuery termQuery:queries){
+                queryBuilder.add(new BooleanClause(termQuery, BooleanClause.Occur.MUST));
+            }
+        }
         queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
-        ApplicationOverview applicationOverview = new ApplicationOverview();
+        StatisticsOverview statisticsOverview = new StatisticsOverview();
         int maxSize = 200;
 
         try{
@@ -362,11 +368,11 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             TopFieldDocs resultDocs =  searcher.search(query, maxSize, sort);
             ScoreDoc[] docs = resultDocs.scoreDocs;
             if(docs.length<=0){
-                return applicationOverview;
+                return statisticsOverview;
             }
             Set<String> needFields = generateQueryField(DubboKeeperMonitorService.CONCURRENT);
             List<ConcurrentItem> concurrentItems = new ArrayList<ConcurrentItem>(docs.length);
-            applicationOverview.setConcurrentItems(concurrentItems);
+            statisticsOverview.setConcurrentItems(concurrentItems);
             for(int i=0;i<docs.length;i++){
                 ScoreDoc doc = docs[i];
                 Document document = searcher.doc(doc.doc,needFields);
@@ -386,7 +392,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             resultDocs = searcher.search(query,maxSize,sort);
             docs = resultDocs.scoreDocs;
             List<ElapsedItem> elapsedItems = new ArrayList<ElapsedItem>(docs.length);
-            applicationOverview.setElapsedItems(elapsedItems);
+            statisticsOverview.setElapsedItems(elapsedItems);
             for(int i=0;i<docs.length;i++){
                 ScoreDoc doc = docs[i];
                 Document document = searcher.doc(doc.doc, needFields);
@@ -408,7 +414,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             resultDocs = searcher.search(query,maxSize,sort);
             docs = resultDocs.scoreDocs;
             List<FaultItem> faultItems = new ArrayList<FaultItem>(docs.length);
-            applicationOverview.setFaultItems(faultItems);
+            statisticsOverview.setFaultItems(faultItems);
             for(int i=0;i<docs.length;i++){
                 ScoreDoc doc = docs[i];
                 Document document = searcher.doc(doc.doc, needFields);
@@ -428,7 +434,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             sort.setSort(sortField);
             resultDocs = searcher.search(query,maxSize,sort);
             List<SuccessItem> successItems = new ArrayList<SuccessItem>(docs.length);
-            applicationOverview.setSuccessItems(successItems);
+            statisticsOverview.setSuccessItems(successItems);
             docs = resultDocs.scoreDocs;
             for(int i=0;i<docs.length;i++){
                 ScoreDoc doc = docs[i];
@@ -444,11 +450,37 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         }catch (IOException e){
             logger.error("failed to grouping search", e);
         }
-        return applicationOverview;
+        return statisticsOverview;
+    }
+
+    private String queryServiceType(String application,String service) throws IOException {
+        TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
+        TermQuery serviceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
+        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+        queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
+        queryBuilder.add(new BooleanClause(serviceQuery, BooleanClause.Occur.FILTER));
+        IndexSearcher searcher = generateSearcher(application);
+        Query query = queryBuilder.build();
+        TopDocs resultDocs =  searcher.search(query, 1);
+        ScoreDoc[] docs = resultDocs.scoreDocs;
+        if(docs.length<0){
+            return null;
+        }
+        Set<String> searchField = new HashSet<String>();
+        searchField.add(DubboKeeperMonitorService.REMOTE_TYPE);
+        Document document = searcher.doc(docs[0].doc, searchField);
+        return document.getBinaryValue(DubboKeeperMonitorService.REMOTE_TYPE).utf8ToString();
     }
 
     @Override
-    public Collection<String> queryServiceByApp(String application) {
+    public StatisticsOverview queryServiceOverview(String application, String service, long start, long end) {
+        TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
+        TermQuery serviceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
+        return queryOverview(application,start,end,applicationQuery,serviceQuery);
+    }
+
+    @Override
+    public Collection<ServiceInfo> queryServiceByApp(String application) {
         TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
         BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
         queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
@@ -461,15 +493,18 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             Query query = queryBuilder.build();
             searcher.search(query, firstPassCollector);
             Collection<SearchGroup<BytesRef>> topSearchGroups = firstPassCollector.getTopGroups(0, false);
-            List<String> apps = new ArrayList<String>();
+            List<ServiceInfo> services = new ArrayList<ServiceInfo>();
             for(SearchGroup<BytesRef> group:topSearchGroups){
-                apps.add(group.groupValue.utf8ToString());
+                ServiceInfo serviceInfo = new ServiceInfo();
+                serviceInfo.setName(group.groupValue.utf8ToString());
+                serviceInfo.setRemoteType(queryServiceType(application,serviceInfo.getName()));
+                services.add(serviceInfo);
             }
-            return apps;
+            return services;
         } catch (IOException e) {
             logger.error("failed to grouping search", e);
         }
-        return new ArrayList<String>();
+        return new ArrayList<ServiceInfo>();
     }
 
 

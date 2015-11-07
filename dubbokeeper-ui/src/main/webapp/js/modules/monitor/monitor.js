@@ -28,7 +28,8 @@ monitor.controller("applicationOverview",function($scope,$httpWrapper,$routePara
                     $scope.serviceOptions = [];
                     for(var i=0;i<data.length;i++){
                         var option = {};
-                        option.name=data[i];
+                        option.name=data[i].name;
+                        option.remoteType=data[i].remoteType;
                         option.ticked=true;
                         option.elapsed={};
                         option.concurrent={};
@@ -36,7 +37,7 @@ monitor.controller("applicationOverview",function($scope,$httpWrapper,$routePara
                         option.success={};
                         if(i==0){
                             option.show=true;
-                            //loadApplicationOverview(option);
+                            loadServiceOverview(option);
                         }
                         option.showType='chart';
                         $scope.serviceOptions.push(option);
@@ -46,7 +47,68 @@ monitor.controller("applicationOverview",function($scope,$httpWrapper,$routePara
             }
         }
     );
+    $scope.switchView = function(service,type){
+        service.showType=type;
+    }
+    var loadServiceOverview=function(service){
+        $httpWrapper.post({
+            url:"monitor/"+$scope.app+"/"+service.name+"/"+$scope.dayRange+"/overview.htm",
+            success:function(data){
+                service.overview=data;
+                generateOptions(service,data.elapsedItems,'elapsed','耗时(ms)',$scope.dayRange);
+                generateOptions(service,data.concurrentItems,'concurrent','并发',$scope.dayRange);
+                generateOptions(service,data.faultItems,'fault','失败次数',$scope.dayRange);
+                generateOptions(service,data.successItems,'success','成功次数',$scope.dayRange);
+            }
+        })
+    }
+    $scope.toggleAppCharts=function(service){
+        if(service.show){
+            service.show=false;
+        }else{
+            loadServiceOverview(service);
+            service.show=true;
+        }
+    }
+    $scope.switchTimeRange=function(dayRange){
+        $scope.dayRange=dayRange;
+        for(var i=0;i<$scope.services.length;i++){
+            if($scope.services[i].show){
+                loadServiceOverview($scope.services[i]);
+            }
+        }
+
+    }
 })
+
+var generateMainData = function(items,prop){
+    var values = [];
+    for(var i=0;i<items.length;i++){
+        values.push(items[i][prop]);
+    }
+    return values;
+}
+var generateXAxisData=function(items){
+    var xAxisData = [];
+    for(var i=0;i<items.length;i++){
+        var date = new Date(items[i].timestamp);
+        var item = items[i].method+"于"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
+        xAxisData.push(item);
+    }
+    return xAxisData;
+}
+var generateOptions=function(app,values,prop,name,dayRange){
+    var options = {};
+    if(!values){
+        app[prop]=options;
+        return;
+    }
+    options.title="在"+dayRange+"天内的"+name+"TOP200";
+    options.subTitle="来自应用端";
+    options.seriesConfig=[{name:name,data:generateMainData(values,prop)}];
+    options.xAxis=generateXAxisData(values);
+    app[prop]=options;
+}
 
 monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
     $menu.switchBarOnly("monitor");
@@ -85,43 +147,17 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
             url:"monitor/"+app.name+"/"+$scope.dayRange+"/overview.htm",
             success:function(data){
                 app.overview=data;
-                generateOptions(app,data.elapsedItems,'elapsed','耗时(ms)');
-                generateOptions(app,data.concurrentItems,'concurrent','并发');
-                generateOptions(app,data.faultItems,'fault','失败次数');
-                generateOptions(app,data.successItems,'success','成功次数');
+                generateOptions(app,data.elapsedItems,'elapsed','耗时(ms)',$scope.dayRange);
+                generateOptions(app,data.concurrentItems,'concurrent','并发',$scope.dayRange);
+                generateOptions(app,data.faultItems,'fault','失败次数',$scope.dayRange);
+                generateOptions(app,data.successItems,'success','成功次数',$scope.dayRange);
             }
         })
     }
 
-    var generateOptions=function(app,values,prop,name){
-        var options = {};
-        if(!values){
-            app[prop]=options;
-            return;
-        }
-        options.title="在"+$scope.dayRange+"天内的"+name+"TOP200";
-        options.subTitle="来自应用端";
-        options.seriesConfig=[{name:name,data:generateMainData(values,prop)}];
-        options.xAxis=generateXAxisData(values);
-        app[prop]=options;
-    }
 
-    var generateMainData = function(items,prop){
-        var values = [];
-        for(var i=0;i<items.length;i++){
-            values.push(items[i][prop]);
-        }
-        return values;
-    }
-    var generateXAxisData=function(items){
-        var xAxisData = [];
-        for(var i=0;i<items.length;i++){
-            var date = new Date(items[i].timestamp);
-            var item = items[i].service+"."+items[i].method+"于"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
-            xAxisData.push(item);
-        }
-        return xAxisData;
-    }
+
+
     $scope.toggleAppCharts=function(app){
         if(app.show){
             app.show=false;

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by bieber on 2015/11/3.
  */
-public class ApplicationOverview {
+public class StatisticsOverview {
 
     private List<ConcurrentItem> concurrentItems;
 
