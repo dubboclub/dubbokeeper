@@ -9,7 +9,7 @@ head.directive("headTpl",function(){
 head.controller("headController",function($scope,$menu,$dkContext,$breadcrumb,$bars,$theme){
     $scope.currentBar="dashboard";
     $scope.bars=$dkContext.getBars();
-    $dkContext.changeProperty('needMenus',false);
+    $dkContext.changeProperty('needBreadCrumb',false);
     $scope.currentTheme = $theme.getCurrentTheme();
     $scope.switchTheme=function(type){
         $theme.setTheme(type);
@@ -21,7 +21,7 @@ head.controller("headController",function($scope,$menu,$dkContext,$breadcrumb,$b
             if($scope.bars[i].barIdentify==barName){
                 if($scope.bars[i].menus){
                     menus=$scope.bars[i].menus;
-                    $dkContext.changeProperty('needMenus',true);
+                    $dkContext.changeProperty('needBreadCrumb',true);
                     for(var j=0;j<menus.length;j++){
                         if(menus[j].isHome){
                             $dkContext.changeProperty("currentHome",menus[j]);
@@ -30,7 +30,7 @@ head.controller("headController",function($scope,$menu,$dkContext,$breadcrumb,$b
                         }
                     }
                 }else{
-                    $dkContext.changeProperty('needMenus',false);
+                    $dkContext.changeProperty('needBreadCrumb',false);
                 }
                 break;
             }

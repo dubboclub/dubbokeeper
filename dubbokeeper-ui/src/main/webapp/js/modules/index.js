@@ -34,7 +34,15 @@ dubbokeeper.barDataset=[{
     barShowName:"Monitor",
     barIdentify:"monitor",
     barHref:"/monitor",
-    barIconClass:"icon-bar-chart"
+    barIconClass:"icon-bar-chart",
+    menus:[{
+        showName:"监控室",
+        identify:"monitor/index",
+        href:"/monitor",
+        icon:"icon-bar-chart",
+        disable:true,
+        isHome:true
+    }]
 },{
     barShowName:"ZooPeeper",
     barIdentify:"zoopeeper",

@@ -9,15 +9,15 @@
 <%@include file="common/header.jsp"%>
 <div class="container-fluid " ng-controller="dubbokeeperCtrl">
     <div class="row">
-        <div class="col-md-2 col-lg-2 col-xs-2" ng-show="needMenus">
+        <div class="col-md-2 col-lg-2 col-xs-2" ng-show="hasMenu">
             <div class="row">
                 <div class="col-md-12 col-lg-12 col-xs-12">
                     <menu-tpl></menu-tpl>
                 </div>
             </div>
         </div>
-        <div class="{{needMenus?'col-md-10 col-lg-10 col-xs-10':'col-md-12 col-lg-12 col-xs-12'}} app-container">
-            <breadcrumb-tpl ng-show="needMenus"></breadcrumb-tpl>
+        <div class="{{hasMenu?'col-md-10 col-lg-10 col-xs-10':'col-md-12 col-lg-12 col-xs-12'}} app-container">
+            <breadcrumb-tpl ng-show="needBreadCrumb"></breadcrumb-tpl>
             <div class="row">
                 <div class="col-md-12 col-lg-12 col-xs-12" ng-view>
                 </div>

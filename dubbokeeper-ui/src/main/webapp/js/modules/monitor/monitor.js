@@ -1,4 +1,4 @@
-var monitor = angular.module("monitor",['ngRoute','lineChart','isteven-multi-select']);
+var monitor = angular.module("monitor",['ngRoute','lineChart','breadCrumb','isteven-multi-select']);
 
 monitor.config(function($routeProvider){
     $routeProvider.when("/monitor/:application/:service/overview",{
@@ -17,9 +17,10 @@ monitor.config(function($routeProvider){
 });
 
 monitor.controller("applicationOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
-    $menu.switchBarOnly("monitor");
+    $menu.switchMenu("monitor/index");
     var oneDay=24*60*60*1000;
     $scope.app=$routeParams.application;
+    $breadcrumb.pushCrumb("应用"+$scope.app+"监控大盘","应用"+$scope.app+"监控大盘","monitor-applicationOverview");
     $scope.dayRange=1;
     $httpWrapper.post({
             url:"monitor/"+$scope.app+"/services.htm",
@@ -111,7 +112,8 @@ var generateOptions=function(app,values,prop,name,dayRange){
 }
 
 monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
-    $menu.switchBarOnly("monitor");
+    $menu.switchMenu("monitor/index");
+    $breadcrumb.pushCrumb("监控大盘","监控大盘","monitor-index");
     var oneDay=24*60*60*1000;
     $scope.dayRange=1;
     $httpWrapper.post({
@@ -181,7 +183,8 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
     $scope.service = $routeParams.service;
     $scope.application=$routeParams.application;
     $scope.method=$routeParams.method;
-    $menu.switchBarOnly("monitor");
+    $menu.switchMenu("monitor/index");
+    $breadcrumb.pushCrumb("应用"+$scope.application+"下服务"+$scope.service+"."+$scope.method+"监控大盘","应用"+$scope.application+"下服务"+$scope.service+"."+$scope.method+"监控大盘","monitor-monitorCharts");
     $scope.elapsedOptions={};
     $scope.concurrentOptions={};
     $scope.tpsOptions={};
@@ -306,9 +309,10 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
 });
 
 monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
-    $menu.switchBarOnly("monitor");
+    $menu.switchMenu("monitor/index");
     $scope.service=$routeParams.service;
     $scope.application=$routeParams.application;
+    $breadcrumb.pushCrumb("应用"+$scope.application+"下服务"+$scope.service+"基本监控信息","应用"+$scope.application+"下服务"+$scope.service+"基本监控信息","monitor-monitorOverview");
     $scope.timeRange={};
     var currentDate = new Date();
     $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;

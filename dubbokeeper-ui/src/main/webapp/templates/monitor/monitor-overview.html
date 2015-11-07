@@ -19,35 +19,35 @@
             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                 <table class="table-responsive table-striped table-hover table-condensed  table table-condensed">
                     <thead>
-                        <tr>
-                            <th>方法名</th>
-                            <th>耗时(ms)</th>
-                            <th>TPS</th>
-                            <th>KBPS</th>
-                            <th>并发</th>
+                    <tr>
+                        <th>方法名</th>
+                        <th>耗时(ms)</th>
+                        <th>TPS</th>
+                        <th>KBPS</th>
+                        <th>并发</th>
 
-                            <th>接受数据(byte)</th>
-                            <th>输出数据(byte)</th>
-                            <th>监控图表</th>
-                        </tr>
+                        <th>接受数据(byte)</th>
+                        <th>输出数据(byte)</th>
+                        <th>监控图表</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr ng-show="!details||details.length<=0">
-                            <td class="text-center text-warning" colspan="10">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}</td>
-                        </tr>
-                        <tr ng-show="details&&details.length>0"  ng-repeat="detail in details | orderBy : 'method'" class="ng-animation">
-                            <td>{{detail.method}}</td>
-                            <td>{{detail.minElapsed}}->{{detail.maxElapsed}}</td>
-                            <td>{{detail.minTps}}->{{detail.maxTps}}</td>
-                            <td>{{detail.minKbps}}->{{detail.maxKbps}}</td>
-                            <td>{{detail.minConcurrent}}->{{detail.maxConcurrent}}</td>
+                    <tr ng-show="!details||details.length<=0">
+                        <td class="text-center text-warning" colspan="10">{{(isEmpty||!details||details.length<=0)?"未发现任何数据...":"努力加载中...."}}</td>
+                    </tr>
+                    <tr ng-show="details&&details.length>0"  ng-repeat="detail in details | orderBy : 'method'" class="ng-animation">
+                        <td>{{detail.method}}</td>
+                        <td>{{detail.minElapsed}}->{{detail.maxElapsed}}</td>
+                        <td>{{detail.minTps}}->{{detail.maxTps}}</td>
+                        <td>{{detail.minKbps}}->{{detail.maxKbps}}</td>
+                        <td>{{detail.minConcurrent}}->{{detail.maxConcurrent}}</td>
 
-                            <td>{{detail.minOutput}}->{{detail.maxOutput}}</td>
-                            <td>{{detail.minInput}}->{{detail.maxInput}}</td>
-                            <td>
-                                <a href="#/monitor/{{application}}/{{service}}/{{detail.method}}/charts">查看监控图表</a>
-                            </td>
-                        </tr>
+                        <td>{{detail.minOutput}}->{{detail.maxOutput}}</td>
+                        <td>{{detail.minInput}}->{{detail.maxInput}}</td>
+                        <td>
+                            <a href="#/monitor/{{application}}/{{service}}/{{detail.method}}/charts">查看监控图表</a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
