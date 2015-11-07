@@ -179,7 +179,7 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
     }
 });
 
-monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
+monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
     $scope.service = $routeParams.service;
     $scope.application=$routeParams.application;
     $scope.method=$routeParams.method;
@@ -198,6 +198,10 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
     $scope.timeRange.endTime=currentDate.getTime();
     $scope.statMsg="准备加载数据...";
     var loadStatisticsData = function(){
+        if(!$routeParams.application){
+            $scope.stopInterval();
+            return;
+        }
         $scope.statMsg="正在查询....";
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
@@ -306,6 +310,9 @@ monitor.controller("monitorCharts",function($scope,$httpWrapper,$routeParams,$br
         },10000);
     }
 
+    $scope.$on('$destroy',function(){
+        $scope.stopInterval();
+    })
 });
 
 monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu,$interval){
@@ -320,6 +327,10 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
     $scope.statMsg="准备加载数据...";
     var loadOverviewData = function(){
         $scope.statMsg="正在查询....";
+        if(!$routeParams.application){
+            $scope.stopInterval();
+            return;
+        }
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
             success:function(data){
@@ -350,5 +361,7 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
         },10000);
     }
 
-
+    $scope.$on('$destroy',function(){
+        $scope.stopInterval();
+    })
 });
