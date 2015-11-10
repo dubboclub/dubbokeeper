@@ -29,8 +29,10 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by bieber on 2015/9/25.
@@ -39,11 +41,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
 
     private static final ConcurrentHashMap<String, Directory> LUCENE_DIRECTORY_MAP = new ConcurrentHashMap<String, Directory>();
 
-    private static final ConcurrentHashMap<String, IndexWriter> LUCENE_WRITER_MAP = new ConcurrentHashMap<String, IndexWriter>();
-
-    private static final ConcurrentHashMap<String, Semaphore> APPLICATION_WRITE_SEMAPHORE = new ConcurrentHashMap<String, Semaphore>();
-
-    private static final ConcurrentHashMap<String, AtomicInteger> APPLICATION_WRITE_COUNTER = new ConcurrentHashMap<String, AtomicInteger>();
+    private static final ConcurrentHashMap<String, ApplicationIndexWriter> LUCENE_WRITER_MAP = new ConcurrentHashMap<String, ApplicationIndexWriter>();
 
     private static final int MAX_GROUP_SIZE=100000;
 
@@ -63,8 +61,8 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             public void run() {
                 logger.debug("shutdown lucene storage");
                 running = false;
-                Collection<IndexWriter> writers = LUCENE_WRITER_MAP.values();
-                for (IndexWriter writer : writers) {
+                Collection<ApplicationIndexWriter> writers = LUCENE_WRITER_MAP.values();
+                for (ApplicationIndexWriter writer : writers) {
                     try {
                         writer.close();
                     } catch (IOException e) {
@@ -84,54 +82,105 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         running = true;
     }
 
+    class ApplicationIndexWriter extends Thread{
+
+        private String application;
+
+        private ConcurrentLinkedQueue<Statistics> statisticses;
+
+        private IndexWriter writer;
+
+        private AtomicLong counter;
+
+        private volatile boolean running=false;
+
+        public ApplicationIndexWriter(String application) throws IOException {
+            this.application = application;
+            statisticses = new ConcurrentLinkedQueue<Statistics>();
+            init();
+            running=true;
+            this.setName(application+"-IndexWriter");
+        }
+
+        private void init() throws IOException {
+            counter = new AtomicLong(getCommitFrequency());
+            Directory directory = getDirectory(application);
+            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+            config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+            writer = new IndexWriter(directory, config);
+        }
+
+
+        public void addDocument(Statistics statistics){
+            statisticses.offer(statistics);
+        }
+
+        public void close() throws IOException {
+            running=false;
+            writer.forceMerge(getMaxSegment());
+            writer.close();
+        }
+
+        @Override
+        public void run() {
+            while(running){
+                try {
+                    Statistics statistics = statisticses.poll();
+                    if(statistics==null){//queue is empty
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            //do nothing
+                        }
+                        continue;
+                    }
+                    logger.debug("store statistics [" + JSON.toJSONString(statistics) + "]");
+                    Document document = new Document();
+                    document.add(new StoredAndSortStringField(DubboKeeperMonitorService.APPLICATION, statistics.getApplication()));
+                    document.add(new StoredAndSortStringField(DubboKeeperMonitorService.INTERFACE, statistics.getServiceInterface()));
+                    document.add(new StoredAndSortStringField(DubboKeeperMonitorService.METHOD, statistics.getMethod()));
+                    document.add(new StoredAndSortStringField(DubboKeeperMonitorService.REMOTE_ADDRESS, statistics.getRemoteAddress()));
+                    document.add(new StoredAndSortStringField(DubboKeeperMonitorService.REMOTE_TYPE, statistics.getRemoteType().toString()));
+                    document.add(new StoredAndSortStringField(DubboKeeperMonitorService.APPLICATION_TYPE, statistics.getType().toString()));
+                    document.add(new StoredAndSortStringField(DubboKeeperMonitorService.HOST_KEY, statistics.getHost()));
+                    document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.CONCURRENT, statistics.getConcurrent()));
+                    document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.ELAPSED, statistics.getElapsed()));
+                    document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.INPUT, statistics.getInput()));
+                    document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.OUTPUT, statistics.getOutput()));
+                    document.add(new LongField(DubboKeeperMonitorService.TIMESTAMP, statistics.getTimestamp(), Field.Store.YES));
+                    document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.FAILURE,statistics.getFailureCount()));
+                    document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.SUCCESS,statistics.getSuccessCount()));
+                    document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.TPS,statistics.getTps()));
+                    document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.KBPS,statistics.getKbps()));
+                    writer.addDocument(document);
+                    long remain = counter.decrementAndGet();
+                    if(remain==0){
+                        writer.forceMerge(getMaxSegment());
+                        writer.close();
+                        init();
+                    }
+                } catch (IOException e) {
+                    logger.error("Failed to add statistics to lucene.",e);
+                }
+            }
+        }
+    }
+
     @Override
     public void storeStatistics(Statistics statistics) {
         if (!running) {
             return;
         }
         try {
-            if (!APPLICATION_WRITE_SEMAPHORE.containsKey(statistics.getApplication())) {
-                APPLICATION_WRITE_SEMAPHORE.putIfAbsent(statistics.getApplication(), new Semaphore(getCommitFrequency()));
-                APPLICATION_WRITE_COUNTER.putIfAbsent(statistics.getApplication(), new AtomicInteger(getCommitFrequency()));
-            }
-            APPLICATION_WRITE_SEMAPHORE.get(statistics.getApplication()).acquire();
-            int remain = APPLICATION_WRITE_COUNTER.get(statistics.getApplication()).decrementAndGet();
-            logger.debug("store statistics [" + JSON.toJSONString(statistics) + "]");
             if (!LUCENE_WRITER_MAP.containsKey(statistics.getApplication())) {
-                Directory directory = getDirectory(statistics.getApplication());
-                IndexWriterConfig config = new IndexWriterConfig(analyzer);
-                config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-                IndexWriter indexWriter = new IndexWriter(directory, config);
-                LUCENE_WRITER_MAP.putIfAbsent(statistics.getApplication(), indexWriter);
+                ApplicationIndexWriter applicationIndexWriter= new ApplicationIndexWriter(statistics.getApplication());
+                applicationIndexWriter =  LUCENE_WRITER_MAP.putIfAbsent(statistics.getApplication(), applicationIndexWriter);
+                if(applicationIndexWriter==null){
+                    LUCENE_WRITER_MAP.get(statistics.getApplication()).start();
+                }
             }
-            IndexWriter indexWriter = LUCENE_WRITER_MAP.get(statistics.getApplication());
-            Document document = new Document();
-            document.add(new StoredAndSortStringField(DubboKeeperMonitorService.APPLICATION, statistics.getApplication()));
-            document.add(new StoredAndSortStringField(DubboKeeperMonitorService.INTERFACE, statistics.getServiceInterface()));
-            document.add(new StoredAndSortStringField(DubboKeeperMonitorService.METHOD, statistics.getMethod()));
-            document.add(new StoredAndSortStringField(DubboKeeperMonitorService.REMOTE_ADDRESS, statistics.getRemoteAddress()));
-            document.add(new StoredAndSortStringField(DubboKeeperMonitorService.REMOTE_TYPE, statistics.getRemoteType().toString()));
-            document.add(new StoredAndSortStringField(DubboKeeperMonitorService.APPLICATION_TYPE, statistics.getType().toString()));
-            document.add(new StoredAndSortStringField(DubboKeeperMonitorService.HOST_KEY, statistics.getHost()));
-            document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.CONCURRENT, statistics.getConcurrent()));
-            document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.ELAPSED, statistics.getElapsed()));
-            document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.INPUT, statistics.getInput()));
-            document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.OUTPUT, statistics.getOutput()));
-            document.add(new LongField(DubboKeeperMonitorService.TIMESTAMP, statistics.getTimestamp(), Field.Store.YES));
-            document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.FAILURE,statistics.getFailureCount()));
-            document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.SUCCESS,statistics.getSuccessCount()));
-            document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.TPS,statistics.getTps()));
-            document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.KBPS,statistics.getKbps()));
-            indexWriter.addDocument(document);
-            if (remain == 0) {
-                logger.debug("start commit lucene");
-                indexWriter.forceMerge(getMaxSegment());
-                indexWriter.close();
-                LUCENE_WRITER_MAP.remove(statistics.getApplication());
-                APPLICATION_WRITE_COUNTER.get(statistics.getApplication()).set(getCommitFrequency());
-                APPLICATION_WRITE_SEMAPHORE.get(statistics.getApplication()).release(getCommitFrequency());
-                logger.debug("finished commit lucene");
-            }
+            ApplicationIndexWriter indexWriter = LUCENE_WRITER_MAP.get(statistics.getApplication());
+            indexWriter.addDocument(statistics);
         } catch (Exception e) {
             logger.error("failed to store statistics info", e);
         }

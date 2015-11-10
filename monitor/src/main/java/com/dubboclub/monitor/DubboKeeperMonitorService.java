@@ -33,12 +33,9 @@ public class DubboKeeperMonitorService implements MonitorService {
 
     public static final String KBPS="kbps";
 
-	private static ExecutorService WRITE_INTO_LUCENE_EXECUTOR;
-	
 	private StatisticsStorage statisticsStorage;
 	
 	public DubboKeeperMonitorService() {
-		WRITE_INTO_LUCENE_EXECUTOR = Executors.newFixedThreadPool(Integer.parseInt(ConfigUtils.getProperty("monitor.writer.size", Runtime.getRuntime().availableProcessors()+"")));
 	}
 
 	@Override
@@ -89,7 +86,7 @@ public class DubboKeeperMonitorService implements MonitorService {
 			statistics.setRemoteType(Statistics.ApplicationType.CONSUMER);
 			statistics.setRemoteAddress(statisticsURL.getParameter(MonitorService.CONSUMER));
 		}
-		WRITE_INTO_LUCENE_EXECUTOR.submit(new StatisticsRunner(statistics));
+        statisticsStorage.storeStatistics(statistics);
 	}
 
 	
@@ -100,16 +97,6 @@ public class DubboKeeperMonitorService implements MonitorService {
 		return null;
 	}
 	
-	class StatisticsRunner implements Runnable{
-		private Statistics statistics;
-		StatisticsRunner(Statistics statistics){
-			this.statistics = statistics;
-		}
-		@Override
-		public void run() {
-			statisticsStorage.storeStatistics(statistics);
-		}
-	}
 
 	public void setStatisticsStorage(StatisticsStorage statisticsStorage) {
 		this.statisticsStorage = statisticsStorage;

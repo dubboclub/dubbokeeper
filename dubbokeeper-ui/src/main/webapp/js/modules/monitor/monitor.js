@@ -196,13 +196,25 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
     var currentDate = new Date();
     $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
     $scope.timeRange.endTime=currentDate.getTime();
-    $scope.statMsg="准备加载数据...";
+    $scope.statMsg="查询实时数据";
+    var realtimeStatisticsData = function(){
+        $httpWrapper.post({
+            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/now.htm",
+            success:function(statistics){
+                if(!$scope.intervalLoad){
+                    return;
+                }
+                generateElapsedOptions(statistics.statisticsCollection);
+                generateConcurrentOptions(statistics.statisticsCollection);
+                generateKBPS(statistics.statisticsCollection);
+                generateTps(statistics.statisticsCollection);
+                generateFailureAndSuccess(statistics.statisticsCollection);
+                generateInputAndOutPut(statistics.statisticsCollection);
+                intervalLoadStatistics();
+            }
+        });
+    }
     var loadStatisticsData = function(){
-        if(!$routeParams.application){
-            $scope.stopInterval();
-            return;
-        }
-        $scope.statMsg="正在查询....";
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
             success:function(statistics){
@@ -212,13 +224,11 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
                 generateTps(statistics.statisticsCollection);
                 generateFailureAndSuccess(statistics.statisticsCollection);
                 generateInputAndOutPut(statistics.statisticsCollection);
-                intervalLoadStatistics();
-                $scope.statMsg="暂停查询";
             }
         });
     }
     $scope.$watch("timeRange",function(){
-        clearTimeout($scope.intervalLoad);
+        $scope.stopInterval();
         loadStatisticsData();
     });
     var generateRendingData =function(statistics,dataKeys){
@@ -297,17 +307,26 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
         options.xAxis=rendingData.xAxisData;
         $scope.failuresuccessOptions=options;
     }
-    loadStatisticsData();
+    realtimeStatisticsData();
     $scope.stopInterval=function(){
         if($scope.intervalLoad){
             clearTimeout($scope.intervalLoad);
+            $scope.intervalLoad=undefined;
+            $scope.statMsg="查询实施数据";
         }
-        $scope.statMsg="已暂停查询";
     }
     var intervalLoadStatistics = function(){
+        $scope.statMsg="暂停实时查询";
         $scope.intervalLoad = setTimeout(function(){
-            loadStatisticsData();
+            realtimeStatisticsData();
         },10000);
+    }
+    $scope.queryRealTimeData=function(){
+        if($scope.intervalLoad){
+            $scope.stopInterval();
+        }else{
+            intervalLoadStatistics();
+        }
     }
 
     $scope.$on('$destroy',function(){
@@ -324,13 +343,23 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
     var currentDate = new Date();
     $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
     $scope.timeRange.endTime=currentDate.getTime();
-    $scope.statMsg="准备加载数据...";
+    $scope.statMsg="查询实施数据";
+
+    var loadOverviewDataRealTime = function(){
+        $httpWrapper.post({
+            url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/now.htm",
+            success:function(data){
+                if(data.length>0){
+                    $scope.details=data;
+                }else{
+                    $scope.isEmpty=true;
+                }
+                intervalLoad();
+            }
+        });
+    }
     var loadOverviewData = function(){
-        $scope.statMsg="正在查询....";
-        if(!$routeParams.application){
-            $scope.stopInterval();
-            return;
-        }
+        $scope.stopInterval();
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
             success:function(data){
@@ -339,12 +368,10 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
                 }else{
                     $scope.isEmpty=true;
                 }
-                $scope.statMsg="暂停查询";
-                intervalLoad();
             }
         });
     }
-    loadOverviewData();
+    loadOverviewDataRealTime();
     $scope.$watch("timeRange",function(){
         clearTimeout($scope.loadTimeout);
         loadOverviewData();
@@ -352,13 +379,22 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
     $scope.stopInterval=function(){
         if($scope.loadTimeout){
             clearTimeout($scope.loadTimeout);
+            $scope.loadTimeout=undefined;
+            $scope.statMsg="查询实施数据";
         }
-        $scope.statMsg="已暂停查询";
     }
     var intervalLoad= function(){
+        $scope.statMsg="暂停实时查询";
         $scope.loadTimeout =  setTimeout(function(){
-            loadOverviewData();
+            loadOverviewDataRealTime();
         },10000);
+    }
+    $scope.realTime=function(){
+        if($scope.loadTimeout){
+            $scope.stopInterval();
+        }else{
+            loadOverviewDataRealTime();
+        }
     }
 
     $scope.$on('$destroy',function(){
