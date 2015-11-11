@@ -37,7 +37,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/basic.module.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/http.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/dialog.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/stickup.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/echarts.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/date-range-picker.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/breadcrumb/breadcrumb.js"></script>
