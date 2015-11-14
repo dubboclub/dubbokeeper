@@ -14,6 +14,7 @@ import com.dubboclub.monitor.model.StatisticsOverview;
 import com.dubboclub.monitor.model.MethodMonitorOverview;
 import com.dubboclub.monitor.storage.StatisticsStorage;
 import com.dubboclub.web.model.MethodStatistics;
+import com.dubboclub.web.utils.ConfigUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,11 @@ public class MonitorController {
     private static final long ONE_DAY=24*60*60*1000;
 
     private static final long ONE_HOUR=60*60*1000;
+
+    @RequestMapping("/load-interval.htm")
+    public @ResponseBody Integer queryInterval(){
+        return Integer.parseInt(ConfigUtils.getProperty("monitor.collect.interval"));
+    }
 
     @RequestMapping("/{application}/{service}/{method}/now.htm")
     public @ResponseBody MethodStatistics queryCurrentMethodStatistics(@PathVariable("application")String application,@PathVariable("service")String service,@PathVariable("method")String method){

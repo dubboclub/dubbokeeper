@@ -3,25 +3,38 @@ fullScreen.directive("fullScreen",function(){
     return {
         restrict:"A",
         scope: {
-            changeCallback:"=changeCallback"
+            changeCallback:"=changeCallback",
+            targetClass:"=targetClass"
         },
         link:function($scope,element){
-            var but = element.append("<button>全屏</button>")
-            console.log(element);
-            but.bind("click",function(){
+            element.append("&nbsp;&nbsp;<i class=\"glyphicon glyphicon-resize-full\" title='全屏'></i>");
+            var full = element.find(".glyphicon-resize-full");
+            full.bind("click",function(){
                $(document).bind("fullscreenchange", function(e) {
                     if($(document).fullScreen()){
-                        element.addClass("fullScreen");
-                        $scope.changeCallback(true);
+                        full.removeClass("glyphicon-resize-full");
+                        full.addClass("glyphicon-resize-small");
+                        full.attr("title","还原");
+                        element.parents("."+$scope.targetClass).addClass("full-screen");
+                        if($scope.changeCallback){
+                            $scope.changeCallback(true);
+                        }
                     }else{
-                          $scope.changeCallback(false);
-                         element.removeClass("fullScreen");
+                        element.parents("."+$scope.targetClass).removeClass("full-screen");
+                        full.removeClass("glyphicon-resize-small");
+                        full.addClass("glyphicon-resize-full");
+                        full.attr("title","全屏");
+                        if($scope.changeCallback){
+                            $scope.changeCallback(false);
+                        }
                     }
                 });
-                if(element.fullScreen()){
-                    element.fullScreen(false);
+                if(element.parents("."+$scope.targetClass).fullScreen()){
+
+                    element.parents("."+$scope.targetClass).fullScreen(false);
                 }else{
-                    element.fullScreen(true); 
+
+                    element.parents("."+$scope.targetClass).fullScreen(true);
                 }
             });
            // $("#fullscreenButton").toggle($(document).fullScreen() != null))

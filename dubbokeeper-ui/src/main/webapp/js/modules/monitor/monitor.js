@@ -1,4 +1,4 @@
-var monitor = angular.module("monitor",['ngRoute','lineChart','breadCrumb','isteven-multi-select']);
+var monitor = angular.module("monitor",['ngRoute','fullScreen','lineChart','breadCrumb','isteven-multi-select']);
 
 monitor.config(function($routeProvider){
     $routeProvider.when("/monitor/:application/:service/overview",{
@@ -116,6 +116,9 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
     $breadcrumb.pushCrumb("监控大盘","监控大盘","monitor-index");
     var oneDay=24*60*60*1000;
     $scope.dayRange=1;
+    $scope.fullScreenChange=function(isFull){
+        console.log(isFull);
+    }
     $httpWrapper.post({
         url:"monitor/index.htm",
         success:function(data){
@@ -197,7 +200,15 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
     $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
     $scope.timeRange.endTime=currentDate.getTime();
     $scope.statMsg="查询实时数据";
+    $scope.fullScreenChange=function(){
+        if($scope.realTimeQuery){
+            realtimeStatisticsData();
+        }else{
+            loadStatisticsData();
+        }
+    }
     var realtimeStatisticsData = function(){
+        $scope.realTimeQuery=true;
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/now.htm",
             success:function(statistics){
@@ -214,7 +225,9 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
             }
         });
     }
+    $scope.realTimeQuery=false;
     var loadStatisticsData = function(){
+        $scope.realTimeQuery=false;
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
             success:function(statistics){
@@ -231,6 +244,16 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
         $scope.stopInterval();
         loadStatisticsData();
     });
+    $scope.interval=10000;
+    var loadInterval=function(){
+        $httpWrapper.post({
+            url:"monitor//load-interval.htm",
+            success:function(interval){
+                $scope.interval=interval;
+            }
+        });
+    }
+    loadInterval();
     var generateRendingData =function(statistics,dataKeys){
         var rendingData={};
         var xAxisData =[];
@@ -307,7 +330,6 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
         options.xAxis=rendingData.xAxisData;
         $scope.failuresuccessOptions=options;
     }
-    realtimeStatisticsData();
     $scope.stopInterval=function(){
         if($scope.intervalLoad){
             clearTimeout($scope.intervalLoad);
@@ -319,7 +341,7 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
         $scope.statMsg="暂停实时查询";
         $scope.intervalLoad = setTimeout(function(){
             realtimeStatisticsData();
-        },10000);
+        },$scope.interval);
     }
     $scope.queryRealTimeData=function(){
         if($scope.intervalLoad){
@@ -344,7 +366,16 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
     $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
     $scope.timeRange.endTime=currentDate.getTime();
     $scope.statMsg="查询实施数据";
-
+    $scope.interval=10000;
+    var loadInterval=function(){
+        $httpWrapper.post({
+            url:"monitor//load-interval.htm",
+            success:function(interval){
+                $scope.interval=interval;
+            }
+        });
+    }
+    loadInterval();
     var loadOverviewDataRealTime = function(){
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/now.htm",
@@ -387,7 +418,7 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
         $scope.statMsg="暂停实时查询";
         $scope.loadTimeout =  setTimeout(function(){
             loadOverviewDataRealTime();
-        },10000);
+        },$scope.interval);
     }
     $scope.realTime=function(){
         if($scope.loadTimeout){

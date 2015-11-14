@@ -14,9 +14,10 @@
 
         <div class="row">
             <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                <div class="panel panel-default">
+                <div class="panel panel-default elapsed-chart">
                     <div class="panel-heading">
                         <span>耗时详情</span>
+                        <span style="float: right;cursor: pointer;" full-screen change-callback="fullScreenChange" target-class="'elapsed-chart'"></span>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -28,9 +29,10 @@
                 </div>
             </div>
             <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                <div class="panel panel-default">
+                <div class="panel panel-default concurrent-chart">
                     <div class="panel-heading">
                         <span>并发情况</span>
+                        <span style="float: right;cursor: pointer;" full-screen change-callback="fullScreenChange"  target-class="'concurrent-chart'"></span>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -44,9 +46,10 @@
         </div>
         <div class="row">
             <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                <div class="panel panel-default">
+                <div class="panel panel-default tps-chart">
                     <div class="panel-heading">
                         <span>TPS</span>
+                        <span style="float: right;cursor: pointer;" full-screen change-callback="fullScreenChange"  target-class="'tps-chart'"></span>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -58,9 +61,10 @@
                 </div>
             </div>
             <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                <div class="panel panel-default">
+                <div class="panel panel-default kbps-chart">
                     <div class="panel-heading">
                         <span>KBPS</span>
+                        <span style="float: right;cursor: pointer;" full-screen change-callback="fullScreenChange"  target-class="'kbps-chart'"></span>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -74,9 +78,10 @@
         </div>
         <div class="row">
             <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                <div class="panel panel-default">
+                <div class="panel panel-default receive-accept-chart">
                     <div class="panel-heading">
                         <span>接收/发送数据</span>
+                        <span style="float: right;cursor: pointer;" full-screen change-callback="fullScreenChange"  target-class="'receive-accept-chart'"></span>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -88,9 +93,10 @@
                 </div>
             </div>
             <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
-                <div class="panel panel-default">
+                <div class="panel panel-default invoke-chart">
                     <div class="panel-heading">
                         <span>调用成功率</span>
+                        <span style="float: right;cursor: pointer;" full-screen change-callback="fullScreenChange"  target-class="'invoke-chart'"></span>
                     </div>
                     <div class="panel-body">
                         <div class="row">

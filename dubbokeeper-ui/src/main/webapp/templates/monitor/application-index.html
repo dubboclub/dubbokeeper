@@ -30,9 +30,9 @@
             </div>
         </div>
         <div class="row"  ng-repeat="service in services">
-            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 service-overview">
                 <div class="panel {{service.remoteType=='CONSUMER'?'panel-success':'panel-info'}}">
-                    <div class="panel-heading"><i class="glyphicon glyphicon-th-large"></i> {{service.remoteType=='CONSUMER'?'发布的服务':'订阅的服务'}}{{service.name}} <span style="float: right;cursor: pointer;"><a href="#/monitor/{{app}}/{{service.name}}/overview" class="{{service.remoteType=='CONSUMER'?'white-color':''}}">详细信息&gt;&gt;</a>&nbsp;&nbsp;<i class="glyphicon {{service.show?'glyphicon-chevron-up':'glyphicon-chevron-down'}}"  ng-click="toggleAppCharts(service)"></i></span></div>
+                    <div class="panel-heading"><i class="glyphicon glyphicon-th-large"></i> {{service.remoteType=='CONSUMER'?'发布的服务':'订阅的服务'}}{{service.name}} <span style="float: right;cursor: pointer;" full-screen target-class="'service-overview'"><a href="#/monitor/{{app}}/{{service.name}}/overview" class="{{service.remoteType=='CONSUMER'?'white-color':''}}">详细信息&gt;&gt;</a>&nbsp;&nbsp;<i class="glyphicon {{service.show?'glyphicon-chevron-up':'glyphicon-chevron-down'}}"  ng-click="toggleAppCharts(service)"></i></span></div>
                     <div class="panel-body" ng-show="service.show">
                         <div class="row">
                             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">

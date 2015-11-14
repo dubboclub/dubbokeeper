@@ -30,9 +30,9 @@
             </div>
         </div>
         <div class="row"  ng-repeat="app in applications">
-            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 application-overview">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><i class="icon-cloud"></i> {{app.name}} <span style="float: right;cursor: pointer;"><a href="#/monitor/{{app.name}}/index">详细信息>></a>&nbsp;&nbsp;<i class="glyphicon {{app.show?'glyphicon-chevron-up':'glyphicon-chevron-down'}}"  ng-click="toggleAppCharts(app)"></i></span></div>
+                    <div class="panel-heading"><i class="icon-cloud"></i> {{app.name}} <span style="float: right;cursor: pointer;" full-screen change-callback="fullScreenChange" target-class="'application-overview'"><a href="#/monitor/{{app.name}}/index">详细信息>></a>&nbsp;&nbsp;<i class="glyphicon {{app.show?'glyphicon-chevron-up':'glyphicon-chevron-down'}}"  ng-click="toggleAppCharts(app)"></i></span></div>
                     <div class="panel-body" ng-show="app.show">
                         <div class="row">
                             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
