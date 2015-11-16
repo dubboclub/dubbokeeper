@@ -92,7 +92,17 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
 
         private AtomicLong counter;
 
+        private volatile long maxElapsed;
+
+        private volatile long maxConcurrent;
+
+        private volatile int maxFault;
+
+        private volatile int maxSuccess;
+
         private volatile boolean running=false;
+
+
 
         public ApplicationIndexWriter(String application) throws IOException {
             this.application = application;
@@ -108,6 +118,12 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
             writer = new IndexWriter(directory, config);
+            long end = System.currentTimeMillis();
+            long start = System.currentTimeMillis()-24*60*60*1000;
+            maxConcurrent = Long.parseLong(queryMaxRecord(application, DubboKeeperMonitorService.CONCURRENT, SortField.Type.LONG,start,end));
+            maxElapsed = Long.parseLong(queryMaxRecord(application, DubboKeeperMonitorService.ELAPSED, SortField.Type.LONG,start,end));
+            maxFault = Integer.parseInt(queryMaxRecord(application, DubboKeeperMonitorService.FAILURE, SortField.Type.INT,start,end));
+            maxSuccess = Integer.parseInt(queryMaxRecord(application,DubboKeeperMonitorService.SUCCESS, SortField.Type.INT,start,end));
         }
 
 
@@ -136,6 +152,18 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                     }
                     logger.debug("store statistics [" + JSON.toJSONString(statistics) + "]");
                     Document document = new Document();
+                    if(maxFault<statistics.getFailureCount()){
+                        maxFault=statistics.getFailureCount();
+                    }
+                    if(maxSuccess<statistics.getSuccessCount()){
+                        maxSuccess=statistics.getSuccessCount();
+                    }
+                    if(maxConcurrent<statistics.getConcurrent()){
+                        maxConcurrent = statistics.getConcurrent();
+                    }
+                    if(maxElapsed<statistics.getElapsed()){
+                        maxElapsed = statistics.getElapsed();
+                    }
                     document.add(new StoredAndSortStringField(DubboKeeperMonitorService.APPLICATION, statistics.getApplication()));
                     document.add(new StoredAndSortStringField(DubboKeeperMonitorService.INTERFACE, statistics.getServiceInterface()));
                     document.add(new StoredAndSortStringField(DubboKeeperMonitorService.METHOD, statistics.getMethod()));
@@ -163,6 +191,27 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                     logger.error("Failed to add statistics to lucene.",e);
                 }
             }
+        }
+
+        public String getApplication() {
+            return application;
+        }
+
+        public long getMaxElapsed() {
+            return maxElapsed;
+        }
+
+
+        public long getMaxConcurrent() {
+            return maxConcurrent;
+        }
+
+        public int getMaxFault() {
+            return maxFault;
+        }
+
+        public int getMaxSuccess() {
+            return maxSuccess;
         }
     }
 
@@ -386,14 +435,67 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
 
 
     @Override
-    public Collection<String> queryApplications() {
-        return LUCENE_DIRECTORY_MAP.keySet();
+    public Collection<ApplicationInfo> queryApplications() {
+        Collection<ApplicationIndexWriter> applicationIndexWriters =  LUCENE_WRITER_MAP.values();
+        List<ApplicationInfo> applicationInfos = new ArrayList<ApplicationInfo>(applicationIndexWriters.size());
+        for(ApplicationIndexWriter writer:applicationIndexWriters){
+            ApplicationInfo applicationInfo = new ApplicationInfo();
+            applicationInfo.setApplicationName(writer.getApplication());
+            applicationInfo.setMaxElapsed(writer.getMaxElapsed());
+            applicationInfo.setMaxSuccess(writer.getMaxSuccess());
+            applicationInfo.setMaxConcurrent(writer.getMaxConcurrent());
+            applicationInfo.setMaxFault(writer.getMaxFault());
+            applicationInfos.add(applicationInfo);
+        }
+
+        return applicationInfos;
+    }
+
+    @Override
+    public ApplicationInfo queryApplicationInfo(String application, long start, long end) {
+        ApplicationInfo applicationInfo = new ApplicationInfo();
+        applicationInfo.setApplicationName(application);
+        applicationInfo.setMaxFault(Integer.parseInt(queryMaxRecord(application,DubboKeeperMonitorService.FAILURE, SortField.Type.INT,start,end)));
+        applicationInfo.setMaxConcurrent(Long.parseLong(queryMaxRecord(application,DubboKeeperMonitorService.CONCURRENT, SortField.Type.LONG,start,end)));
+        applicationInfo.setMaxElapsed(Long.parseLong(queryMaxRecord(application,DubboKeeperMonitorService.ELAPSED, SortField.Type.LONG,start,end)));
+        applicationInfo.setMaxSuccess(Integer.parseInt(queryMaxRecord(application,DubboKeeperMonitorService.SUCCESS, SortField.Type.LONG,start,end)));
+        return applicationInfo;
     }
 
     @Override
     public StatisticsOverview queryApplicationOverview(String application,long start,long end) {
         TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
         return queryOverview(application,start,end,applicationQuery);
+    }
+
+
+    private String queryMaxRecord(String application, String field,SortField.Type type,long start,long end,TermQuery...queries){
+        NumericRangeQuery<Long> timeQuery = NumericRangeQuery.newLongRange(DubboKeeperMonitorService.TIMESTAMP, start, end, true, true);
+        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+        if(queries.length>0){
+            for(TermQuery termQuery:queries){
+                queryBuilder.add(new BooleanClause(termQuery, BooleanClause.Occur.MUST));
+            }
+        }
+        queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
+        try {
+            IndexSearcher searcher = generateSearcher(application);
+            Query query = queryBuilder.build();
+            SortField sortField = new SortField(field, type,true);
+            Sort sort = new Sort();
+            sort.setSort(sortField);
+            TopFieldDocs resultDocs =  searcher.search(query, 1, sort);
+            ScoreDoc[] docs = resultDocs.scoreDocs;
+            if(docs.length<=0){
+                return "0";
+            }
+            Set<String> needFields = generateQueryField(field);
+            Document document = searcher.doc(docs[0].doc,needFields);
+            return document.get(field);
+        } catch (IOException e) {
+            logger.error("failed to grouping search", e);
+        }
+        return "0";
     }
 
     private StatisticsOverview queryOverview(String application,long start,long end,TermQuery... queries){
@@ -529,7 +631,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
     }
 
     @Override
-    public Collection<ServiceInfo> queryServiceByApp(String application) {
+    public Collection<ServiceInfo> queryServiceByApp(String application,long start,long end) {
         TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
         BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
         queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
@@ -546,7 +648,12 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             for(SearchGroup<BytesRef> group:topSearchGroups){
                 ServiceInfo serviceInfo = new ServiceInfo();
                 serviceInfo.setName(group.groupValue.utf8ToString());
-                serviceInfo.setRemoteType(queryServiceType(application,serviceInfo.getName()));
+                serviceInfo.setRemoteType(queryServiceType(application, serviceInfo.getName()));
+                TermQuery serviceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE,new BytesRef(serviceInfo.getName())));
+                serviceInfo.setMaxElapsed(Long.parseLong(queryMaxRecord(application,DubboKeeperMonitorService.ELAPSED, SortField.Type.LONG,start,end,serviceQuery)));
+                serviceInfo.setMaxFault(Integer.parseInt(queryMaxRecord(application, DubboKeeperMonitorService.FAILURE, SortField.Type.INT, start, end, serviceQuery)));
+                serviceInfo.setMaxConcurrent(Long.parseLong(queryMaxRecord(application, DubboKeeperMonitorService.CONCURRENT, SortField.Type.LONG, start, end, serviceQuery)));
+                serviceInfo.setMaxSuccess(Integer.parseInt(queryMaxRecord(application,DubboKeeperMonitorService.SUCCESS, SortField.Type.INT,start,end,serviceQuery)));
                 services.add(serviceInfo);
             }
             return services;
@@ -651,6 +758,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                         return FileVisitResult.CONTINUE;
                     }
                     LUCENE_DIRECTORY_MAP.put(dir.getFileName().toString(), generateLuceneDirectory(dir));
+                    ApplicationIndexWriter applicationIndexWriter = new ApplicationIndexWriter(dir.getFileName().toString());
+                    LUCENE_WRITER_MAP.put(dir.getFileName().toString(),applicationIndexWriter);
+                    applicationIndexWriter.start();
                     return FileVisitResult.SKIP_SUBTREE;
                 }
 

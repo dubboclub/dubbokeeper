@@ -137,8 +137,8 @@ dateRangePicker.directive("dateRangePicker",function(){
 
             $scope.submitRange = function(){
                 $scope.rangeSlipUp=false;
-                var startDate = $scope.startDate+" "+$scope.startHourTxt+":"+$scope.startMinute;
-                var endDate =  $scope.endDate+" "+$scope.endHourTxt+":"+$scope.endMinuteTxt;
+                var startDate = $scope.startDate+"T"+$scope.startHourTxt+":"+$scope.startMinute;
+                var endDate =  $scope.endDate+"T"+$scope.endHourTxt+":"+$scope.endMinuteTxt;
                 var temp = {};
                 temp.startTime = new Date(startDate).getTime();
                 temp.endTime = new Date(endDate).getTime();
@@ -148,6 +148,8 @@ dateRangePicker.directive("dateRangePicker",function(){
             $scope.changeRange=function(rangeSize){
                 var endDate = new Date();
                 var startDate = new Date(endDate.getTime()-rangeSize*60*60*1000);
+                start.data('datepicker').setDate(startDate);
+                end.data('datepicker').setDate(endDate);
                 $scope.startHour = startDate.getHours();
                 $scope.startMinute = startDate.getMinutes();
                 $scope.endHour = endDate.getHours();
@@ -155,8 +157,6 @@ dateRangePicker.directive("dateRangePicker",function(){
                 $scope.startDate = startDate.getFullYear()+"-"+numberFormat(startDate.getMonth()+1)+"-"+numberFormat(startDate.getDate());
                 $scope.endDate = endDate.getFullYear()+"-"+numberFormat(endDate.getMonth()+1)+"-"+numberFormat(endDate.getDate());
                 formatHourAndMinute();
-                start.data('datepicker').setDate(startDate);
-                end.data('datepicker').setDate(endDate);
             }
 
             var start = $(element.get(0)).find(".start").datepicker({

@@ -9,9 +9,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dubboclub.admin.model.Provider;
 import com.dubboclub.admin.service.ProviderService;
-import com.dubboclub.monitor.model.ServiceInfo;
-import com.dubboclub.monitor.model.StatisticsOverview;
-import com.dubboclub.monitor.model.MethodMonitorOverview;
+import com.dubboclub.monitor.model.*;
 import com.dubboclub.monitor.storage.StatisticsStorage;
 import com.dubboclub.web.model.MethodStatistics;
 import com.dubboclub.web.utils.ConfigUtils;
@@ -21,8 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.dubboclub.monitor.model.Statistics;
 
 @Controller
 @RequestMapping("/monitor")
@@ -97,8 +93,14 @@ public class MonitorController {
     }
 
     @RequestMapping("/index.htm")
-    public @ResponseBody Collection<String> monitorIndex(){
+    public @ResponseBody Collection<ApplicationInfo> monitorIndex(){
         return statisticsStorage.queryApplications();
+    }
+
+    @RequestMapping("/{application}/{dayRange}/info.htm")
+    public @ResponseBody ApplicationInfo queryApplicationInfo(@PathVariable("application")String application,@PathVariable("dayRange")int dayRange){
+        long currentTime = System.currentTimeMillis();
+        return statisticsStorage.queryApplicationInfo(application,currentTime-ONE_DAY*dayRange,currentTime);
     }
 
     @RequestMapping("/{application}/{dayRange}/overview.htm")
@@ -116,9 +118,11 @@ public class MonitorController {
 
 
 
-    @RequestMapping("/{application}/services.htm")
-    public @ResponseBody Collection<ServiceInfo> queryServiceByApp(@PathVariable("application")String application){
-        return statisticsStorage.queryServiceByApp(application);
+    @RequestMapping("/{application}/{dayRange}/services.htm")
+    public @ResponseBody Collection<ServiceInfo> queryServiceByApp(@PathVariable("application")String application,@PathVariable("dayRange")int dayRange){
+        long end = System.currentTimeMillis();
+        long start = end-ONE_DAY*dayRange;
+        return statisticsStorage.queryServiceByApp(application,start,end);
     }
 
 }

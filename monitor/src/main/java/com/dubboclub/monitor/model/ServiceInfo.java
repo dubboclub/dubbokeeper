@@ -3,10 +3,11 @@ package com.dubboclub.monitor.model;
 /**
  * Created by bieber on 2015/11/7.
  */
-public class ServiceInfo {
+public class ServiceInfo extends BaseInfo {
     private String name;
 
     private String remoteType;
+
 
     public String getName() {
         return name;

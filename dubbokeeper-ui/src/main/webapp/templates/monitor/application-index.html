@@ -11,6 +11,7 @@
                       button-label="name"
                       item-label="name"
                       tick-property="ticked"
+                      max-labels="4"
                       orientation="horizontal"  >
                 </div>
             </div>
@@ -31,7 +32,38 @@
         </div>
         <div class="row"  ng-repeat="service in services">
             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 service-overview">
-                <div class="panel {{service.remoteType=='CONSUMER'?'panel-success':'panel-info'}}">
+                <div class="row" ng-if="$index%3===0" ng-init="group=services.slice($index,$index+3)">
+                    <div class="col-md-4 col-xs-4 col-lg-4 col-sm-4" ng-repeat="service in group">
+                        <div class="panel panel-success">
+                            <div class="panel-body">
+                                <div class="caption">
+                                    <strong><a href="#/monitor/{{app}}/{{service.name}}/{{dayRange}}/service/top200.html" title="查看top200信息">{{service.name}}</a></strong>
+                                    <p>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="badge">{{service.maxConcurrent}}</span>
+                                            最大并发数：
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="badge">{{service.maxElapsed}}</span>
+                                            最大耗时(ms)：
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="badge">{{service.maxFault}}</span>
+                                            最大失败次数：
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="badge">{{service.maxSuccess}}</span>
+                                            最大成功次数：
+                                        </li>
+                                    </ul>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <!-- <div class="panel {{service.remoteType=='CONSUMER'?'panel-success':'panel-info'}}">
                     <div class="panel-heading"><i class="glyphicon glyphicon-th-large"></i> {{service.remoteType=='CONSUMER'?'发布的服务':'订阅的服务'}}{{service.name}} <span style="float: right;cursor: pointer;" full-screen target-class="'service-overview'"><a href="#/monitor/{{app}}/{{service.name}}/overview" class="{{service.remoteType=='CONSUMER'?'white-color':''}}">详细信息&gt;&gt;</a>&nbsp;&nbsp;<i class="glyphicon {{service.show?'glyphicon-chevron-up':'glyphicon-chevron-down'}}"  ng-click="toggleAppCharts(service)"></i></span></div>
                     <div class="panel-body" ng-show="service.show">
                         <div class="row">
@@ -154,7 +186,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

@@ -58,7 +58,7 @@
     padding-left: 15px;  padding-right: 15px;
     display: block;
     z-index: 1000;
-    position: absolute;
+
     background: white;
 }
 .date-time-picker-submit{

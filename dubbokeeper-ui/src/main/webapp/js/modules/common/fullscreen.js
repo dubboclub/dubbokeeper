@@ -1,5 +1,5 @@
-var fullScreen = angular.module('fullScreen', []);
-fullScreen.directive("fullScreen",function(){
+var fullScreenDirective = angular.module('fullScreen', []);
+fullScreenDirective.directive("fullScreen",function(){
     return {
         restrict:"A",
         scope: {

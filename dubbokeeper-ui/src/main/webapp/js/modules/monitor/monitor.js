@@ -13,8 +13,84 @@ monitor.config(function($routeProvider){
     }).when("/monitor",{
         templateUrl:"templates/monitor/index.html",
         controller:"index"
+    }).when("/monitor/:application/:dayRange/top200.html",{
+        templateUrl:"templates/monitor/application-top200.html",
+        controller:"applicationTop200"
+    }).when("/monitor/:application/:service/:dayRange/service/top200.html",{
+        templateUrl:"templates/monitor/service-top200.html",
+        controller:"serviceTop200"
     });
 });
+monitor.controller("serviceTop200",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
+    $menu.switchMenu("monitor/index");
+    var oneDay=24*60*60*1000;
+    $scope.app=$routeParams.application;
+    $scope.name = $routeParams.service;
+    $scope.dayRange=$routeParams.dayRange;
+    $breadcrumb.pushCrumb("服务"+$scope.name+"TOP200","服务"+$scope.name+"TOP200","monitor-serviceTop200");
+    $scope.service={};
+    $scope.service.name=$scope.name;
+    $scope.service.elapsed={};
+    $scope.service.concurrent={};
+    $scope.service.fault={};
+    $scope.service.success={};
+    $scope.showType='chart';
+    var loadServiceOverview=function(){
+        $httpWrapper.post({
+            url:"monitor/"+$scope.app+"/"+ $scope.name+"/"+$scope.dayRange+"/overview.htm",
+            success:function(data){
+                $scope.service.overview=data;
+                generateOptions($scope.service,data.elapsedItems,'elapsed','耗时(ms)',$scope.dayRange);
+                generateOptions($scope.service,data.concurrentItems,'concurrent','并发',$scope.dayRange);
+                generateOptions($scope.service,data.faultItems,'fault','失败次数',$scope.dayRange);
+                generateOptions($scope.service,data.successItems,'success','成功次数',$scope.dayRange);
+            }
+        })
+    }
+    $scope.switchView = function(type){
+        $scope.showType=type;
+    }
+    loadServiceOverview();
+    $scope.switchTimeRange=function(dayRange){
+        $scope.dayRange=dayRange;
+        loadServiceOverview();
+    }
+
+});
+monitor.controller("applicationTop200",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
+    $menu.switchMenu("monitor/index");
+    var oneDay=24*60*60*1000;
+    $scope.name=$routeParams.application;
+    $scope.dayRange=$routeParams.dayRange;
+    $breadcrumb.pushCrumb("应用"+$scope.name+"TOP200","应用"+$scope.name+"TOP200","monitor-applicationTop200");
+    $scope.app={};
+    $scope.app.name=$scope.name;
+    $scope.app.elapsed={};
+    $scope.app.concurrent={};
+    $scope.app.fault={};
+    $scope.app.success={};
+    $scope.showType='chart';
+    var loadApplicationOverview=function(){
+        $httpWrapper.post({
+            url:"monitor/"+$scope.name+"/"+$scope.dayRange+"/overview.htm",
+            success:function(data){
+                $scope.app.overview=data;
+                generateOptions($scope.app,data.elapsedItems,'elapsed','耗时(ms)',$scope.dayRange);
+                generateOptions($scope.app,data.concurrentItems,'concurrent','并发',$scope.dayRange);
+                generateOptions($scope.app,data.faultItems,'fault','失败次数',$scope.dayRange);
+                generateOptions($scope.app,data.successItems,'success','成功次数',$scope.dayRange);
+            }
+        })
+    }
+    $scope.switchView = function(type){
+        $scope.showType=type;
+    }
+    loadApplicationOverview();
+    $scope.switchTimeRange=function(dayRange){
+        $scope.dayRange=dayRange;
+        loadApplicationOverview();
+    }
+})
 
 monitor.controller("applicationOverview",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
     $menu.switchMenu("monitor/index");
@@ -22,63 +98,42 @@ monitor.controller("applicationOverview",function($scope,$httpWrapper,$routePara
     $scope.app=$routeParams.application;
     $breadcrumb.pushCrumb("应用"+$scope.app+"监控大盘","应用"+$scope.app+"监控大盘","monitor-applicationOverview");
     $scope.dayRange=1;
-    $httpWrapper.post({
-            url:"monitor/"+$scope.app+"/services.htm",
-            success:function(data){
-                if(data){
-                    $scope.serviceOptions = [];
-                    for(var i=0;i<data.length;i++){
-                        var option = {};
-                        option.name=data[i].name;
-                        option.remoteType=data[i].remoteType;
-                        option.ticked=true;
-                        option.elapsed={};
-                        option.concurrent={};
-                        option.fault={};
-                        option.success={};
-                        if(i==0){
+    var queryServiceInfo = function(){
+        $httpWrapper.post({
+                url:"monitor/"+$scope.app+"/"+$scope.dayRange+"/services.htm",
+                success:function(data){
+                    if(data){
+                        $scope.serviceOptions = [];
+                        for(var i=0;i<data.length;i++){
+                            var option = {};
+                            option.name=data[i].name;
+                            option.remoteType=data[i].remoteType;
+                            option.maxConcurrent = data[i].maxConcurrent;
+                            option.maxElapsed = data[i].maxElapsed;
+                            option.maxFault = data[i].maxFault;
+                            option.maxSuccess = data[i].maxSuccess;
+                            option.ticked=true;
+                            option.elapsed={};
+                            option.concurrent={};
+                            option.fault={};
+                            option.success={};
                             option.show=true;
-                            loadServiceOverview(option);
+                            option.showType='chart';
+                            $scope.serviceOptions.push(option);
                         }
-                        option.showType='chart';
-                        $scope.serviceOptions.push(option);
+                        $scope.services = $scope.serviceOptions;
                     }
-                    $scope.services = $scope.serviceOptions;
                 }
             }
-        }
-    );
+        );
+    }
+    queryServiceInfo();
     $scope.switchView = function(service,type){
         service.showType=type;
     }
-    var loadServiceOverview=function(service){
-        $httpWrapper.post({
-            url:"monitor/"+$scope.app+"/"+service.name+"/"+$scope.dayRange+"/overview.htm",
-            success:function(data){
-                service.overview=data;
-                generateOptions(service,data.elapsedItems,'elapsed','耗时(ms)',$scope.dayRange);
-                generateOptions(service,data.concurrentItems,'concurrent','并发',$scope.dayRange);
-                generateOptions(service,data.faultItems,'fault','失败次数',$scope.dayRange);
-                generateOptions(service,data.successItems,'success','成功次数',$scope.dayRange);
-            }
-        })
-    }
-    $scope.toggleAppCharts=function(service){
-        if(service.show){
-            service.show=false;
-        }else{
-            loadServiceOverview(service);
-            service.show=true;
-        }
-    }
     $scope.switchTimeRange=function(dayRange){
         $scope.dayRange=dayRange;
-        for(var i=0;i<$scope.services.length;i++){
-            if($scope.services[i].show){
-                loadServiceOverview($scope.services[i]);
-            }
-        }
-
+        queryServiceInfo();
     }
 })
 
@@ -113,7 +168,7 @@ var generateOptions=function(app,values,prop,name,dayRange){
 
 monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb,$menu){
     $menu.switchMenu("monitor/index");
-    $breadcrumb.pushCrumb("监控大盘","监控大盘","monitor-index");
+    $breadcrumb.pushCrumb("监控大盘","监控大盘","monitor/index");
     var oneDay=24*60*60*1000;
     $scope.dayRange=1;
     $scope.fullScreenChange=function(isFull){
@@ -126,17 +181,17 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
                 $scope.appOptions = [];
                 for(var i=0;i<data.length;i++){
                     var option = {};
-                    option.name=data[i];
+                    option.name=data[i].applicationName;
+                    option.maxConcurrent = data[i].maxConcurrent;
+                    option.maxFault = data[i].maxFault;
+                    option.maxElapsed = data[i].maxElapsed;
+                    option.maxSuccess = data[i].maxSuccess;
                     option.ticked=true;
                     option.elapsed={};
                     option.concurrent={};
                     option.fault={};
                     option.success={};
-                    if(i==0){
-                        option.show=true;
-                        loadApplicationOverview(option);
-                    }
-                    option.showType='chart';
+                    option.show=true;
                     $scope.appOptions.push(option);
                 }
                 $scope.applications = $scope.appOptions;
@@ -144,10 +199,8 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
         }
         }
     );
-    $scope.switchView = function(app,type){
-        app.showType=type;
-    }
-    var loadApplicationOverview=function(app){
+
+   /* var loadApplicationOverview=function(app){
         $httpWrapper.post({
             url:"monitor/"+app.name+"/"+$scope.dayRange+"/overview.htm",
             success:function(data){
@@ -158,24 +211,26 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
                 generateOptions(app,data.successItems,'success','成功次数',$scope.dayRange);
             }
         })
+    }*/
+    var loadApplicationInfo = function(app){
+        $httpWrapper.post({
+            url:"monitor/"+app.name+"/"+$scope.dayRange+"/info.htm",
+            success:function(data){
+                app.maxConcurrent=data.maxConcurrent;
+                app.maxElapsed = data.maxElapsed;
+                app.maxSuccess = data.maxSuccess;
+                app.maxFault = data.maxFault;
+            }
+        })
     }
 
 
 
-
-    $scope.toggleAppCharts=function(app){
-        if(app.show){
-            app.show=false;
-        }else{
-            loadApplicationOverview(app);
-            app.show=true;
-        }
-    }
     $scope.switchTimeRange=function(dayRange){
         $scope.dayRange=dayRange;
         for(var i=0;i<$scope.applications.length;i++){
             if($scope.applications[i].show){
-                loadApplicationOverview($scope.applications[i]);
+                loadApplicationInfo($scope.applications[i]);
             }
         }
 

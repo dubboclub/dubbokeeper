@@ -1,0 +1,152 @@
+<div class="panel panel-default service-overview">
+    <div class="panel-heading">
+        <i class=" icon-cloud"></i> 服务{{name}}在{{dayRange}}天以内Top200<span style="float: right;cursor: pointer;" full-screen target-class="'service-overview'"><a href="#/monitor/{{app}}/{{service.name}}/overview" class="{{service.remoteType=='CONSUMER'?'white-color':''}}">详细信息&gt;&gt;</a>&nbsp;&nbsp;</span>
+    </div>
+    <div class="panel-body">
+        <div class="row"  style="padding-bottom: 10px;">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <span class="label {{dayRange==30?'label-warning':'label-default'}} can-click" ng-click="switchTimeRange(30)">一个月以内</span>
+                <span class="label {{dayRange==21?'label-warning':'label-primary'}}  can-click" ng-click="switchTimeRange(21)">三周以内</span>
+                <span class="label  {{dayRange==14?'label-warning':'label-primary'}} can-click" ng-click="switchTimeRange(14)">两周以内</span>
+                <span class="label {{dayRange==7?'label-warning':'label-primary'}}    can-click"  ng-click="switchTimeRange(7)">一周以内</span>
+                <span class="label  {{dayRange==6?'label-warning':'label-info'}}  can-click" ng-click="switchTimeRange(6)">6天以内</span>
+                <span class="label  {{dayRange==5?'label-warning':'label-info'}}   can-click" ng-click="switchTimeRange(5)">5天以内</span>
+                <span class="label {{dayRange==4?'label-warning':'label-info'}}  can-click" ng-click="switchTimeRange(4)">4天以内</span>
+                <span class="label  {{dayRange==3?'label-warning':'label-info'}}  can-click" ng-click="switchTimeRange(3)">3天以内</span>
+                <span class="label  {{dayRange==2?'label-warning':'label-info'}} can-click" ng-click="switchTimeRange(2)">2天以内</span>
+                <span class="label  {{dayRange==1?'label-warning':'label-danger'}} can-click" ng-click="switchTimeRange(1)">一天以内</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 service-overview">
+
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                        <ul class="nav nav-tabs">
+                            <li role="presentation" ng-click="switchView('chart')" class="{{showType=='chart'?'active':''}} can-click"><a href="javascript:void(0);">图表</a></li>
+                            <li role="presentation" ng-click="switchView('elapsed')" class="{{showType=='elapsed'?'active':''}} can-click"><a href="javascript:void(0);">耗时详细列表</a></li>
+                            <li role="presentation" ng-click="switchView('concurrent')" class="{{showType=='concurrent'?'active':''}} can-click"><a href="javascript:void(0);">并发详细列表</a></li>
+                            <li role="presentation" ng-click="switchView('fault')" class="{{showType=='fault'?'active':''}} can-click"><a href="javascript:void(0);">失败详细列表</a></li>
+                            <li role="presentation" ng-click="switchView('success')" class="{{showType=='success'?'active':''}} can-click"><a href="javascript:void(0);">成功详细列表</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row" ng-show="showType=='chart'">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
+                        <div class="row" >
+                            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                                <line-chart chart-options="service.elapsed"></line-chart>
+                            </div>
+                            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                                <line-chart chart-options="service.concurrent"></line-chart>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                                <line-chart chart-options="service.fault"></line-chart>
+                            </div>
+                            <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+                                <line-chart chart-options="service.success"></line-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-show="showType=='elapsed'">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>消耗时间(ms)</th>
+                                <th>方法名称</th>
+                                <th>触发时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="{{elapsed.remoteType=='CONSUMER'?'success':''}}" title="{{elapsed.remoteType=='CONSUMER'?'提供端':'消费端'}}" ng-repeat="elapsed in service.overview.elapsedItems">
+                                <td>{{$index+1}}</td>
+                                <td>{{elapsed.elapsed}}</td>
+                                <td>{{elapsed.method}}</td>
+                                <td>{{elapsed.timestamp | date : 'MM-dd hh:mm:ss'}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" ng-show="showType=='concurrent' ">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>并发数量</th>
+                                <th>方法名称</th>
+                                <th>触发时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="{{concurrent.remoteType=='CONSUMER'?'success':''}}"  title="{{concurrent.remoteType=='CONSUMER'?'提供端':'消费端'}}"  ng-repeat="concurrent in service.overview.concurrentItems">
+                                <td>{{$index+1}}</td>
+                                <td>{{concurrent.concurrent}}</td>
+                                <td>{{concurrent.method}}</td>
+                                <td>{{concurrent.timestamp | date : 'MM-dd hh:mm:ss'}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" ng-show="showType=='fault'">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>失败数量</th>
+                                <th>方法名称</th>
+                                <th>触发时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="{{fault.remoteType=='CONSUMER'?'success':''}}"  title="{{fault.remoteType=='CONSUMER'?'提供端':'消费端'}}"  ng-repeat="fault in service.overview.faultItems">
+                                <td>{{$index+1}}</td>
+                                <td>{{fault.fault}}</td>
+                                <td>{{fault.method}}</td>
+                                <td>{{fault.timestamp | date : 'MM-dd hh:mm:ss'}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" ng-show="showType=='success'">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 max-view-height">
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>成功数量</th>
+                                <th>方法名称</th>
+                                <th>触发时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="{{success.remoteType=='CONSUMER'?'success':''}}"  title="{{success.remoteType=='CONSUMER'?'提供端':'消费端'}}"  ng-repeat="success in service.overview.successItems">
+                                <td>{{$index+1}}</td>
+                                <td>{{success.success}}</td>
+                                <td>{{success.method}}</td>
+                                <td>{{success.timestamp | date : 'MM-dd hh:mm:ss'}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="panel {{service.remoteType=='CONSUMER'?'panel-success':'panel-info'}}">
+                     <div class="panel-heading"><i class="glyphicon glyphicon-th-large"></i> {{service.remoteType=='CONSUMER'?'发布的服务':'订阅的服务'}}{{service.name}} <span style="float: right;cursor: pointer;" full-screen target-class="'service-overview'"><a href="#/monitor/{{app}}/{{service.name}}/overview" class="{{service.remoteType=='CONSUMER'?'white-color':''}}">详细信息&gt;&gt;</a>&nbsp;&nbsp;<i class="glyphicon {{service.show?'glyphicon-chevron-up':'glyphicon-chevron-down'}}"  ng-click="toggleAppCharts(service)"></i></span></div>
+                     <div class="panel-body" ng-show="service.show">
+
+
+                     </div>
+                 </div>-->
+            </div>
+        </div>
+    </div>
+</div>
