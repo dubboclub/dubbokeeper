@@ -8,8 +8,8 @@
     <artifactId>dubbokeeper</artifactId>
     <version>0.0.2</version>
     <modules>
-        <module>admin</module>
-        <module>monitor</module>
+        <module>dubbokeeper-admin</module>
+        <module>dubbokeeper-monitor</module>
         <module>dubbokeeper-ui</module>
     </modules>
     <packaging>pom</packaging>

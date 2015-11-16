@@ -23,7 +23,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>monitor</artifactId>
+            <artifactId>dubbokeeper-monitor</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>admin</artifactId>
+            <artifactId>dubbokeeper-admin</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
