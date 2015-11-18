@@ -112,6 +112,7 @@ monitor.controller("applicationOverview",function($scope,$httpWrapper,$routePara
                             option.maxElapsed = data[i].maxElapsed;
                             option.maxFault = data[i].maxFault;
                             option.maxSuccess = data[i].maxSuccess;
+                            option.remoteType=data[i].remoteType;
                             option.ticked=true;
                             option.elapsed={};
                             option.concurrent={};
@@ -121,6 +122,45 @@ monitor.controller("applicationOverview",function($scope,$httpWrapper,$routePara
                             option.showType='chart';
                             $scope.serviceOptions.push(option);
                         }
+                        var providers=[];
+                        var consumers=[];
+                        for(var i=0;i<$scope.serviceOptions.length;i++){
+                            if($scope.serviceOptions[i].remoteType=='CONSUMER'){
+                                providers.push($scope.serviceOptions[i]);
+                            }else{
+                                consumers.push($scope.serviceOptions[i]);
+                            }
+                        }
+
+                        var services =[];
+                        services.push({
+                            name: '<strong>所有服务</strong>',
+                            serviceGroup: true
+                        });
+                        if(providers.length>0){
+                            services.push({
+                                name: '<strong>提供的服务</strong>',
+                                serviceGroup: true
+                            });
+                            services=services.concat(providers);
+                            services.push({
+                                serviceGroup: false
+                            });
+                        }
+                        if(consumers.length>0){
+                            services.push({
+                                name: '<strong>消费的服务</strong>',
+                                serviceGroup: true
+                            });
+                            services=services.concat(consumers);
+                            services.push({
+                                serviceGroup: false
+                            });
+                        }
+                        services.push({
+                            serviceGroup: false
+                        });
+                        $scope.serviceGroup = services;
                         $scope.services = $scope.serviceOptions;
                     }
                 }
@@ -186,6 +226,7 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
                     option.maxFault = data[i].maxFault;
                     option.maxElapsed = data[i].maxElapsed;
                     option.maxSuccess = data[i].maxSuccess;
+                    option.applicationType = data[i].applicationType;
                     option.ticked=true;
                     option.elapsed={};
                     option.concurrent={};
@@ -194,6 +235,57 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
                     option.show=true;
                     $scope.appOptions.push(option);
                 }
+                var consumers = [];
+                var providers = [];
+                var consumerAndProvider = [];
+                for(var i=0;i<$scope.appOptions.length;i++){
+                    if($scope.appOptions[i].applicationType==1){
+                        providers.push($scope.appOptions[i]);
+                    }else if($scope.appOptions[i].applicationType==0){
+                        consumers.push($scope.appOptions[i]);
+                    }else{
+                        consumerAndProvider.push($scope.appOptions[i]);
+                    }
+                }
+                var apps = [];
+                apps.push({
+                    name: '<strong>所有应用</strong>',
+                    appGroup: true
+                });
+                if(consumerAndProvider.length>0){
+                    apps.push({
+                        name: '<strong>即是消费者也是提供者</strong>',
+                        appGroup: true
+                    });
+                    apps=apps.concat(consumerAndProvider);
+                    apps.push({
+                        appGroup: false
+                    });
+                }
+                if(providers.length>0){
+                    apps.push({
+                        name: '<strong>提供者</strong>',
+                        appGroup: true
+                    });
+                    apps=apps.concat(providers);
+                    apps.push({
+                        appGroup: false
+                    });
+                }
+                if(consumers.length>0){
+                    apps.push({
+                        name: '<strong>消费者</strong>',
+                        appGroup: true
+                    });
+                    apps=apps.concat(consumers);
+                    apps.push({
+                        appGroup: false
+                    });
+                }
+                apps.push({
+                    appGroup: false
+                });
+                $scope.multiOptions = apps;
                 $scope.applications = $scope.appOptions;
             }
         }

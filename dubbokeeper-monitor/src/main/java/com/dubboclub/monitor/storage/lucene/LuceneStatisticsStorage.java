@@ -188,6 +188,8 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                     long remain = counter.decrementAndGet();
                     if(remain==0&&running){
                         writer.forceMerge(getMaxSegment());
+                        writer.commit();
+                        counter = new AtomicLong(getCommitFrequency());
                         //init();
                     }
                 } catch (IOException e) {
@@ -448,6 +450,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             applicationInfo.setMaxSuccess(writer.getMaxSuccess());
             applicationInfo.setMaxConcurrent(writer.getMaxConcurrent());
             applicationInfo.setMaxFault(writer.getMaxFault());
+            applicationInfo.setApplicationType(queryApplicationType(writer.getApplication()));
             applicationInfos.add(applicationInfo);
         }
 
@@ -462,6 +465,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         applicationInfo.setMaxConcurrent(Long.parseLong(queryMaxRecord(application,DubboKeeperMonitorService.CONCURRENT, SortField.Type.LONG,start,end)));
         applicationInfo.setMaxElapsed(Long.parseLong(queryMaxRecord(application,DubboKeeperMonitorService.ELAPSED, SortField.Type.LONG,start,end)));
         applicationInfo.setMaxSuccess(Integer.parseInt(queryMaxRecord(application,DubboKeeperMonitorService.SUCCESS, SortField.Type.LONG,start,end)));
+        applicationInfo.setApplicationType(queryApplicationType(application));
         return applicationInfo;
     }
 
@@ -631,6 +635,36 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
         TermQuery serviceQuery = new TermQuery(new Term(DubboKeeperMonitorService.INTERFACE, new BytesRef(service)));
         return queryOverview(application,start,end,applicationQuery,serviceQuery);
+    }
+
+    private int queryApplicationType(String application)  {
+        try{
+            TermQuery applicationQuery = new TermQuery(new Term(DubboKeeperMonitorService.APPLICATION, new BytesRef(application)));
+            BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+            queryBuilder.add(new BooleanClause(applicationQuery, BooleanClause.Occur.MUST));
+            Sort groupSort = new Sort();
+            SortField groupSortField = new SortField(DubboKeeperMonitorService.INTERFACE, SortField.Type.STRING);
+            groupSort.setSort(groupSortField);
+            TermFirstPassGroupingCollector firstPassCollector = new TermFirstPassGroupingCollector(DubboKeeperMonitorService.REMOTE_TYPE, groupSort,2);
+            IndexSearcher searcher = generateSearcher(application);
+            Query query = queryBuilder.build();
+            searcher.search(query, firstPassCollector);
+            Collection<SearchGroup<BytesRef>> topSearchGroups = firstPassCollector.getTopGroups(0, false);
+            int size =  topSearchGroups.size();
+            if(size==2){
+                return size;
+            }
+            for(SearchGroup<BytesRef> group:topSearchGroups){
+                if(Statistics.ApplicationType.PROVIDER.toString().equals(group.groupValue.utf8ToString())){
+                    return 0;
+                }else{
+                    return 1;
+                }
+            }
+            return 1;
+        }catch (Exception e){
+            return 1;
+        }
     }
 
     @Override

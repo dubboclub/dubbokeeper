@@ -1,18 +1,19 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class=" icon-home"></i> {{app}}应用大盘
+        <i class=" icon-home"></i> <strong class='text-primary'>{{app}}</strong>应用大盘
     </div>
     <div class="panel-body">
         <div class="row" style="padding-bottom: 10px;">
             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                 <div  isteven-multi-select
-                      input-model="serviceOptions"
+                      input-model="serviceGroup"
                       output-model="services"
                       button-label="name"
                       item-label="name"
                       tick-property="ticked"
                       max-labels="4"
-                      orientation="horizontal"  >
+                      orientation="horizontal"
+                        group-property="serviceGroup">
                 </div>
             </div>
         </div>
@@ -37,7 +38,7 @@
                         <div class="panel panel-success">
                             <div class="panel-body">
                                 <div class="caption">
-                                    <strong><a href="#/monitor/{{app}}/{{service.name}}/{{dayRange}}/service/top200.html" title="查看top200信息">{{service.name}}</a></strong>
+                                    <strong><span ng-if="service.remoteType==='CONSUMER'" title="提供服务" class="label  label-primary">P</span><span ng-if="service.remoteType==='PROVIDER'"  title="消费服务" class="label label-warning">C</span>&nbsp;<a href="#/monitor/{{app}}/{{service.name}}/{{dayRange}}/service/top200.html" title="查看top200信息">{{service.name}}</a></strong>
                                     <p>
                                     <ul class="list-group">
                                         <li class="list-group-item">
