@@ -188,8 +188,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                     long remain = counter.decrementAndGet();
                     if(remain==0&&running){
                         writer.forceMerge(getMaxSegment());
-                        writer.close();
-                        init();
+                        //init();
                     }
                 } catch (IOException e) {
                     logger.error("Failed to add statistics to lucene.",e);

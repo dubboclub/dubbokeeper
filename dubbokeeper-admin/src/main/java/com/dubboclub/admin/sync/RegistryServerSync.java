@@ -141,7 +141,7 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
                 }else{
                     long currentId = ID.incrementAndGet();
                     ids.put(currentId, url);
-                    URL_IDS_MAPPER.put(url.toFullString(),currentId);
+                    URL_IDS_MAPPER.putIfAbsent(url.toFullString(),currentId);
                 }
             }
         }
