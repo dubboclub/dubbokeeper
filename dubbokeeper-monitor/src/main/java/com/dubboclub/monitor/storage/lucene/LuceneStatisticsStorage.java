@@ -107,23 +107,25 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         public ApplicationIndexWriter(String application) throws IOException {
             this.application = application;
             statisticses = new ConcurrentLinkedQueue<Statistics>();
-            init();
             running=true;
+            init();
             this.setName(application+"-IndexWriter");
         }
 
         private void init() throws IOException {
-            counter = new AtomicLong(getCommitFrequency());
-            Directory directory = getDirectory(application);
-            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-            writer = new IndexWriter(directory, config);
-            long end = System.currentTimeMillis();
-            long start = System.currentTimeMillis()-24*60*60*1000;
-            maxConcurrent = Long.parseLong(queryMaxRecord(application, DubboKeeperMonitorService.CONCURRENT, SortField.Type.LONG,start,end));
-            maxElapsed = Long.parseLong(queryMaxRecord(application, DubboKeeperMonitorService.ELAPSED, SortField.Type.LONG,start,end));
-            maxFault = Integer.parseInt(queryMaxRecord(application, DubboKeeperMonitorService.FAILURE, SortField.Type.INT,start,end));
-            maxSuccess = Integer.parseInt(queryMaxRecord(application,DubboKeeperMonitorService.SUCCESS, SortField.Type.INT,start,end));
+            if(running){
+                counter = new AtomicLong(getCommitFrequency());
+                Directory directory = getDirectory(application);
+                IndexWriterConfig config = new IndexWriterConfig(analyzer);
+                config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+                writer = new IndexWriter(directory, config);
+                long end = System.currentTimeMillis();
+                long start = System.currentTimeMillis()-24*60*60*1000;
+                maxConcurrent = Long.parseLong(queryMaxRecord(application, DubboKeeperMonitorService.CONCURRENT, SortField.Type.LONG,start,end));
+                maxElapsed = Long.parseLong(queryMaxRecord(application, DubboKeeperMonitorService.ELAPSED, SortField.Type.LONG,start,end));
+                maxFault = Integer.parseInt(queryMaxRecord(application, DubboKeeperMonitorService.FAILURE, SortField.Type.INT,start,end));
+                maxSuccess = Integer.parseInt(queryMaxRecord(application,DubboKeeperMonitorService.SUCCESS, SortField.Type.INT,start,end));
+            }
         }
 
 
@@ -133,8 +135,10 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
 
         public void close() throws IOException {
             running=false;
-            writer.forceMerge(getMaxSegment());
-            writer.close();
+            if(writer.isOpen()){
+                writer.forceMerge(getMaxSegment());
+                writer.close();
+            }
         }
 
         @Override
@@ -182,7 +186,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                     document.add(new StoredAndSortNumericField(DubboKeeperMonitorService.KBPS,statistics.getKbps()));
                     writer.addDocument(document);
                     long remain = counter.decrementAndGet();
-                    if(remain==0){
+                    if(remain==0&&running){
                         writer.forceMerge(getMaxSegment());
                         writer.close();
                         init();
