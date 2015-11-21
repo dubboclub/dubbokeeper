@@ -263,7 +263,7 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                 $httpWrapper.post({
                 url:"loadAppsDependencies.htm",
                 success:function(data){
-                     /*var nodeSize = 100;
+                     /*var nodeSize = 20;
                      var graph={};
                      var nodes=[];
                      for(var i=0;i<nodeSize;i++){

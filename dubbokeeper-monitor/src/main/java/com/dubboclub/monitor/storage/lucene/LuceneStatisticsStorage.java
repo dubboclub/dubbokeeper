@@ -264,6 +264,8 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 Collections.sort(statisticsList);
                 return statisticsList;
             }
+        }catch(IndexNotFoundException e){
+            //do nothing
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("failed to search for application " + application, e);
@@ -432,7 +434,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 }
                 return methodMonitorOverviews.values();
             }
-        } catch (IOException e) {
+        }catch (IndexNotFoundException e){
+            //do nothing
+        }catch (IOException e) {
             logger.error("failed to grouping search", e);
         }
         return new ArrayList<MethodMonitorOverview>();
@@ -499,7 +503,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             Set<String> needFields = generateQueryField(field);
             Document document = searcher.doc(docs[0].doc,needFields);
             return document.get(field);
-        } catch (IOException e) {
+        }catch (IndexNotFoundException e){
+            //do nothing
+        }catch (IOException e) {
             logger.error("failed to grouping search", e);
         }
         return "0";
@@ -605,6 +611,8 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                     break;
                 }
             }
+        }catch (IndexNotFoundException e){
+            //do nothing
         }catch (IOException e){
             logger.error("failed to grouping search", e);
         }
@@ -662,6 +670,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 }
             }
             return -1;
+        }catch (IndexNotFoundException e){
+            //do nothing
+            return -1;
         }catch (Exception e){
             return -1;
         }
@@ -694,7 +705,9 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 services.add(serviceInfo);
             }
             return services;
-        } catch (IOException e) {
+        }catch (IndexNotFoundException e){
+            //do nothing
+        }catch (IOException e) {
             logger.error("failed to grouping search", e);
         }
         return new ArrayList<ServiceInfo>();
