@@ -6,7 +6,7 @@
                 <h4 class="modal-title"><i class="glyphicon {{dialogParams.type=='info'?'glyphicon-info-sign':(dialogParams.type=='confirm'?'glyphicon-question-sign':'glyphicon-alert')}}"></i> {{dialogParams.title}}</h4>
             </div>
             <div class="modal-body">
-                <p>{{dialogParams.content}}</p>
+                <p ng-bind-html="dialogParams.content"></p>
             </div>
             <div class="modal-footer">
                 <button type="button" ng-show="dialogParams.cancleBtn" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">{{dialogParams.cancelContent?dialogParams.cancelContent:'取消'}}</button>

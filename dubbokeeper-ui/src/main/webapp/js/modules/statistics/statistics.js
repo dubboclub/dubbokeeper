@@ -263,141 +263,27 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                 $httpWrapper.post({
                 url:"loadAppsDependencies.htm",
                 success:function(data){
-                    require( [
-                        'echarts',
-                        'echarts/chart/force', // 使用柱状图就加载bar模块，按需加载
-                        'echarts/chart/chord' // 使用柱状图就加载bar模块，按需加载
-                    ], function (echarts) {
-                        require(['echarts/theme/blue'], function(curTheme){
-                            var originNodes = data.nodes.filter(function(){return true});
-                            var originLinks = data.links.filter(function(){return true});
-                            var option = {
-                                title : {
-                                    text: '应用依赖关系图',
-                                    subtext: '数据来自注册中心',
-                                    x:'center'
-                                },
-                                tooltip : {
-                                    trigger: 'item',
-                                    formatter: '{a} : {b}'
-                                },
-                                toolbox: {
-                                    show : true,
-                                    feature : {
-                                        restore : {show: true},
-                                        magicType: {show: true, type: ['force', 'chord']},
-                                        saveAsImage : {show: true}
-                                    }
-                                },
-                                legend: {
-                                    x: 'left',
-                                    data:['纯提供者','纯消费者','即是提供者也是消费者']
-                                },
-                                series : [
-                                    {
-                                        type:'force',
-                                        name : "应用关系",
-                                        ribbonType: false,
-                                        roam:'scale',
-                                        nodePadding:50,
-                                        orient:'radial',
-                                        categories : [
-                                            {
-                                                name: '纯提供者'
-                                            },
-                                            {
-                                                name: '纯消费者'
-                                            },
-                                            {
-                                                name:'即是提供者也是消费者'
-                                            }
-                                        ],
-                                        itemStyle: {
-                                            normal: {
-                                                label: {
-                                                    show: true,
-                                                    textStyle: {
-                                                        color: '#333'
-                                                    }
-                                                },
-                                                nodeStyle : {
-                                                    brushType : 'both',
-                                                    borderColor : 'rgba(255,215,0,0.4)',
-                                                    borderWidth : 1
-                                                }
-                                            },
-                                            emphasis: {
-                                                label: {
-                                                    show: false
-                                                    // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
-                                                },
-                                                nodeStyle : {
-                                                    //r: 30
-                                                },
-                                                linkStyle : {}
-                                            }
-                                        },
-                                        minRadius : 15,
-                                        maxRadius : 25,
-                                        gravity: 1.1,
-                                        scaling: 1.2,
-                                        draggable: false,
-                                        linkSymbol: 'arrow',
-                                        steps: 10,
-                                        coolDown: 0.9,
-                                        //preventOverlap: true,
-                                        nodes: data.nodes,
-                                        links :data.links
-                                    }
-                                ]
-                            };
-                            var myChart = echarts.init(document.getElementById('dependencies'),curTheme);
-                            window.onresize = myChart.resize;
-                            myChart.showLoading();
-                            myChart.setOption(option,true);
+                     /*var nodeSize = 100;
+                     var graph={};
+                     var nodes=[];
+                     for(var i=0;i<nodeSize;i++){
+                        var node={};
+                         node.name="node"+i;
+                         node.category=parseInt(Math.random()*2);
+                         nodes.push(node);
+                     }
+                     var edges=[];
+                    for(var i=0;i<nodeSize;i++){
+                        var size = Math.random()*10;
+                        for(var j=0;j<size;j++){
+                            var edge={};
+                            edge.source=nodes[i].name;
+                            edge.target="node"+parseInt(Math.random()*nodeSize);
+                            edges.push(edge);
+                        }
+                    }*/
 
-                            var originSeries = option.series;
-                            var ecConfig = require('echarts/config');
-                            function focus(param) {
-                                var data = param.data;
-                                var links = option.series[0].links;
-                                var nodes = option.series[0].nodes;
-                                var currentSeries = option.series[0];
-                                if (data.source != null&& data.target != null) { //点击的是边
-                                    location.hash="#/admin/"+data.target+"/"+data.source+"/consumes";
-                                } else { // 点击的是点
-                                    console.log("选中了" + data.name + '(' + data.value + ')');
-                                    var currentNodes = [data];
-                                    var currentNodeLinks = links.filter(function (link) {
-                                        var matched = link.source == data.name|| link.target==data.name;
-                                        if(matched){
-                                            currentNodes.push(nodes.filter(function (node) {
-                                                return data.name!=node.name&&(node.name==link.target||node.name==link.source);
-                                            })[0]);
-                                        }
-                                        return matched;
-                                    });
-                                    if(currentNodeLinks.length>0){
-                                        currentSeries.links=currentNodeLinks;
-                                        currentSeries.nodes= currentNodes;
-                                        myChart.showLoading();
-                                        myChart.setSeries([currentSeries],true);
-                                    }
-                                }
-                            }
-                            myChart.on(ecConfig.EVENT.CLICK, focus)
-                            myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function(){
-                                myChart.hideLoading();
-                            });
-                            myChart.on(ecConfig.EVENT.RESTORE,function(param){
-                                var currentSeries = option.series[0];
-                                currentSeries.nodes=originNodes;
-                                currentSeries.links=originLinks;
-                                myChart.showLoading();
-                                myChart.setSeries([currentSeries]);
-                            });
-                        });
-                    });
+                    $scope.graph=data;
                 }
             });
                 break;

@@ -40,7 +40,7 @@ dialog.$dialog=function(){
     Dialog.prototype.info=function(options){
         this._bindHidden();
         this.scope.dialogParams.type='info';
-        this.scope.dialogParams.content=options.content;
+        this.scope.dialogParams.content=this.$sce.trustAsHtml(options.content);
         this.scope.dialogParams.size= options.size?options.size:"normal";
         this.scope.dialogParams.title="提示";
         this.scope.dialogParams.cancleBtn=false;
@@ -54,7 +54,7 @@ dialog.$dialog=function(){
     Dialog.prototype.confirm=function(options){
         this._bindHidden();
         this.scope.dialogParams.type="confirm";
-        this.scope.dialogParams.content=options.content;
+        this.scope.dialogParams.content=this.$sce.trustAsHtml(options.content);
         this.scope.dialogParams.size= options.size?options.size:"normal";
         this.scope.dialogParams.title="确认";
         this.scope.dialogParams.cancleBtn=true;
@@ -68,7 +68,7 @@ dialog.$dialog=function(){
     Dialog.prototype.alert=function(options){
         this._bindHidden();
         this.scope.dialogParams.type='alert';
-        this.scope.dialogParams.content=options.content;
+        this.scope.dialogParams.content=this.$sce.trustAsHtml(options.content);
         this.scope.dialogParams.size= options.size?options.size:"normal";
         this.scope.dialogParams.title="警告";
         this.scope.dialogParams.cancleBtn=false;
@@ -102,8 +102,9 @@ dialog.$dialog=function(){
 
 
     var d=new Dialog();
-    this.$get = function () {
+    this.$get =['$sce',function ($sce) {
+        d.$sce=$sce;
         return d;
-    };
+    }] ;
 }
 dialog.provider("$dialog",dialog.$dialog);

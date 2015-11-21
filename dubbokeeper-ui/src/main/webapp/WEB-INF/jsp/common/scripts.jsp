@@ -13,6 +13,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/esprima.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/jquery/jquery-2.1.4.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/jquery/jquery.fullscreen.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/cytoscape.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/angularjs/angular.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/angularjs/angular-route.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/libs/angularjs/angular-animate.js"></script>

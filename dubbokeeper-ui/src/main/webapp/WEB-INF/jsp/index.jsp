@@ -41,11 +41,13 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/echarts.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/echarts.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/fullscreen.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/apps-dependencies.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/common/date-range-picker.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/breadcrumb/breadcrumb.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/provider.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/apps/apps.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/head/head.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/menu/menu.js"></script>
+
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/modules/index.js"></script>
 <%@include file="common/footer.jsp"%>
