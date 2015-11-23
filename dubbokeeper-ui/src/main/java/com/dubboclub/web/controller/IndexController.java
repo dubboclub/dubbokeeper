@@ -139,11 +139,11 @@ public class IndexController {
                 Map<String,Object> link = new HashMap<String, Object>();
                 link.put("source",application.getApplication());
                 List<Provider> providers = providerService.listProviderByServiceKey(consumer.getServiceKey());
-                if(containedLinks.contains(providers.get(0).getApplication())){
-                    continue;
-                }
-                containedLinks.add(providers.get(0).getApplication());
                 if(providers.size()>0){
+                    if(containedLinks.contains(providers.get(0).getApplication())){
+                        continue;
+                    }
+                    containedLinks.add(providers.get(0).getApplication());
                     link.put("target",providers.get(0).getApplication());
                     link.put("weight",1);
                     link.put("name",application.getApplication()+"依赖"+providers.get(0).getApplication());
