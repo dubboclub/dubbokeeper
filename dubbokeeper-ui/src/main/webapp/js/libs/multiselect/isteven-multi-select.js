@@ -573,7 +573,13 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 }
                 
             }
-
+            $scope._formatInterface = function(input){
+                var items = input.split(".");
+                for(var i=0;i<items.length-1;i++){
+                    items[i]=items[i].substring(0,1);
+                }
+                return items.join(".");
+            }
             // A simple function to parse the item label settings. Used on the buttons and checkbox labels.
             $scope.writeLabel = function( item, type ) {
                 
@@ -583,7 +589,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
 
                 angular.forEach( temp, function( value, key ) {                    
                     item[ value ] && ( label += '&nbsp;' + value.split( '.' ).reduce( function( prev, current ) {
-                        return prev[ current ]; 
+                        return $scope._formatInterface(prev[ current ]);
                     }, item ));        
                 });
                 

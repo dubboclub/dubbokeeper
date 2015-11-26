@@ -11,9 +11,9 @@
                       button-label="name"
                       item-label="name"
                       tick-property="ticked"
-                      max-labels="4"
+                      max-labels="2"
                       orientation="horizontal"
-                        group-property="serviceGroup">
+                      group-property="serviceGroup">
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                         <div class="panel panel-success">
                             <div class="panel-body">
                                 <div class="caption">
-                                    <strong><span ng-if="service.remoteType==='CONSUMER'" title="提供服务" class="label  label-primary">P</span><span ng-if="service.remoteType==='PROVIDER'"  title="消费服务" class="label label-warning">C</span>&nbsp;<a href="#/monitor/{{app}}/{{service.name}}/{{dayRange}}/service/top200.html" title="查看top200信息">{{service.name}}</a></strong>
+                                    <strong><span ng-if="service.remoteType==='CONSUMER'" title="提供服务" class="label  label-primary">P</span><span ng-if="service.remoteType==='PROVIDER'"  title="消费服务" class="label label-warning">C</span>&nbsp;<a href="#/monitor/{{app}}/{{service.name}}/{{dayRange}}/service/top200.html" title="查看{{service.name}}服务top200信息">{{service.name | formatInterfaceName}}</a></strong>
                                     <p>
                                     <ul class="list-group">
                                         <li class="list-group-item">
