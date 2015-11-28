@@ -38,9 +38,9 @@ dubbokeeper是一个开源版本基于spring mvc开发的社区版dubboadmin，�
 
 >3、调整配置
 
-在`dubbokeeper-ui/target`下面会有`dubbokeeper`目录，该目录就是编译后的部署结果（当然在`target`下面的dubbokeeper-ui-${version}.war也可以）
+在`dubbokeeper-ui/target`下面会有`dubbokeeper-ui-${version}`目录，该目录就是编译后的部署结果（当然在`target`下面的dubbokeeper-ui-${version}.war也可以）
 
-调整`dubbokeeper/WEB-INF/classes/dubbo.properties`文件中的配置项。
+调整`dubbokeeper-ui-${version}/WEB-INF/classes/dubbo.properties`文件中的配置项。
 
 ```xml
 #monitor的应用名，可根据自己情况自定义
@@ -75,7 +75,8 @@ monitor.lucene.commit.frequency=10
 monitor.log.home=/usr/dev/op_disk/monitor-log
 ```
 
-
+>4、部署&启动
+将上面的`dubbokeeper-ui-${version}`整个目录拷贝到tomcat或者其他servlet容器下面，然后启动容器即可。
 
 
 ###其他信息
