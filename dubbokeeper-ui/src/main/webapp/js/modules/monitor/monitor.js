@@ -549,7 +549,7 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
             }
         });
     }
-    loadOverviewDataRealTime();
+    loadOverviewData();
     $scope.$watch("timeRange",function(){
         clearTimeout($scope.loadTimeout);
         loadOverviewData();

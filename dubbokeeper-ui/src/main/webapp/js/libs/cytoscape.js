@@ -19008,7 +19008,6 @@ var cyReg = function( $ele ){
 };
 
 var registerJquery = function( $, cytoscape ){
-    console.log("jquery");
   if( !$ ){ return; } // no jquery => don't need this
 
   if( $.fn.cytoscape ){ return; } // already registered

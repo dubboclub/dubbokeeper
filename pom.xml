@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dubboclub</groupId>
     <artifactId>dubbokeeper</artifactId>
-    <version>0.0.2</version>
+    <version>1.0.0</version>
     <modules>
         <module>dubbokeeper-admin</module>
         <module>dubbokeeper-monitor</module>
