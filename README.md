@@ -78,6 +78,9 @@ monitor.log.home=/usr/dev/op_disk/monitor-log
 >4、部署&启动
 将上面的`dubbokeeper-ui-${version}`整个目录拷贝到tomcat或者其他servlet容器下面，然后启动容器即可。
 
+>5、部署成功
+
+![](https://raw.githubusercontent.com/dubboclub/resources/master/dubbokeeper.png)
 
 ###其他信息
 > 预览地址：http://dk.dubboclub.net/dubbokeeper
