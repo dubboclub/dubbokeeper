@@ -253,7 +253,10 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             queryBuilder.add(new BooleanClause(interfaceQuery, BooleanClause.Occur.MUST));
             queryBuilder.add(new BooleanClause(methodQuery, BooleanClause.Occur.MUST));
             queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
-            TopDocs topDocs = searcher.search(queryBuilder.build(), Integer.MAX_VALUE);
+            SortField sortField = new SortField(DubboKeeperMonitorService.TIMESTAMP, SortField.Type.LONG,true);
+            Sort sort = new Sort();
+            sort.setSort(sortField);
+            TopDocs topDocs = searcher.search(queryBuilder.build(),Integer.MAX_VALUE,sort);
             ScoreDoc[] scoreDocs = topDocs.scoreDocs;
             List<Statistics> statisticsList = new ArrayList<Statistics>();
             if (scoreDocs.length > 0) {
