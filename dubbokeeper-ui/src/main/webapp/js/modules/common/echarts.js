@@ -11,7 +11,11 @@ lineChart.directive('pipChart',function(){
             $scope.$watch("chartOptions",function(){
                 if(!$scope.chartOptions.dataset||$scope.chartOptions.dataset.length<=0){
                     if($scope.myChart){
-                        $scope.myChart.dispose();
+                        try{
+                            $scope.myChart.dispose();
+                        }catch(e){
+
+                        }
                         $scope.myChart=undefined;
                     }
                     return ;
@@ -87,7 +91,11 @@ lineChart.directive('lineChart', function() {
             $scope.$watch("chartOptions",function(){
                 if(!$scope.chartOptions.seriesConfig||$scope.chartOptions.seriesConfig.length<=0){
                     if($scope.myChart){
-                        $scope.myChart.dispose();
+                       try{
+                           $scope.myChart.dispose();
+                       }catch(e){
+                           //do nothing
+                       }
                         $scope.myChart=undefined;
                     }
                     return ;
@@ -97,7 +105,11 @@ lineChart.directive('lineChart', function() {
                 for(var i=0;i<$scope.chartOptions.seriesConfig.length;i++){
                     if(!$scope.chartOptions.seriesConfig[i].data||$scope.chartOptions.seriesConfig[i].data.length<=0){
                         if($scope.myChart){
-                            $scope.myChart.dispose();
+                           try{
+                               $scope.myChart.dispose();
+                           }catch(e){
+                               //do nothing
+                           }
                         }
                         return;
                     }
@@ -123,7 +135,11 @@ lineChart.directive('lineChart', function() {
                     legends.push($scope.chartOptions.seriesConfig[i].name);
                 }
                 if($scope.myChart){
-                    $scope.myChart.dispose();
+                    try{
+                        $scope.myChart.dispose();
+                    }catch(e){
+                        //do nothing
+                    }
                     $scope.myChart=undefined;
                 }
                 require( [

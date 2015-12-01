@@ -54,7 +54,7 @@
             level="DEBUG">
         <appender-ref ref="dkRolling" />
     </logger>
-    <!--<root level="DEBUG">
+    <root level="DEBUG">
              <appender-ref ref="STDOUT" />
-   </root>-->
+   </root>
 </configuration>

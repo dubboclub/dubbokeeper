@@ -137,7 +137,7 @@ dateRangePicker.directive("dateRangePicker",function(){
 
             $scope.submitRange = function(){
                 $scope.rangeSlipUp=false;
-                var startDate = $scope.startDate+"T"+$scope.startHourTxt+":"+$scope.startMinute;
+                var startDate = $scope.startDate+"T"+$scope.startHourTxt+":"+$scope.startMinuteTxt;
                 var endDate =  $scope.endDate+"T"+$scope.endHourTxt+":"+$scope.endMinuteTxt;
                 var temp = {};
                 temp.startTime = new Date(startDate).getTime();

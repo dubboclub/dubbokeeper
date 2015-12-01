@@ -20,7 +20,6 @@ import org.apache.lucene.search.grouping.term.TermSecondPassGroupingCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -254,10 +253,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
             queryBuilder.add(new BooleanClause(interfaceQuery, BooleanClause.Occur.MUST));
             queryBuilder.add(new BooleanClause(methodQuery, BooleanClause.Occur.MUST));
             queryBuilder.add(new BooleanClause(timeQuery, BooleanClause.Occur.FILTER));
-            SortField sortField = new SortField(DubboKeeperMonitorService.TIMESTAMP, SortField.Type.LONG,true);
-            Sort sort = new Sort();
-            sort.setSort(sortField);
-            TopDocs topDocs = searcher.search(queryBuilder.build(),Integer.MAX_VALUE,sort);
+            TopDocs topDocs = searcher.search(queryBuilder.build(),Integer.MAX_VALUE);
             ScoreDoc[] scoreDocs = topDocs.scoreDocs;
             List<Statistics> statisticsList = new ArrayList<Statistics>();
             if (scoreDocs.length > 0) {
@@ -265,7 +261,6 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                     Document document = searcher.doc(scoreDocs[i].doc);
                     statisticsList.add(parseDocToStatistics(document));
                 }
-                Collections.sort(statisticsList);
                 return statisticsList;
             }
         }catch(IndexNotFoundException e){
@@ -747,7 +742,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
         return secondPassCollector.getTopGroups(0).groups;
     }
 
-   
+
     private IndexSearcher generateSearcher(String application) throws IOException {
         return new IndexSearcher(DirectoryReader.open(generateLuceneDirectory(application)));
     }
@@ -777,7 +772,7 @@ public class LuceneStatisticsStorage implements StatisticsStorage,InitializingBe
                 luceneDirectory = new NIOFSDirectory(path);
                 break;
             case SIMPLE:
-                luceneDirectory = new SimpleFSDirectory(path);
+                luceneDirectory = new NIOFSDirectory(path);
                 break;
         }
         return luceneDirectory;

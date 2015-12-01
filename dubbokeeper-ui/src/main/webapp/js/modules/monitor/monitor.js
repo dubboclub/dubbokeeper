@@ -362,28 +362,31 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
                 if(!$scope.intervalLoad){
                     return;
                 }
-                generateElapsedOptions(statistics.statisticsCollection);
-                generateConcurrentOptions(statistics.statisticsCollection);
-                generateKBPS(statistics.statisticsCollection);
-                generateTps(statistics.statisticsCollection);
-                generateFailureAndSuccess(statistics.statisticsCollection);
-                generateInputAndOutPut(statistics.statisticsCollection);
+                var statisticsCollection = _quickSort(statistics.statisticsCollection,'timestamp')
+                generateElapsedOptions(statisticsCollection);
+                generateConcurrentOptions(statisticsCollection);
+                generateKBPS(statisticsCollection);
+                generateTps(statisticsCollection);
+                generateFailureAndSuccess(statisticsCollection);
+                generateInputAndOutPut(statisticsCollection);
                 intervalLoadStatistics();
             }
         });
     }
     $scope.realTimeQuery=false;
+
     var loadStatisticsData = function(){
         $scope.realTimeQuery=false;
         $httpWrapper.post({
             url:"monitor/"+$routeParams.application+"/"+$routeParams.service+"/"+$routeParams.method+"/"+$scope.timeRange.startTime+"-"+$scope.timeRange.endTime+"/monitors.htm",
             success:function(statistics){
-                generateElapsedOptions(statistics.statisticsCollection);
-                generateConcurrentOptions(statistics.statisticsCollection);
-                generateKBPS(statistics.statisticsCollection);
-                generateTps(statistics.statisticsCollection);
-                generateFailureAndSuccess(statistics.statisticsCollection);
-                generateInputAndOutPut(statistics.statisticsCollection);
+                var statisticsCollection = _quickSort(statistics.statisticsCollection,'timestamp')
+                generateElapsedOptions(statisticsCollection);
+                generateConcurrentOptions(statisticsCollection);
+                generateKBPS(statisticsCollection);
+                generateTps(statisticsCollection);
+                generateFailureAndSuccess(statisticsCollection);
+                generateInputAndOutPut(statisticsCollection);
             }
         });
     }
@@ -406,7 +409,7 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
         var xAxisData =[];
         for(var i=0;i<statistics.length;i++){
             var date = new Date(statistics[i].timestamp);
-            xAxisData.push(date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds());
+            xAxisData.push((date.getMonth()+1)+"月"+date.getDate()+"日"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds());
         }
         rendingData.xAxisData=xAxisData;
         rendingData.mainData=[];
@@ -438,7 +441,24 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
         options.xAxis=rendingData.xAxisData;
         $scope.concurrentOptions=options;
     }
+     var _quickSort=function(array,key){
+        if(array.length==0){
+            return [];
+        }
+        var left=[];
+        var right=[];
+        var pivotIndex=Math.floor(array.length / 2);
+        var pivot=array[pivotIndex][key];
+        for(var i=0;i<array.length;i++){
+            if(array[i][key]>pivot){
+                right.push(array[i]);
+            }else if(array[i][key]<pivot){
+                left.push(array[i]);
+            }
+        }
+        return _quickSort(left,key).concat(array[pivotIndex],_quickSort(right,key))
 
+    };
     var generateTps = function(statistics){
         var rendingData = generateRendingData(statistics,["tps"]);
         var options = {};
@@ -549,7 +569,7 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
             }
         });
     }
-    loadOverviewData();
+
     $scope.$watch("timeRange",function(){
         clearTimeout($scope.loadTimeout);
         loadOverviewData();
@@ -578,4 +598,5 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
     $scope.$on('$destroy',function(){
         $scope.stopInterval();
     })
+    loadOverviewData();
 });
