@@ -1,4 +1,4 @@
-var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'fullScreen','dialog','statistics','monitor','isteven-multi-select','appDependencies','zoopeeper','httpWrapper','override','router','theme','lineChart','dateRangePicker']);
+var dubbokeeper=angular.module("dubbokeeper",["apps","head","menu","breadCrumb",'aboutus','fullScreen','dialog','statistics','monitor','isteven-multi-select','appDependencies','zoopeeper','httpWrapper','override','router','theme','lineChart','dateRangePicker']);
 dubbokeeper.controller("dubbokeeperCtrl",function($scope,$dkContext){
     $dkContext._init($scope);
     $scope.currentHome={};
@@ -51,7 +51,7 @@ dubbokeeper.barDataset=[{
 },{
     barShowName:"AboutUs",
     barIdentify:"aboutus",
-    barHref:"/statistics",
+    barHref:"/aboutus",
     barIconClass:"icon-bookmark"
 }];
 dubbokeeper.$dkContext= function () {
