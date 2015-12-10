@@ -501,7 +501,7 @@ monitor.controller("monitorCharts",function($scope,$rootScope,$httpWrapper,$rout
         if($scope.intervalLoad){
             clearTimeout($scope.intervalLoad);
             $scope.intervalLoad=undefined;
-            $scope.statMsg="查询实施数据";
+            $scope.statMsg="查询实时数据";
         }
     }
     var intervalLoadStatistics = function(){
@@ -532,7 +532,7 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
     var currentDate = new Date();
     $scope.timeRange.startTime= currentDate.getTime()-60*60*1000;
     $scope.timeRange.endTime=currentDate.getTime();
-    $scope.statMsg="查询实施数据";
+    $scope.statMsg="查询实时数据";
     $scope.interval=10000;
     var loadInterval=function(){
         $httpWrapper.post({
@@ -578,7 +578,7 @@ monitor.controller("monitorOverview",function($scope,$httpWrapper,$routeParams,$
         if($scope.loadTimeout){
             clearTimeout($scope.loadTimeout);
             $scope.loadTimeout=undefined;
-            $scope.statMsg="查询实施数据";
+            $scope.statMsg="查询实时数据";
         }
     }
     var intervalLoad= function(){
