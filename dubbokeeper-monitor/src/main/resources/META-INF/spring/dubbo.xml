@@ -7,9 +7,8 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
 
-    <bean class="com.dubboclub.monitor.storage.lucene.LuceneStatisticsStorage" id="luceneStatisticsStorage"/>
-    <bean class="com.dubboclub.monitor.DubboKeeperMonitorService" id="dubboKeeperMonitorService">
-        <property name="statisticsStorage" ref="luceneStatisticsStorage"/>
+    <bean class="com.dubboclub.dk.monitor.DubboKeeperMonitorService" id="dubboKeeperMonitorService">
+
     </bean>
 
     <dubbo:service interface="com.alibaba.dubbo.monitor.MonitorService" ref="dubboKeeperMonitorService" id="exportMonitorService">

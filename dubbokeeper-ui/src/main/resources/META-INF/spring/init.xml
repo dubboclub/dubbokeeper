@@ -8,8 +8,8 @@
     
     <dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}"/>
 
-    <bean class="com.dubboclub.web.utils.ContextHolder" />
-    <bean class="com.dubboclub.web.properties.DubboKeeperConfigurer">
+    <bean class="com.dubboclub.dk.web.utils.ContextHolder" />
+    <bean class="com.dubboclub.dk.web.properties.DubboKeeperConfigurer">
         <property name="locations">
             <value>
                 classpath*:/dubbo.properties

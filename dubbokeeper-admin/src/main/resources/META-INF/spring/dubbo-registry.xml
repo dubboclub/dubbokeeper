@@ -10,22 +10,22 @@
 
     <dubbo:reference id="registryService" interface="com.alibaba.dubbo.registry.RegistryService" check="false" />
 
-    <bean class="com.dubboclub.admin.sync.RegistryServerSync" id="registryServerSync">
+    <bean class="com.dubboclub.dk.admin.sync.RegistryServerSync" id="registryServerSync">
         <property name="registryService" ref="registryService"/>
     </bean>
 
-    <bean class="com.dubboclub.admin.service.AbstractService" id="abstractService" abstract="true">
+    <bean class="com.dubboclub.dk.admin.service.AbstractService" id="abstractService" abstract="true">
         <property name="registryServerSync" ref="registryServerSync"/>
     </bean>
 
-    <bean class="com.dubboclub.admin.service.impl.ProviderServiceImpl" id="providerService" parent="abstractService">
+    <bean class="com.dubboclub.dk.admin.service.impl.ProviderServiceImpl" id="providerService" parent="abstractService">
         <property name="overrideService" ref="overrideService"/>
     </bean>
-    <bean class="com.dubboclub.admin.service.impl.ApplicationServiceImpl" parent="abstractService">
+    <bean class="com.dubboclub.dk.admin.service.impl.ApplicationServiceImpl" parent="abstractService">
         <property name="consumerService" ref="consumerService"/>
         <property name="providerService" ref="providerService"/>
     </bean>
-    <bean class="com.dubboclub.admin.service.impl.ConsumerServiceImpl" id="consumerService" parent="abstractService"/>
-    <bean class="com.dubboclub.admin.service.impl.OverrideServiceImpl" id="overrideService" parent="abstractService"/>
-    <bean class="com.dubboclub.admin.service.impl.RouteServiceImpl" id="routeService" parent="abstractService"/>
+    <bean class="com.dubboclub.dk.admin.service.impl.ConsumerServiceImpl" id="consumerService" parent="abstractService"/>
+    <bean class="com.dubboclub.dk.admin.service.impl.OverrideServiceImpl" id="overrideService" parent="abstractService"/>
+    <bean class="com.dubboclub.dk.admin.service.impl.RouteServiceImpl" id="routeService" parent="abstractService"/>
 </beans>

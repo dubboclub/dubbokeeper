@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>dubbokeeper</artifactId>
-        <groupId>com.dubboclub</groupId>
-        <version>1.0.0</version>
+        <groupId>com.dubboclub.dk</groupId>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <properties>
@@ -24,6 +24,11 @@
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>dubbokeeper-monitor</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dubboclub.dk</groupId>
+            <artifactId>lucene-storage</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
