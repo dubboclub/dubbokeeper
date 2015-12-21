@@ -1,0 +1,8 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dubboclub.dk.storage.mysql.mapper.ApplicationMapper">
+    <insert id="addApplication" parameterType="ApplicationInfo">
+        insert into application (name) value(#{applicationName})
+    </insert>
+</mapper>

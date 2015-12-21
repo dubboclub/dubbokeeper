@@ -14,6 +14,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,12 +35,14 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
     private volatile static MongoDatabase mongoDatabase;
 
+    private MongoTemplate mongoTemplate;
+
     private static final String APPLICATION_COLLECTIONS = "applications";
 
     private static final String STATISTICS_COLLECTIONS = "statistics";
 
     private void init(){
-        if(mongoDatabase==null){
+        /*if(mongoDatabase==null){
             synchronized (this){
                 if(mongoDatabase==null){
                     MongodbConfigurer configurer = ExtensionLoader.getExtensionLoader(ExtensionFactory.class).getAdaptiveExtension().getExtension(MongodbConfigurer.class,"mongodbConfigurer");
@@ -65,7 +70,8 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
                     MongoCollection<Document> applicationCollection = mongoDatabase.getCollection(APPLICATION_COLLECTIONS);
                 }
             }
-        }
+        }*/
+        //mongoTemplate.find(Query.query(Criteria.where("fdsfads").gt()))
     }
 
     @Override

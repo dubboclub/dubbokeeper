@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class MysqlStatisticsStorage implements StatisticsStorage {
 
+
     @Override
     public void storeStatistics(Statistics statistics) {
 

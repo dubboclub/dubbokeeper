@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <bean class="org.apache.commons.dbcp.BasicDataSource" id="basicDataSource">
+        <property name="url" value="${dubbo.monitor.mysql.url}"/>
+        <property name="username" value="${dubbo.monitor.mysql.username}"/>
+        <property name="password" value="${dubbo.monitor.mysql.password}"/>
+        <property name="maxActive" value="${dubbo.monitor.mysql.pool.max}"/>
+        <property name="minIdle" value="${dubbo.monitor.mysql.pool.min}"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="basicDataSource" />
+        <property name="configLocation" value="META-INF/mybatis/config.xml"/>
+        <property name="mapperLocations" value="classpath*:mapper/*Mapper.xml"/>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.dubboclub.dk.storage.mysql.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="basicDataSource"/>
+    </bean>
+
+    <bean class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="dataSourceTransactionManager"/>
+    </bean>
+</beans>

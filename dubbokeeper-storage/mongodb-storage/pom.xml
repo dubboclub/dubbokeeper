@@ -13,6 +13,7 @@
     <artifactId>mongodb-storage</artifactId>
     <properties>
         <mongodb.version>3.0.4</mongodb.version>
+        <spring.data.mongodb.version>1.8.1.RELEASE</spring.data.mongodb.version>
     </properties>
 
     <dependencies>
@@ -20,6 +21,25 @@
             <groupId>com.dubboclub.dk</groupId>
             <artifactId>storage-api</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>${spring.data.mongodb.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-tx</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
      <!--   <dependency>
             <groupId>org.mongodb</groupId>
