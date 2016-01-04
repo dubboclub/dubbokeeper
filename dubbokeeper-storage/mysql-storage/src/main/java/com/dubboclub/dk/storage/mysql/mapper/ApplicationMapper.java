@@ -1,6 +1,10 @@
 package com.dubboclub.dk.storage.mysql.mapper;
 
 import com.dubboclub.dk.storage.model.ApplicationInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @date: 2015/12/17.
@@ -13,5 +17,8 @@ import com.dubboclub.dk.storage.model.ApplicationInfo;
  */
 public interface ApplicationMapper {
 
-    public int addApplication(ApplicationInfo applicationInfo);
+    public int addApplication(String applicationName);
+
+    public List<String> listApps();
+
 }
