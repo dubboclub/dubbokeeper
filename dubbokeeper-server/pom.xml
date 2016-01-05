@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>dubbokeeper</artifactId>
+        <groupId>com.dubboclub.dk</groupId>
+        <version>1.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.dubboclub.dk</groupId>
+    <artifactId>dubbokeeper-server</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>dubbokeeper-monitor</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>storage-api</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
+    <profiles>
+        <profile>
+            <id>lucene</id>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.parent.groupId}</groupId>
+                    <artifactId>lucene-storage</artifactId>
+                    <version>${project.parent.version}</version>
+                </dependency>
+            </dependencies>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>mysql</id>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.parent.groupId}</groupId>
+                    <artifactId>mysql-storage</artifactId>
+                    <version>${project.parent.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mongodb</id>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.parent.groupId}</groupId>
+                    <artifactId>mongodb-storage</artifactId>
+                    <version>${project.parent.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+</project>

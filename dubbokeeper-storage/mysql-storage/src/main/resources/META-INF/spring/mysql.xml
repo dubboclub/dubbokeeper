@@ -32,8 +32,9 @@
         <property name="transactionManager" ref="dataSourceTransactionManager"/>
     </bean>
 
-    <bean class="com.dubboclub.dk.storage.mysql.MysqlStatisticsStorage" autowire="byType">
-        
+    <bean class="com.dubboclub.dk.storage.mysql.MysqlStatisticsStorage" id="mysqlStatisticsStorage" autowire="byType">
     </bean>
+
+    <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="mysqlStatisticsStorage"/>
 
 </beans>

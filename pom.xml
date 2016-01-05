@@ -12,6 +12,7 @@
         <module>dubbokeeper-monitor</module>
         <module>dubbokeeper-ui</module>
         <module>dubbokeeper-storage</module>
+        <module>dubbokeeper-server</module>
     </modules>
     <packaging>pom</packaging>
     
@@ -203,5 +204,43 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <finalName>${final-name}</finalName>
+                    <descriptors>
+                        <descriptor>${release.file}</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>lucene</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <release.file>release-lucene.xml</release.file>
+                <final-name>lucene</final-name>
+            </properties>
+        </profile>
+        <profile>
+            <id>mysql</id>
+            <properties>
+                <release.file>release-mysql.xml</release.file>
+                <final-name>mysql</final-name>
+            </properties>
+        </profile>
+        <profile>
+            <id>mongodb</id>
+            <properties>
+                <release.file>release-mongodb.xml</release.file>
+                <final-name>mongodb</final-name>
+            </properties>
+        </profile>
+    </profiles>
 </project>

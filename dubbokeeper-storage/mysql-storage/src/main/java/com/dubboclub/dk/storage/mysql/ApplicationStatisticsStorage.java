@@ -1,28 +1,22 @@
 package com.dubboclub.dk.storage.mysql;
 
 import com.alibaba.dubbo.common.utils.ConfigUtils;
-import com.alibaba.fastjson.JSON;
-import com.dubboclub.dk.storage.model.ApplicationInfo;
 import com.dubboclub.dk.storage.model.Statistics;
 import com.dubboclub.dk.storage.mysql.mapper.ApplicationMapper;
 import com.dubboclub.dk.storage.mysql.mapper.StatisticsMapper;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
-import com.sun.org.glassfish.external.statistics.Statistic;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @date: 2015/12/28.

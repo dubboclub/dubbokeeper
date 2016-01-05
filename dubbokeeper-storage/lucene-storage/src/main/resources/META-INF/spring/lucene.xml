@@ -6,8 +6,7 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-        <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="mongoDBStatisticsStorage"/>
-
-        <bean class="com.dubboclub.dk.storage.mongodb.MongoDBStatisticsStorage" id="mongoDBStatisticsStorage"/>
+    <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="luceneStatisticsStorage"/>
+    <bean class="com.dubboclub.dk.storage.lucene.LuceneStatisticsStorage" id="luceneStatisticsStorage"/>
 
 </beans>

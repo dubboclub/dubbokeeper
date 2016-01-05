@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>dubbokeeper-server</id>
+    <baseDirectory>mysql-server</baseDirectory>
+    <formats>
+        <format>dir</format>
+        <format>tar.gz</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <includes>
+                <include>bin/*mysql.*</include>
+                <include>bin/setting.*</include>
+                <include>conf/*mysql.properties</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <moduleSets>
+        <moduleSet>
+            <includes>
+                <include>com.dubboclub.dk:dubbokeeper-server</include>
+            </includes>
+            <binaries>
+                <outputDirectory>lib/</outputDirectory>
+                <unpack>false</unpack>
+                <dependencySets>
+                    <dependencySet>
+                        <outputDirectory>lib/</outputDirectory>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+</assembly>

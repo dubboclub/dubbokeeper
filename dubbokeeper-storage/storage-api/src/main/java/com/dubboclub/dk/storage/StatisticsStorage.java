@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * Created by bieber on 2015/9/25.
  */
-@SPI("lucene")
 public interface StatisticsStorage {
 
     String STORAGE_KEY="dubbo.monitor.storage";

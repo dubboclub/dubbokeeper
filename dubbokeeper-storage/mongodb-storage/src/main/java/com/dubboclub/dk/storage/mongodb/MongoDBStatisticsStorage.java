@@ -41,42 +41,11 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
     private static final String STATISTICS_COLLECTIONS = "statistics";
 
-    private void init(){
-        /*if(mongoDatabase==null){
-            synchronized (this){
-                if(mongoDatabase==null){
-                    MongodbConfigurer configurer = ExtensionLoader.getExtensionLoader(ExtensionFactory.class).getAdaptiveExtension().getExtension(MongodbConfigurer.class,"mongodbConfigurer");
-                    MongoClientURI connectionString = new MongoClientURI(configurer.getConnects());
-                    MongoClient mongoClient = new MongoClient(connectionString);
-                    mongoDatabase = mongoClient.getDatabase(configurer.getDbName());
-                    MongoIterable<String> collections =  mongoDatabase.listCollectionNames();
-                    MongoCursor<String> cursor = collections.iterator();
-                    boolean hasApp = false;
-                    boolean hasStat = false;
-                    while(cursor.hasNext()){
-                        String collection = cursor.next();
-                        if(collection.equals(APPLICATION_COLLECTIONS)){
-                            hasApp=true;
-                        }else if(collection.equals(STATISTICS_COLLECTIONS)){
-                            hasStat=true;
-                        }
-                    }
-                    if (!hasApp){
-                        mongoDatabase.createCollection(APPLICATION_COLLECTIONS);
-                    }
-                    if(!hasStat){
-                        mongoDatabase.createCollection(STATISTICS_COLLECTIONS);
-                    }
-                    MongoCollection<Document> applicationCollection = mongoDatabase.getCollection(APPLICATION_COLLECTIONS);
-                }
-            }
-        }*/
-        //mongoTemplate.find(Query.query(Criteria.where("fdsfads").gt()))
-    }
+
 
     @Override
     public void storeStatistics(Statistics statistics) {
-        init();
+
     }
 
     @Override

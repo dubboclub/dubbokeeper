@@ -27,7 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/monitor")
 public class MonitorController {
 
-    private static StatisticsStorage statisticsStorage = ExtensionLoader.getExtensionLoader(StatisticsStorage.class).getExtension(ConfigUtils.getProperty(StatisticsStorage.STORAGE_KEY,"lucene"));
+    @Autowired
+    private static StatisticsStorage statisticsStorage ;
 
     @Autowired
     private ProviderService providerService;

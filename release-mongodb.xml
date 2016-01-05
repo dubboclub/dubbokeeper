@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>dubbokeeper-server</id>
+    <baseDirectory>mongodb-server</baseDirectory>
+    <formats>
+        <format>dir</format>
+        <format>tar.gz</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <includes>
+                <include>bin/*mongodb.*</include>
+                <include>bin/setting.*</include>
+                <include>conf/*mongodb.properties</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <moduleSets>
+        <moduleSet>
+            <includes>
+                <include>com.dubboclub.dk:dubbokeeper-server</include>
+            </includes>
+            <binaries>
+                <outputDirectory>lib/</outputDirectory>
+                <unpack>false</unpack>
+                <dependencySets>
+                    <dependencySet>
+                        <outputDirectory>lib/</outputDirectory>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+</assembly>
