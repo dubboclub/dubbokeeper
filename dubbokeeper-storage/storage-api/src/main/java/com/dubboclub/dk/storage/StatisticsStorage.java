@@ -2,6 +2,8 @@ package com.dubboclub.dk.storage;
 
 import com.alibaba.dubbo.common.extension.SPI;
 import com.dubboclub.dk.storage.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +14,9 @@ import java.util.List;
 public interface StatisticsStorage {
 
     String STORAGE_KEY="dubbo.monitor.storage";
+
+
+    Logger LOGGER = LoggerFactory.getLogger("dubbokeeper-server");
 
     
     public void storeStatistics(Statistics statistics);

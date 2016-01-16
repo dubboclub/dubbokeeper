@@ -31,8 +31,12 @@ public class DubboKeeperMonitorService implements MonitorService {
 
     public static final String KBPS="kbps";
 
-	private StatisticsStorage statisticsStorage = ExtensionLoader.getExtensionLoader(StatisticsStorage.class).getExtension(ConfigUtils.getProperty(StatisticsStorage.STORAGE_KEY,"lucene"));
-	
+	private StatisticsStorage statisticsStorage;
+
+	public void setStatisticsStorage(StatisticsStorage statisticsStorage) {
+		this.statisticsStorage = statisticsStorage;
+	}
+
 	public DubboKeeperMonitorService() {
 	}
 

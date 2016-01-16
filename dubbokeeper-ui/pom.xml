@@ -16,7 +16,6 @@
         <jasper.version>2.2.2.v201112011158</jasper.version>
         <taglibs.version>1.2.0.v201112081803</taglibs.version>
         <jstl.version>1.1.2</jstl.version>
-        <logback.version>1.1.2</logback.version>
     </properties>
     <artifactId>dubbokeeper-ui</artifactId>
     <packaging>war</packaging>
@@ -31,16 +30,7 @@
             <artifactId>storage-api</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>dubbokeeper-admin</artifactId>

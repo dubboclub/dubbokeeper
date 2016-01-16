@@ -4,6 +4,7 @@ import com.dubboclub.dk.storage.model.Statistics;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @date: 2015/12/28.
@@ -29,4 +30,11 @@ public interface StatisticsMapper {
     public Integer queryMaxSuccess(@Param("application")String application,@Param("start")long start,@Param("end")long end);
 
     public List<Statistics> queryStatisticsForMethod(@Param("application")String application,@Param("start")long start,@Param("end")long end,@Param("serviceInterface")String serviceInterface,@Param("method")String method);
+
+    public<T extends Object> T queryMethodMaxItemByService(@Param("item")String item,@Param("application")String application,@Param("serviceInterface")String serviceInterface,@Param("start")long start,@Param("end")long end);
+
+    public List<String> queryMethodForService(@Param("application")String application,@Param("serviceInterface")String serviceInterface);
+
+    public List<Statistics> queryApplicationOverview(@Param("application")String application,@Param("item")String item,@Param("start")long start,@Param("end")long end);
+
 }

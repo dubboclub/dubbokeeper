@@ -7,7 +7,7 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
 
-    <bean class="com.dubboclub.dk.monitor.DubboKeeperMonitorService" id="dubboKeeperMonitorService">
+    <bean class="com.dubboclub.dk.monitor.DubboKeeperMonitorService" autowire="byType" id="dubboKeeperMonitorService">
 
     </bean>
 

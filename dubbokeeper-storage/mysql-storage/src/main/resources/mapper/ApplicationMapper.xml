@@ -6,10 +6,19 @@
     <resultMap id="appMap" type="ApplicationInfo">
         <result column="name" property="applicationName"/>
     </resultMap>
-    <insert id="addApplication" parameterType="String">
-        insert into application (name) value(#{applicationName})
+    <insert id="addApplication" parameterType="ApplicationInfo">
+        insert into application (name,type) value(#{applicationName},#{type})
     </insert>
-    <select id="listApps" resultType="String">
-        select lower(name) from application
+    <select id="listApps" resultType="ApplicationInfo">
+        select lower(name),type from application
     </select>
+
+    <select id="getAppType" parameterType="String">
+        select type from application where name=#{name}
+    </select>
+
+    <select id="updateAppType">
+        update application set type=#{type} where name=#{name}
+    </select>
+
 </mapper>

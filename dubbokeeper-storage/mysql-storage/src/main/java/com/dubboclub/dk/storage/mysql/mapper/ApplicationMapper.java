@@ -17,8 +17,13 @@ import java.util.List;
  */
 public interface ApplicationMapper {
 
-    public int addApplication(String applicationName);
+    public int addApplication(ApplicationInfo applicationInfo);
 
-    public List<String> listApps();
+    public List<ApplicationInfo> listApps();
+
+
+    public int getAppType(@Param("name")String name);
+
+    public int updateAppType(@Param("name")String name,@Param("type")int type);
 
 }
