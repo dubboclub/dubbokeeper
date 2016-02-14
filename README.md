@@ -23,7 +23,8 @@ dubbokeeper是一个开源版本基于spring mvc开发的社区版dubboadmin，�
 ##规划中的功能
 
 ###服务调用Trace
-> 将基于dubbo的框架可扩展性，对服务的调用过程进行跟踪，并且汇总分析，通过形象的方式呈现服务调用过程，从而帮助对服务问题进行定位。具体将参考谷歌的`Depper`。
+> 将基于dubbo的框架可扩展性，对服务的调用过程进行跟踪，并且汇总分析，通过形象的方式呈现服务调用过程，从而帮助对服务问题进行定位。具体将参考谷歌的[Dapper](https://github.com/sdcuike/DistributedTracingSystem/blob/master/dapper-2010-1.pdf
+)。
 ###Zookeeper
 > 基于zookeeper的四字命令完成对zookeeper的基本监控
 
