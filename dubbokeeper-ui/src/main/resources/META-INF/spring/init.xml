@@ -17,6 +17,6 @@
         </property>
     </bean>
 
-    <dubbo:reference interface="com.dubboclub.dk.storage.StatisticsStorage" id="statisticsStorage"/>
+    <dubbo:reference interface="com.dubboclub.dk.storage.StatisticsStorage" check="true" id="statisticsStorage"/>
 
 </beans>

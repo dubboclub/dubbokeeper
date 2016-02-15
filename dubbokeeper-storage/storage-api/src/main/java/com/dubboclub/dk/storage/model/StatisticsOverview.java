@@ -1,11 +1,12 @@
 package com.dubboclub.dk.storage.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by bieber on 2015/11/3.
  */
-public class StatisticsOverview {
+public class StatisticsOverview implements Serializable {
 
     private List<ConcurrentItem> concurrentItems;
 

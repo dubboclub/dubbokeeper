@@ -87,10 +87,12 @@ public class MysqlStatisticsStorage implements StatisticsStorage,InitializingBea
         Collection<ApplicationInfo> applicationInfos =  applicationMapper.listApps();
         for(ApplicationInfo applicationInfo:applicationInfos){
             ApplicationStatisticsStorage applicationStatisticsStorage =APPLICATION_STORAGES.get(applicationInfo.getApplicationName());
-            applicationInfo.setMaxConcurrent(applicationStatisticsStorage.getMaxConcurrent());
-            applicationInfo.setMaxElapsed(applicationStatisticsStorage.getMaxElapsed());
-            applicationInfo.setMaxFault(applicationStatisticsStorage.getMaxFault());
-            applicationInfo.setMaxSuccess(applicationStatisticsStorage.getMaxSuccess());
+            if(applicationStatisticsStorage!=null){
+                applicationInfo.setMaxConcurrent(applicationStatisticsStorage.getMaxConcurrent());
+                applicationInfo.setMaxElapsed(applicationStatisticsStorage.getMaxElapsed());
+                applicationInfo.setMaxFault(applicationStatisticsStorage.getMaxFault());
+                applicationInfo.setMaxSuccess(applicationStatisticsStorage.getMaxSuccess());
+            }
         }
         return applicationInfos;
     }

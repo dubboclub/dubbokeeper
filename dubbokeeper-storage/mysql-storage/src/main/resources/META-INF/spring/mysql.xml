@@ -35,6 +35,6 @@
     <bean class="com.dubboclub.dk.storage.mysql.MysqlStatisticsStorage" id="mysqlStatisticsStorage" autowire="byType">
     </bean>
 
-    <!--<dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="mysqlStatisticsStorage"/>-->
+    <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="mysqlStatisticsStorage"/>
 
 </beans>

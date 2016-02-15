@@ -1,9 +1,11 @@
 package com.dubboclub.dk.storage.model;
 
+import java.io.Serializable;
+
 /**
  * Created by bieber on 2015/11/4.
  */
-public class OverviewItem {
+public class OverviewItem implements Serializable {
 
     private long concurrent;
 

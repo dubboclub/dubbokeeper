@@ -18,6 +18,7 @@ import com.dubboclub.dk.storage.model.StatisticsOverview;
 import com.dubboclub.dk.web.model.MethodStatistics;
 import com.dubboclub.dk.web.utils.ConfigUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MonitorController {
 
     @Autowired
-    private static StatisticsStorage statisticsStorage ;
+    @Qualifier("statisticsStorage")
+    private StatisticsStorage statisticsStorage ;
 
     @Autowired
     private ProviderService providerService;

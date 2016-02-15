@@ -1,6 +1,8 @@
 package com.dubboclub.dk.storage.model;
 
-public class Statistics implements Comparable<Statistics> {
+import java.io.Serializable;
+
+public class Statistics implements Comparable<Statistics>,Serializable {
 	//发生的时间戳
 	private long timestamp;
 	private String serviceInterface;

@@ -1,9 +1,11 @@
 package com.dubboclub.dk.storage.model;
 
+import java.io.Serializable;
+
 /**
  * Created by bieber on 2015/9/29.
  */
-public class MethodMonitorOverview {
+public class MethodMonitorOverview implements Serializable {
 
     private String method;
 

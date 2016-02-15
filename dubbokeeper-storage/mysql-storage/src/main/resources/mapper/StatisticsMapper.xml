@@ -5,7 +5,7 @@
 
     <insert id="batchInsert">
         <![CDATA[
-       insert into statistics_${application} (timestamp,serviceInterface,method,type,tps,kbps,host,elapsed,concurrent,input,output,successCount,failureCount,remoteAddress,remoteType)
+       insert into `statistics_${application}` (timestamp,serviceInterface,method,type,tps,kbps,host,elapsed,concurrent,input,output,successCount,failureCount,remoteAddress,remoteType)
         values
         ]]>
         <foreach collection="list" separator="," item="item">
@@ -30,7 +30,7 @@
     <insert id="addOne">
         <![CDATA[
 
-       insert into statistics_${application} (timestamp,serviceInterface,method,type,tps,kbps,host,elapsed,concurrent,input,output,successCount,failureCount,remoteAddress,remoteType)
+       insert into `statistics_${application}` (timestamp,serviceInterface,method,type,tps,kbps,host,elapsed,concurrent,input,output,successCount,failureCount,remoteAddress,remoteType)
         values (#{statistics.timestamp},
             #{statistics.serviceInterface},
             #{statistics.method},
@@ -51,7 +51,7 @@
     </insert>
 
     <select id="queryMaxElapsed" resultType="long">
-        select elapsed from statistics_${application} where
+        select elapsed from `statistics_${application}` where
         <if test="service!=null">
             serviceInterface=#{service} and
         </if>
@@ -60,7 +60,7 @@
         ]]>
     </select>
     <select id="queryMaxConcurrent" resultType="long">
-        select concurrent from statistics_${application} where
+        select concurrent from `statistics_${application}` where
         <if test="service!=null">
             serviceInterface=#{service} and
         </if>
@@ -69,7 +69,7 @@
         ]]>
     </select>
     <select id="queryMaxFault" resultType="int">
-        select failureCount from statistics_${application} where
+        select failureCount from `statistics_${application}` where
         <if test="service!=null">
             serviceInterface=#{service} and
         </if>
@@ -78,7 +78,7 @@
       ]]>
     </select>
     <select id="queryMaxSuccess" resultType="int">
-        select successCount from statistics_${application} where
+        select successCount from `statistics_${application}` where
         <if test="service!=null">
             serviceInterface=#{service} and
         </if>
@@ -113,7 +113,7 @@
     <sql id="queryMethodSQLFragment">
        <![CDATA[
 
-         select id from statistics_${application} where timestamp>=#{start} and timestamp<#{end} and serviceInterface=#{serviceInterface} and method=#{method}
+         select id from `statistics_${application}` where timestamp>=#{start} and timestamp<#{end} and serviceInterface=#{serviceInterface} and method=#{method}
 
         ]]>
     </sql>
@@ -121,7 +121,7 @@
     <sql id="queryAppSQLFragment">
         <![CDATA[
 
-         select id from statistics_${application} where timestamp>=#{start} and timestamp<#{end}
+         select id from `statistics_${application}` where timestamp>=#{start} and timestamp<#{end}
 
         ]]>
     </sql>
@@ -129,20 +129,20 @@
     <select id="queryStatisticsForMethod" resultMap="statisticsMap">
         select
         <include refid="statisticsSQLFragment"></include>
-        from statistics_${application} t
+        from `statistics_${application}` t
         <where>
             <![CDATA[
-          t.id in (select id from statistics_${application} where timestamp>=#{start} and timestamp<#{end} and serviceInterface=#{serviceInterface} and method=#{method})
+          t.id in (select id from `statistics_${application}` where timestamp>=#{start} and timestamp<#{end} and serviceInterface=#{serviceInterface} and method=#{method})
           ]]>
         </where>
     </select>
 
     <select id="queryMethodForService" resultType="String">
-        select method from statistics_${application} t where serviceInterface=#{serviceInterface} group by method
+        select method from `statistics_${application}` t where serviceInterface=#{serviceInterface} group by method
     </select>
 
     <select id="queryMethodMaxItemByServiceForLong" resultType="Long">
-        select ${item} from statistics_${application} t
+        select ${item} from `statistics_${application}` t
         <where>
             t.id in (
             <include refid="queryMethodSQLFragment"></include>
@@ -151,7 +151,7 @@
     </select>
 
     <select id="queryMethodMaxItemByServiceForInteger" resultType="Integer">
-        select ${item} from statistics_${application} t
+        select ${item} from `statistics_${application}` t
         <where>
             t.id in (
             <include refid="queryMethodSQLFragment"></include>
@@ -160,7 +160,7 @@
     </select>
 
     <select id="queryMethodMaxItemByServiceForDouble" resultType="Double">
-        select ${item} from statistics_${application} t
+        select ${item} from `statistics_${application}` t
         <where>
             t.id in (
             <include refid="queryMethodSQLFragment"></include>
@@ -169,7 +169,7 @@
     </select>
 
     <select id="queryApplicationOverview" resultType="Statistics">
-        select ${item},method,serviceInterface,timestamp,remoteType from statistics_${application} t
+        select ${item},method,serviceInterface,timestamp,remoteType from `statistics_${application}` t
         <where>
             t.id in (
             <include refid="queryAppSQLFragment"></include>
@@ -178,7 +178,7 @@
     </select>
 
     <select id="queryServiceOverview" resultType="Statistics">
-        select ${item},method,serviceInterface,timestamp,remoteType from statistics_${application} t
+        select ${item},method,serviceInterface,timestamp,remoteType from `statistics_${application}` t
         <where>
             t.id in (
             <include refid="queryAppSQLFragment"></include>
@@ -193,7 +193,7 @@
     </resultMap>
 
     <select id="queryServiceByApp" resultMap="serviceInfoMap">
-        select remoteType,serviceInterface from  statistics_${application} t group by t.serviceInterface,t.remoteType
+        select remoteType,serviceInterface from  `statistics_${application}` t group by t.serviceInterface,t.remoteType
     </select>
 
 </mapper>
