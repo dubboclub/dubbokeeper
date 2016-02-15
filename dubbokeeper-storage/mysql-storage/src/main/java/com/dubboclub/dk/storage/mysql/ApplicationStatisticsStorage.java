@@ -49,7 +49,8 @@ public class ApplicationStatisticsStorage  extends Thread{
             "  `remoteType` varchar(20) DEFAULT NULL COMMENT '远程应用类型',\n" +
             "  PRIMARY KEY (`id`),\n" +
             "  KEY `time-index` (`timestamp`),\n" +
-            "  KEY `method-index` (`method`)\n" +
+            "  KEY `method-index` (`method`),\n" +
+            "  KEY `service-index` (`serviceInterface`)\n"+
             ") ENGINE=InnoDB DEFAULT CHARSET=utf8;\n";
 
     private StatisticsMapper statisticsMapper;
@@ -106,10 +107,10 @@ public class ApplicationStatisticsStorage  extends Thread{
     private void init(){
         long end = System.currentTimeMillis();
         long start = System.currentTimeMillis()-24*60*60*1000;
-        Long concurrent =statisticsMapper.queryMaxConcurrent(application,start,end);
-        Long elapsed = statisticsMapper.queryMaxElapsed(application,start,end);
-        Integer fault = statisticsMapper.queryMaxFault(application,start,end);
-        Integer success = statisticsMapper.queryMaxSuccess(application,start,end);
+        Long concurrent =statisticsMapper.queryMaxConcurrent(application,null,start,end);
+        Long elapsed = statisticsMapper.queryMaxElapsed(application,null,start,end);
+        Integer fault = statisticsMapper.queryMaxFault(application,null,start,end);
+        Integer success = statisticsMapper.queryMaxSuccess(application,null,start,end);
         maxConcurrent =concurrent==null?0:concurrent;
         maxElapsed = elapsed==null?0:elapsed;
         maxFault=fault==null?0:fault;

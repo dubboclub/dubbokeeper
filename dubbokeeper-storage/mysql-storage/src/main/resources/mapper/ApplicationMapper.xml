@@ -5,12 +5,13 @@
 
     <resultMap id="appMap" type="ApplicationInfo">
         <result column="name" property="applicationName"/>
+        <result column="type" property="applicationType"/>
     </resultMap>
     <insert id="addApplication" parameterType="ApplicationInfo">
-        insert into application (name,type) value(#{applicationName},#{type})
+        insert into application (name,type) value(#{applicationName},#{applicationType})
     </insert>
-    <select id="listApps" resultType="ApplicationInfo">
-        select lower(name),type from application
+    <select id="listApps" resultMap="appMap">
+        select lower(name) as name,type from application
     </select>
 
     <select id="getAppType" parameterType="String">

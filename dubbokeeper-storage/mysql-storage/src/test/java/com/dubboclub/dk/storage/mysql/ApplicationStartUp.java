@@ -1,5 +1,6 @@
 package com.dubboclub.dk.storage.mysql;
 
+import com.alibaba.fastjson.JSON;
 import com.dubboclub.dk.storage.model.ApplicationInfo;
 import com.dubboclub.dk.storage.mysql.mapper.ApplicationMapper;
 import org.junit.Assert;
@@ -40,6 +41,11 @@ public abstract class ApplicationStartUp extends AbstractJUnit4SpringContextTest
 
     protected <T extends Object> T doInTransaction(TransactionCallback<T> callback){
         return transactionTemplate.execute(callback);
+    }
+
+
+    protected void printObject(Object object){
+        System.out.println(JSON.toJSONString(object));
     }
 
 

@@ -52,7 +52,7 @@ public class ApplicationMapperTest extends ApplicationStartUp {
 
     @Test
     public void testAddApplication() throws Exception {
-        TransactionCallback<Integer> transactionCallback = new DBTransactionTestCallback<Integer>() {
+       /* TransactionCallback<Integer> transactionCallback = new DBTransactionTestCallback<Integer>() {
             @Override
             protected Integer doInTransaction() {
                 int result = applicationMapper.addApplication("hello");
@@ -60,7 +60,7 @@ public class ApplicationMapperTest extends ApplicationStartUp {
                 return result;
             }
         };
-       Integer result = doInTransaction(transactionCallback);
+       Integer result = doInTransaction(transactionCallback);*/
     }
 
 
