@@ -226,6 +226,7 @@
                     <finalName>${final-name}</finalName>
                     <descriptors>
                         <descriptor>${release.file}</descriptor>
+                        <descriptor>release-ui.xml</descriptor>
                     </descriptors>
                 </configuration>
             </plugin>

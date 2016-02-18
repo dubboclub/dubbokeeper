@@ -5,3 +5,4 @@ CREATE TABLE `application` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `应用名词索引` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

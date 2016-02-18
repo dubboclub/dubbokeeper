@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>dubbokeeper-ui</id>
+    <baseDirectory>/</baseDirectory>
+    <formats>
+        <format>dir</format>
+    </formats>
+    <moduleSets>
+        <moduleSet>
+            <includes>
+                <include>com.dubboclub.dk:dubbokeeper-ui</include>
+            </includes>
+            <binaries>
+                <unpack>false</unpack>
+                <dependencySets>
+                    <dependencySet>
+                        <includes>
+                            <include>com.dubboclub.dk:dubbokeeper-ui</include>
+                        </includes>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+</assembly>

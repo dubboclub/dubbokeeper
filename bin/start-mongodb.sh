@@ -7,5 +7,5 @@ if [ "$JAVA_HOME" != "" ]; then
 else
   JAVA=java
 fi
-DUBBO_PROPERTIES=${CONFDIR}/dubbo-lucene.properties
+DUBBO_PROPERTIES=${CONFDIR}/dubbo-mongodb.properties
 "$JAVA" "-Dmonitor.log.home=${LOG_DIR} -Ddubbo.properties.file=${DUBBO_PROPERTIES}" -cp "${CLASSPATH}" "${MAINCLASS}" start
