@@ -34,5 +34,7 @@ dubbo.monitor.mysql.password=root
 dubbo.monitor.mysql.pool.max=10
 #mysql数据库链接池最小连接数
 dubbo.monitor.mysql.pool.min=10
+#间隔多久进行一次收集数据的提交
+mysql.commit.interval=100
 ```
 
