@@ -36,7 +36,6 @@ public class Main {
     }
 
     private static void start(){
-        System.out.println(System.getProperty("dubbo.properties.file"));
         ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath*:/META-INF/spring/*.xml");
         classPathXmlApplicationContext.start();
         running=true;

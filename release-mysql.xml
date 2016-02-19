@@ -12,6 +12,7 @@
                 <include>bin/*mysql.*</include>
                 <include>bin/setting.*</include>
                 <include>conf/*mysql.properties</include>
+                <include>conf/logback.xml</include>
             </includes>
         </fileSet>
     </fileSets>

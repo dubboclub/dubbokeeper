@@ -6,9 +6,9 @@
     <timestamp key="byDate" datePattern="yyyyMMdd" />
 
     <appender name="dubboRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/DUBBO.log</file>
+        <file>${LOG_HOME}/dubbo-framework/DUBBO.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${DUBBO_LOG_HOME}/DUBBO-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/dubbo-framework/DUBBO-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <MaxFileSize>100MB</MaxFileSize>
@@ -20,20 +20,14 @@
         </encoder>
     </appender>
     <appender name="dkRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/DubboKeeper.log</file>
+        <file>${LOG_HOME}/dubbokeeper/DubboKeeper.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${DUBBO_LOG_HOME}/DubboKeeper-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/dubbokeeper/DubboKeeper-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <MaxFileSize>100MB</MaxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-            <immediateFlush>true</immediateFlush>
-        </encoder>
-    </appender>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
             <immediateFlush>true</immediateFlush>
@@ -51,7 +45,7 @@
             level="DEBUG">
         <appender-ref ref="dkRolling" />
     </logger>
-    <root level="DEBUG">
+    <!--<root level="DEBUG">
              <appender-ref ref="STDOUT" />
-   </root>
+   </root>-->
 </configuration>

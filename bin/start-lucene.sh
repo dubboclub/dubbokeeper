@@ -1,11 +1,17 @@
 #!/bin/bash
 DK_HOME=$(pwd)
-"$DK_HOME/setting.sh"
+CONFDIR="${DK_HOME}/../conf"
+LOG_HOME="${DK_HOME}/../logs"
+CLASSPATH="${DK_HOME}/../lib/*:${CONFDIR}"
+MAINCLASS="com.dubboclub.dk.server.Main"
 
-if [ "$JAVA_HOME" != "" ]; then
-  JAVA="$JAVA_HOME/bin/java"
+if [ "$JAVA_HOME" !="" ]; then
+	
+	JAVA="$JAVA_HOME/bin/java"
 else
-  JAVA=java
+	JAVA=java
 fi
-DUBBO_PROPERTIES=${CONFDIR}/dubbo-lucene.properties
-"$JAVA" "-Dmonitor.log.home=${LOG_DIR} -Ddubbo.properties.file=${DUBBO_PROPERTIES}" -cp "${CLASSPATH}" "${MAINCLASS}" start
+
+DUBBO_PROPERTIES="dubbo-lucene.properties"
+
+"$JAVA" "-Dmonitor.log.home=${LOG_HOME}" "-Ddubbo.properties.file=${DUBBO_PROPERTIES}" -cp $CLASSPATH "${MAINCLASS}" start

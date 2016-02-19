@@ -12,6 +12,7 @@
                 <include>bin/*lucene.*</include>
                 <include>bin/setting.*</include>
                 <include>conf/*lucene.properties</include>
+                <include>conf/logback.xml</include>
             </includes>
         </fileSet>
     </fileSets>

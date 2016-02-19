@@ -12,6 +12,7 @@
                 <include>bin/*mongodb.*</include>
                 <include>bin/setting.*</include>
                 <include>conf/*mongodb.properties</include>
+                <include>conf/logback.xml</include>
             </includes>
         </fileSet>
     </fileSets>
