@@ -13,6 +13,8 @@ public class SpyZooNode {
     
     private String name;
     
+    private String decodeName;
+    
     private List<SpyZooNode> childNodes;
     
     private List<SpyZooNode> nodeList;
@@ -50,8 +52,16 @@ public class SpyZooNode {
     public void setName(String name) {
         this.name = name;
     }
+    
+    public String getDecodeName() {
+		return decodeName;
+	}
 
-    public List<SpyZooNode> getChildNodes() {
+	public void setDecodeName(String decodeName) {
+		this.decodeName = decodeName;
+	}
+
+	public List<SpyZooNode> getChildNodes() {
         return childNodes;
     }
 
