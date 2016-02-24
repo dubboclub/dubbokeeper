@@ -226,7 +226,7 @@
                     <finalName>${final-name}</finalName>
                     <descriptors>
                         <descriptor>${release.file}</descriptor>
-                        <descriptor>release-ui.xml</descriptor>
+                        <descriptor>assembly/release-ui.xml</descriptor>
                     </descriptors>
                 </configuration>
             </plugin>
@@ -239,21 +239,21 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <release.file>release-lucene.xml</release.file>
+                <release.file>assembly/release-lucene.xml</release.file>
                 <final-name>lucene</final-name>
             </properties>
         </profile>
         <profile>
             <id>mysql</id>
             <properties>
-                <release.file>release-mysql.xml</release.file>
+                <release.file>assembly/release-mysql.xml</release.file>
                 <final-name>mysql</final-name>
             </properties>
         </profile>
         <profile>
             <id>mongodb</id>
             <properties>
-                <release.file>release-mongodb.xml</release.file>
+                <release.file>assembly/release-mongodb.xml</release.file>
                 <final-name>mongodb</final-name>
             </properties>
         </profile>
