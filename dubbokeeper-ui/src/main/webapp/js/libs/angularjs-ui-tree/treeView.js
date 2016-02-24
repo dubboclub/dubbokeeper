@@ -4,7 +4,7 @@
 	module.value('treeViewDefaults', {
 		foldersProperty: 'folders',
 		filesProperty: 'files',
-		displayProperty: 'name',
+		displayProperty: 'decodeName',
 		collapsible: true
 	});
 	

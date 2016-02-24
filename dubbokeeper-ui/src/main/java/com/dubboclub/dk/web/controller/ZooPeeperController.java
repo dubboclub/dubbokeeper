@@ -4,6 +4,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.utils.ConfigUtils;
 import com.dubboclub.dk.web.model.SpyZooResponse;
 import com.dubboclub.dk.web.model.SpyZooNode;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -60,6 +62,7 @@ public class ZooPeeperController implements InitializingBean{
                 for(String child:children){
                     SpyZooNode node = new SpyZooNode();
                     node.setName(child);
+                    node.setDecodeName(URLDecoder.decode(child, "UTF-8"));
                     node.setParent(parent);
                     node.setNodeStat(zooKeeper.exists((parent.equals("/")?"":parent)+"/"+child,false));
                     if(zooKeeper.getChildren((parent.equals("/")?"":parent)+"/"+child,false).size()>0){
