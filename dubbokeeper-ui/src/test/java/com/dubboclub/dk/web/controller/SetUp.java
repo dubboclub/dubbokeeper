@@ -24,7 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath*:/META-INF/spring/*.xml"})
-public class Setup extends AbstractJUnit4SpringContextTests {
+public class SetUp extends AbstractJUnit4SpringContextTests {
     @Autowired
     protected WebApplicationContext wac;
 

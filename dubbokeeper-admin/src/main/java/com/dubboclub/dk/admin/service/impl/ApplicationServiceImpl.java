@@ -65,7 +65,7 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
                             application.setType(Application.PROVIDER_AND_CONSUMER);
                         }
                     }
-                    break;
+                    //break;
                 }
             }
         }
