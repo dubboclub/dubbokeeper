@@ -48,6 +48,7 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
         }
         if(consumers!=null){
             for(Map.Entry<String, Map<Long, URL>> oneService:consumers.entrySet()){
+                //某个服务的所有地址，一个服务可能会被多个应用消费
                 Map<Long, URL> urls = oneService.getValue();
                 for(Map.Entry<Long,URL> url:urls.entrySet()){
                     if(url.getValue().getParameter(Constants.INTERFACE_KEY).equals(MonitorService.class.getName())){
@@ -65,7 +66,6 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
                             application.setType(Application.PROVIDER_AND_CONSUMER);
                         }
                     }
-                    //break;
                 }
             }
         }

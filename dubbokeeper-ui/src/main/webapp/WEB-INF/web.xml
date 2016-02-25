@@ -16,6 +16,7 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:webApplication.xml</param-value>
         </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>dispatcherServlet</servlet-name>

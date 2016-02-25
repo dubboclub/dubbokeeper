@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @fix:
  * @description: 描述功能
  */
-public class IndexControllerTest extends Setup{
+public class IndexControllerTest extends SetUp{
 
     @Test
     public void testIndex() throws Exception {
