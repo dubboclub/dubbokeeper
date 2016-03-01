@@ -1,6 +1,7 @@
 package com.dubboclub.dk.storage.model;
 
 /**
+ * 应用信息
  * Created by bieber on 2015/11/16.
  */
 public class ApplicationInfo extends  BaseInfo{
