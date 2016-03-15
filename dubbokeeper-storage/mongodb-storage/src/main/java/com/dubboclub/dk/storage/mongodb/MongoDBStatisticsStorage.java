@@ -4,6 +4,8 @@ import com.alibaba.dubbo.common.extension.ExtensionFactory;
 import com.alibaba.dubbo.common.extension.ExtensionLoader;
 import com.dubboclub.dk.storage.StatisticsStorage;
 import com.dubboclub.dk.storage.model.*;
+import com.dubboclub.dk.storage.mongodb.dto.TempMethodOveride;
+import com.dubboclub.dk.storage.mongodb.dto.TempServiceOveride;
 import com.mongodb.Function;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -13,6 +15,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import org.apache.commons.lang.StringUtils;
+import org.apache.zookeeper.data.Stat;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -29,7 +32,7 @@ import java.util.List;
 
 /**
  * @date: 2015/12/14.
- * @author:bieber.
+ * @author: bieber ; hidehai;
  * @project:dubbokeeper.
  * @package:com.dubboclub.dk.storage.mongodb.
  * @version:1.0.0
@@ -44,7 +47,7 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    private static final String APPLICATION_COLLECTIONS = "applications";
+    private static final String APPLICATION_COLLECTIONS = "application";
 
     private static final String STATISTICS_COLLECTIONS = "statistics";
 
@@ -107,7 +110,8 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
     @Override
     public Collection<ApplicationInfo> queryApplications() {
-        return null;
+        List<ApplicationInfo>  applicationInfos = mongoTemplate.findAll(ApplicationInfo.class,APPLICATION_COLLECTIONS);
+        return applicationInfos;
     }
 
     @Override
@@ -117,17 +121,40 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
     @Override
     public StatisticsOverview queryApplicationOverview(String application, long start, long end) {
-        return null;
+        StatisticsOverview statisticsOverview = new StatisticsOverview();
+        List<Statistics> statisticses = findApplicationOverview(application,"concurrent",start,end);
+        fillConcurrentItem(statisticses,statisticsOverview);
+        statisticses = findApplicationOverview(application,"elapsed",start,end);
+        fillElapsedItem(statisticses,statisticsOverview);
+        statisticses = findApplicationOverview(application,"failureCount",start,end);
+        fillFaultItem(statisticses,statisticsOverview);
+        statisticses = findApplicationOverview(application,"successCount",start,end);
+        fillSuccessItem(statisticses,statisticsOverview);
+        return statisticsOverview;
     }
 
     @Override
     public StatisticsOverview queryServiceOverview(String application, String service, long start, long end) {
-        return null;
+        StatisticsOverview statisticsOverview = new StatisticsOverview();
+        List<Statistics> statisticses = findServiceOverview(application,service,"concurrent",start,end);
+        fillConcurrentItem(statisticses,statisticsOverview);
+        statisticses = findServiceOverview(application,service,"elapsed",start,end);
+        fillElapsedItem(statisticses,statisticsOverview);
+        statisticses = findServiceOverview(application,service,"failureCount",start,end);
+        fillFaultItem(statisticses,statisticsOverview);
+        statisticses = findServiceOverview(application,service,"successCount",start,end);
+        fillSuccessItem(statisticses,statisticsOverview);
+        return statisticsOverview;
     }
 
     @Override
     public Collection<ServiceInfo> queryServiceByApp(String application, long start, long end) {
-        return null;
+        List<ServiceInfo> infos = findServiceByApp(application);
+
+        for(ServiceInfo info : infos){
+
+        }
+        return infos;
     }
 
     /**
@@ -152,7 +179,7 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
 
     /**
-     * 查询区间倒排数据
+     *  查询应用接口区间倒排数据
      * @param column
      * @param application
      * @param serviceInterface
@@ -161,10 +188,6 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
      * @param endTime
      */
     private Statistics findMethodMaxItemByService(String column,String application, String serviceInterface, String method, long startTime, long endTime){
-        String sql = "select ${item} from `statistics_${application}` where timestamp>=#{start} \n" +
-                "and timestamp<#{end} and serviceInterface=#{serviceInterface} and method=#{method}\n" +
-                "order by ${item} desc limit 1;";
-
         Query query = new Query(
                 Criteria.where("serviceInterface").is(serviceInterface)
         );
@@ -174,28 +197,111 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
         Statistics statisticses = mongoTemplate.findOne(query,Statistics.class,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
-
         return statisticses;
     }
 
-    private class TempMethodOveride{
-       private  String m;
-        private int total;
+    /**
+     *  查询应用概要信息
+     * @param application
+     * @param startTime
+     * @param item
+     * @param endTime
+     * @return
+     */
+    private List<Statistics> findApplicationOverview(String application,String item,long startTime, long endTime){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
+        query.with(new Sort(Sort.Direction.DESC,item)).limit(200);
 
-        public String getM() {
-            return m;
-        }
+        List<Statistics>  statisticses = mongoTemplate.find(query,Statistics.class,
+                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
+        return statisticses;
+    }
 
-        public void setM(String m) {
-            this.m = m;
-        }
+    /**
+     *  查询接口概要信息
+     * @param application
+     * @param startTime
+     * @param item
+     * @param service
+     * @param endTime
+     * @return
+     */
+    private List<Statistics> findServiceOverview(String application,String service,String item,long startTime, long endTime){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("serviceInterface").is(service));
+        query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
+        query.with(new Sort(Sort.Direction.DESC,item)).limit(200);
 
-        public int getTotal() {
-            return total;
-        }
+        List<Statistics>  statisticses = mongoTemplate.find(query,Statistics.class,
+                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
+        return statisticses;
+    }
 
-        public void setTotal(int total) {
-            this.total = total;
+    private List<ServiceInfo> findServiceByApp(String application){
+        TypedAggregation aggregation =new TypedAggregation(Statistics.class,
+                Aggregation.project("remoteType","serviceInterface"),               //限制结果集包含域
+                Aggregation.group("serviceInterface","remoteType")  //分组聚合
+        );
+
+        List<ServiceInfo> serviceInfos = mongoTemplate.aggregate(aggregation,
+                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()),
+                ServiceInfo.class).getMappedResults();
+        return  serviceInfos;
+    }
+
+
+
+    private void fillConcurrentItem(List<Statistics> statisticses,StatisticsOverview statisticsOverview){
+        List<ConcurrentItem> concurrentItems = new ArrayList<ConcurrentItem>();
+        statisticsOverview.setConcurrentItems(concurrentItems);
+        for(Statistics statistics:statisticses){
+            ConcurrentItem concurrentItem = new ConcurrentItem();
+            convertItem(concurrentItem,statistics);
+            concurrentItem.setConcurrent(statistics.getConcurrent());
+            concurrentItems.add(concurrentItem);
         }
     }
+
+    private void fillElapsedItem(List<Statistics> statisticses,StatisticsOverview statisticsOverview){
+        List<ElapsedItem> elapsedItems = new ArrayList<ElapsedItem>();
+        statisticsOverview.setElapsedItems(elapsedItems);
+        for(Statistics statistics:statisticses){
+            ElapsedItem elapsedItem = new ElapsedItem();
+            convertItem(elapsedItem,statistics);
+            elapsedItem.setElapsed(statistics.getElapsed());
+            elapsedItems.add(elapsedItem);
+        }
+    }
+
+
+    private void fillFaultItem(List<Statistics> statisticses,StatisticsOverview statisticsOverview){
+        List<FaultItem> faultItems = new ArrayList<FaultItem>();
+        statisticsOverview.setFaultItems(faultItems);
+        for(Statistics statistics:statisticses){
+            FaultItem faultItem = new FaultItem();
+            convertItem(faultItem,statistics);
+            faultItem.setFault(statistics.getFailureCount());
+            faultItems.add(faultItem);
+        }
+    }
+
+    private void fillSuccessItem(List<Statistics> statisticses,StatisticsOverview statisticsOverview){
+        List<SuccessItem> successItems = new ArrayList<SuccessItem>();
+        statisticsOverview.setSuccessItems(successItems);
+        for(Statistics statistics:statisticses){
+            SuccessItem successItem = new SuccessItem();
+            convertItem(successItem,statistics);
+            successItem.setSuccess(statistics.getSuccessCount());
+            successItems.add(successItem);
+        }
+    }
+
+    private void convertItem(BaseItem item,Statistics statistics){
+        item.setMethod( statistics.getMethod());
+        item.setService(statistics.getServiceInterface());
+        item.setTimestamp(statistics.getTimestamp());
+        item.setRemoteType(statistics.getRemoteType().toString());
+    }
+
 }
