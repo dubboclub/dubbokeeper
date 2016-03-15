@@ -61,7 +61,7 @@ public class MysqlStatisticsStorage implements StatisticsStorage,InitializingBea
         for(String method:methods){
             MethodMonitorOverview methodMonitorOverview = new MethodMonitorOverview();
             Long concurrent = statisticsMapper.queryMethodMaxItemByServiceForLong("concurrent", application, serviceInterface, method, startTime, endTime);
-            Long elapsed = statisticsMapper.queryMethodMaxItemByServiceForLong("concurrent", application, serviceInterface, method, startTime, endTime);
+            Long elapsed = statisticsMapper.queryMethodMaxItemByServiceForLong("elapsed", application, serviceInterface, method, startTime, endTime);
             Integer failure = statisticsMapper.queryMethodMaxItemByServiceForInteger("failureCount", application, serviceInterface, method, startTime, endTime);
             Long input = statisticsMapper.queryMethodMaxItemByServiceForLong("input", application, serviceInterface, method, startTime, endTime);
             Double kbps = statisticsMapper.queryMethodMaxItemByServiceForDouble("kbps", application, serviceInterface, method, startTime, endTime);
