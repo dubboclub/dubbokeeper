@@ -116,6 +116,7 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
     @Override
     public ApplicationInfo queryApplicationInfo(String application, long start, long end) {
+        //TODO fix
         return null;
     }
 
@@ -150,9 +151,16 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
     @Override
     public Collection<ServiceInfo> queryServiceByApp(String application, long start, long end) {
         List<ServiceInfo> infos = findServiceByApp(application);
-
+        Statistics statistics = null;
         for(ServiceInfo info : infos){
-
+            statistics = queryMaxItemByService(application,info.getName(),"concurrent",start,end);
+            info.setMaxConcurrent(statistics == null ? 0 : statistics.getConcurrent());
+            statistics = queryMaxItemByService(application,info.getName(),"elapsed",start,end);
+            info.setMaxElapsed(statistics == null ? 0 : statistics.getElapsed());
+            statistics = queryMaxItemByService(application,info.getName(),"failureCount",start,end);
+            info.setMaxFault(statistics == null ? 0 : statistics.getFailureCount());
+            statistics = queryMaxItemByService(application,info.getName(),"successCount",start,end);
+            info.setMaxSuccess(statistics == null ? 0 : statistics.getSuccessCount());
         }
         return infos;
     }
@@ -195,9 +203,9 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
         query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
         query.with(new Sort(Sort.Direction.DESC,column)).limit(1);
 
-        Statistics statisticses = mongoTemplate.findOne(query,Statistics.class,
+        Statistics statistics = mongoTemplate.findOne(query,Statistics.class,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
-        return statisticses;
+        return statistics;
     }
 
     /**
@@ -240,14 +248,34 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
     private List<ServiceInfo> findServiceByApp(String application){
         TypedAggregation aggregation =new TypedAggregation(Statistics.class,
-                Aggregation.project("remoteType","serviceInterface"),               //限制结果集包含域
-                Aggregation.group("serviceInterface","remoteType")  //分组聚合
+                Aggregation.project("remoteType","serviceInterface"),
+                Aggregation.group("serviceInterface","remoteType"),
+                Aggregation.project("remoteType").and("serviceInterface").as("name")
         );
 
         List<ServiceInfo> serviceInfos = mongoTemplate.aggregate(aggregation,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()),
                 ServiceInfo.class).getMappedResults();
         return  serviceInfos;
+    }
+
+    /**
+     *
+     * @param application
+     * @param service
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    private Statistics queryMaxItemByService(String application,String service,String item,long startTime,long endTime){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("serviceInterface").is(service));
+        query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
+        query.with(new Sort(Sort.Direction.DESC,item));
+
+        Statistics statistics = mongoTemplate.findOne(query,Statistics.class,
+                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
+        return statistics;
     }
 
 
