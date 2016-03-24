@@ -16,13 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.mapreduce.GroupBy;
 import org.springframework.data.mongodb.core.mapreduce.GroupByResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -52,24 +51,27 @@ public class MongoDBStatisticsStorageTest {
      *
      */
     @Test
-    public void storeStatisticsTest() {
+    public void storeStatisticsTest() throws InterruptedException {
         Statistics statistics = new Statistics();
-        statistics.setApplication("test_hh_service");
-        statistics.setConcurrent(2);
+        statistics.setApplication("test_aa_service");
+        statistics.setConcurrent(6);
         statistics.setElapsed(1);
-        statistics.setFailureCount(0);
+        statistics.setFailureCount(5);
+        statistics.setSuccessCount(3);
         statistics.setHost("10.100.152.111");
         statistics.setInput(100);
         statistics.setOutput(200);
         statistics.setKbps(300);
         statistics.setMethod("fetchData");
         statistics.setRemoteAddress("10.100.152.200");
-        statistics.setRemoteType(Statistics.ApplicationType.PROVIDER);
-        statistics.setServiceInterface("com.hidehai.dubbo.MMSerivce");
+        statistics.setType(Statistics.ApplicationType.PROVIDER);
+        statistics.setRemoteType(Statistics.ApplicationType.CONSUMER);
+        statistics.setServiceInterface("com.hidehai.dubbo.KKSerivce");
         statistics.setTimestamp(new Date().getTime());
         statistics.setTps(150);
 
         statisticsStorage.storeStatistics(statistics);
+        Thread.sleep(5000);
     }
 
     @Test
@@ -212,27 +214,57 @@ public class MongoDBStatisticsStorageTest {
     @Test
     public void findServiceByAppTest(){
         String application = "test_hh_service";
-
-
         TypedAggregation aggregation =new TypedAggregation(Statistics.class,
-                Aggregation.project("serviceInterface","remoteType").and("serviceInterface").as("name"),
-                Aggregation.group(Aggregation.fields("name").and("remoteType")).count().as("totalNum")
+                Aggregation.project("remoteType","serviceInterface"),
+                Aggregation.group("serviceInterface","remoteType").count().as("totalNum"),
+                Aggregation.project("remoteType","totalNum").and("serviceInterface").as("name")
         );
-
-        AggregationResults<BasicDBObject> result = mongoTemplate.aggregate(aggregation,
-                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()),
-                BasicDBObject.class);
-        System.out.println(aggregation.toString());
-        System.out.println(result.getMappedResults());
-
 //        AggregationResults<ServiceInfo> result = mongoTemplate.aggregate(aggregation,
 //                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()),
 //                ServiceInfo.class);
-//
-//        for(ServiceInfo s : result){
-//            LOGGER.info(s.getName());
-//        }
+//        System.out.println(aggregation.toString());
+//        System.out.println(result.getMappedResults());
+        AggregationResults<ServiceInfo> result = mongoTemplate.aggregate(aggregation,
+                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()),
+                ServiceInfo.class);
+        for(ServiceInfo s : result){
+            LOGGER.info(s.getName());
+        }
+    }
 
+
+    @Test
+    public void queryServiceByAppTest(){
+        String application = "test_hh_service";
+        Date sdate = DateUtils.addDays(new Date(),-1);
+        Date ldate = new Date();
+        Collection<ServiceInfo> infos = statisticsStorage.queryServiceByApp(application,sdate.getTime(),ldate.getTime());
+        Assert.assertNotNull(infos);
+        for(ServiceInfo i : infos){
+            Assert.assertNotNull(i.getName());
+            Assert.assertNotNull(i.getRemoteType());
+            Assert.assertNotNull(i.getMaxConcurrent());
+            Assert.assertNotNull(i.getMaxElapsed());
+            Assert.assertNotNull(i.getMaxFault());
+            Assert.assertNotNull(i.getMaxSuccess());
+
+            LOGGER.info(String.format("server:%s - type:%s - concurent:%s - elapsed:%s - fault:%s - suc:%s",
+                    i.getName(),i.getRemoteType(),i.getMaxConcurrent(),i.getMaxElapsed(),i.getMaxFault(),i.getMaxSuccess()));
+        }
+
+
+
+    }
+
+    @Test
+    public void updateAppType(){
+        String application = "test_kk_service";
+        int type =1;
+
+        Query query = new Query(
+                Criteria.where("applicationName").is(application)
+        );
+        mongoTemplate.updateMulti(query,new Update().set("applicationType",type),ApplicationInfo.class,APPLICATION_COLLECTIONS);
     }
 
     class Temp{
