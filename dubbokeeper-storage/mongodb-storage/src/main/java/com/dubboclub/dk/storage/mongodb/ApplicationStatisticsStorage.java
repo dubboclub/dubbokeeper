@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,14 @@ public class ApplicationStatisticsStorage extends Thread{
     private ConcurrentLinkedQueue<Statistics> statisticsCollection = new ConcurrentLinkedQueue<Statistics>();
 
     private static final int WRITE_INTERVAL= Integer.parseInt(ConfigUtils.getProperty("mongodb.commit.interval", "100"));
+
+
+    public ApplicationStatisticsStorage(ApplicationDao applicationDao,
+                                        StatisticsDao statisticsDao,
+                                        String application,
+                                        int type){
+        this(applicationDao,statisticsDao,application,type,false);
+    }
 
     public ApplicationStatisticsStorage(ApplicationDao applicationDao,
                                         StatisticsDao statisticsDao,

@@ -19,6 +19,7 @@ import com.mongodb.client.MongoIterable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.data.Stat;
 import org.bson.Document;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -42,15 +43,28 @@ import java.util.concurrent.ConcurrentHashMap;
  * @fix:
  * @description: 描述功能
  */
-public class MongoDBStatisticsStorage implements StatisticsStorage {
+public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingBean {
 
     private static final ConcurrentHashMap<String,ApplicationStatisticsStorage> APPLICATION_STORAGES = new ConcurrentHashMap<String, ApplicationStatisticsStorage>();
 
-    @Autowired
     private ApplicationDao applicationDao;
-    @Autowired
     private StatisticsDao statisticsDao;
 
+    public ApplicationDao getApplicationDao() {
+        return applicationDao;
+    }
+
+    public void setApplicationDao(ApplicationDao applicationDao) {
+        this.applicationDao = applicationDao;
+    }
+
+    public StatisticsDao getStatisticsDao() {
+        return statisticsDao;
+    }
+
+    public void setStatisticsDao(StatisticsDao statisticsDao) {
+        this.statisticsDao = statisticsDao;
+    }
 
     @Override
     public void storeStatistics(Statistics statistics) {
@@ -109,8 +123,15 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
     @Override
     public ApplicationInfo queryApplicationInfo(String application, long start, long end) {
-        //TODO fix
-        return null;
+        ApplicationStatisticsStorage applicationStatisticsStorage = APPLICATION_STORAGES.get(application);
+        ApplicationInfo applicationInfo = new ApplicationInfo();
+        applicationInfo.setApplicationName(applicationStatisticsStorage.getApplication());
+        applicationInfo.setApplicationType(applicationStatisticsStorage.getType());
+        applicationInfo.setMaxConcurrent(statisticsDao.queryMaxItemByService(application,null,"concurrent",start,end).getConcurrent());
+        applicationInfo.setMaxElapsed(statisticsDao.queryMaxItemByService(application,null,"elapsed",start,end).getElapsed());
+        applicationInfo.setMaxFault(statisticsDao.queryMaxItemByService(application,null,"failureCount",start,end).getFailureCount());
+        applicationInfo.setMaxSuccess(statisticsDao.queryMaxItemByService(application,null,"successCount",start,end).getSuccessCount());
+        return applicationInfo;
     }
 
     @Override
@@ -209,6 +230,19 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
         item.setService(statistics.getServiceInterface());
         item.setTimestamp(statistics.getTimestamp());
         item.setRemoteType(statistics.getRemoteType().toString());
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Collection<ApplicationInfo> apps = applicationDao.findAll();
+        for(ApplicationInfo app:apps){
+            ApplicationStatisticsStorage applicationStatisticsStorage  = new ApplicationStatisticsStorage(applicationDao,statisticsDao,
+                    app.getApplicationName(),
+                    app.getApplicationType());
+            APPLICATION_STORAGES.put(app.getApplicationName(),applicationStatisticsStorage);
+            applicationStatisticsStorage.start();
+            LOGGER.info("start application [{}] storage",app.getApplicationName());
+        }
     }
 
 }

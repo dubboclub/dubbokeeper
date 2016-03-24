@@ -21,8 +21,15 @@ public class StatisticsDao {
 
     private static final String STATISTICS_COLLECTIONS = "statistics";
 
-    @Autowired
     private MongoTemplate mongoTemplate;
+
+    public MongoTemplate getMongoTemplate() {
+        return mongoTemplate;
+    }
+
+    public void setMongoTemplate(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     public void addOne(String application,Statistics statistics){
         mongoTemplate.save(statistics,String.format("%s_%s",STATISTICS_COLLECTIONS,application));

@@ -17,9 +17,15 @@ public class ApplicationDao {
 
     private static final String APPLICATION_COLLECTIONS = "application";
 
-    @Autowired
     private MongoTemplate mongoTemplate;
 
+    public MongoTemplate getMongoTemplate() {
+        return mongoTemplate;
+    }
+
+    public void setMongoTemplate(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     public void updateAppType(String application, int type){
         Query query = new Query(
