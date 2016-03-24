@@ -4,6 +4,8 @@ import com.alibaba.dubbo.common.extension.ExtensionFactory;
 import com.alibaba.dubbo.common.extension.ExtensionLoader;
 import com.dubboclub.dk.storage.StatisticsStorage;
 import com.dubboclub.dk.storage.model.*;
+import com.dubboclub.dk.storage.mongodb.dao.ApplicationDao;
+import com.dubboclub.dk.storage.mongodb.dao.StatisticsDao;
 import com.dubboclub.dk.storage.mongodb.dto.TempMethodOveride;
 import com.dubboclub.dk.storage.mongodb.dto.TempServiceOveride;
 import com.mongodb.Function;
@@ -29,6 +31,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @date: 2015/12/14.
@@ -41,58 +44,48 @@ import java.util.List;
  */
 public class MongoDBStatisticsStorage implements StatisticsStorage {
 
-
-    private volatile static MongoDatabase mongoDatabase;
+    private static final ConcurrentHashMap<String,ApplicationStatisticsStorage> APPLICATION_STORAGES = new ConcurrentHashMap<String, ApplicationStatisticsStorage>();
 
     @Autowired
-    private MongoTemplate mongoTemplate;
-
-    private static final String APPLICATION_COLLECTIONS = "application";
-
-    private static final String STATISTICS_COLLECTIONS = "statistics";
-
+    private ApplicationDao applicationDao;
+    @Autowired
+    private StatisticsDao statisticsDao;
 
 
     @Override
     public void storeStatistics(Statistics statistics) {
-        LOGGER.info(statistics.getApplication());
-        String app = statistics.getApplication();
-        if(app == null){
-            LOGGER.warn("url.application miss!");
-            return;
+        if(!APPLICATION_STORAGES.containsKey(statistics.getApplication().toLowerCase())){
+            ApplicationStatisticsStorage applicationStatisticsStorage  = new ApplicationStatisticsStorage(applicationDao,statisticsDao,
+                    statistics.getApplication(),
+                    statistics.getType()== Statistics.ApplicationType.CONSUMER?0:1,true);
+            ApplicationStatisticsStorage old = APPLICATION_STORAGES.putIfAbsent(statistics.getApplication().toLowerCase(),applicationStatisticsStorage);
+            if(old==null){
+                applicationStatisticsStorage.start();
+            }
         }
-        String collectionName = String.format("%s_%s",STATISTICS_COLLECTIONS,app.toLowerCase());
-        mongoTemplate.save(statistics,collectionName);
+        APPLICATION_STORAGES.get(statistics.getApplication().toLowerCase()).addStatistics(statistics);
     }
 
     @Override
     public List<Statistics> queryStatisticsForMethod(String application, String serviceInterface, String method, long startTime, long endTime) {
-       Query query = new Query(
-         Criteria.where("serviceInterface").is(serviceInterface)
-       );
-        query.addCriteria(Criteria.where("method").is(method));
-        query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-
-        String collectionName = String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase());
-        List<Statistics>  statisticses = mongoTemplate.find(query,Statistics.class,collectionName);
-        return statisticses;
+       return statisticsDao.queryStatisticsForMethod(application,serviceInterface,method,startTime,endTime);
     }
 
     @Override
     public Collection<MethodMonitorOverview> queryMethodMonitorOverview(String application, String serviceInterface, int methodSize, long startTime, long endTime) {
-        List<TempMethodOveride> methods = findMethodForService(application,serviceInterface);
+        List<TempMethodOveride> methods = statisticsDao.findMethodForService(application,serviceInterface);
 
         Collection<MethodMonitorOverview> methodMonitorOverviews = new ArrayList<MethodMonitorOverview>(methods.size());
         for(TempMethodOveride method : methods){
             MethodMonitorOverview methodMonitorOverview = new MethodMonitorOverview();
-            Statistics concurrent= findMethodMaxItemByService("concurrent",application,serviceInterface,method.getM(),startTime,endTime);
-            Statistics elapsed= findMethodMaxItemByService("elapsed",application,serviceInterface,method.getM(),startTime,endTime);
-            Statistics failure= findMethodMaxItemByService("failureCount",application,serviceInterface,method.getM(),startTime,endTime);
-            Statistics input= findMethodMaxItemByService("input",application,serviceInterface,method.getM(),startTime,endTime);
-            Statistics kbps= findMethodMaxItemByService("kbps",application,serviceInterface,method.getM(),startTime,endTime);
-            Statistics output= findMethodMaxItemByService("output",application,serviceInterface,method.getM(),startTime,endTime);
-            Statistics success= findMethodMaxItemByService("successCount",application,serviceInterface,method.getM(),startTime,endTime);
-            Statistics tps= findMethodMaxItemByService("tps",application,serviceInterface,method.getM(),startTime,endTime);
+            Statistics concurrent= statisticsDao.findMethodMaxItemByService("concurrent",application,serviceInterface,method.getM(),startTime,endTime);
+            Statistics elapsed= statisticsDao.findMethodMaxItemByService("elapsed",application,serviceInterface,method.getM(),startTime,endTime);
+            Statistics failure= statisticsDao.findMethodMaxItemByService("failureCount",application,serviceInterface,method.getM(),startTime,endTime);
+            Statistics input= statisticsDao.findMethodMaxItemByService("input",application,serviceInterface,method.getM(),startTime,endTime);
+            Statistics kbps= statisticsDao.findMethodMaxItemByService("kbps",application,serviceInterface,method.getM(),startTime,endTime);
+            Statistics output= statisticsDao.findMethodMaxItemByService("output",application,serviceInterface,method.getM(),startTime,endTime);
+            Statistics success= statisticsDao.findMethodMaxItemByService("successCount",application,serviceInterface,method.getM(),startTime,endTime);
+            Statistics tps= statisticsDao.findMethodMaxItemByService("tps",application,serviceInterface,method.getM(),startTime,endTime);
 
             methodMonitorOverview.setMaxConcurrent(concurrent==null?0:concurrent.getConcurrent());
             methodMonitorOverview.setMaxElapsed(elapsed==null?0:elapsed.getElapsed());
@@ -110,7 +103,7 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
 
     @Override
     public Collection<ApplicationInfo> queryApplications() {
-        List<ApplicationInfo>  applicationInfos = mongoTemplate.findAll(ApplicationInfo.class,APPLICATION_COLLECTIONS);
+        List<ApplicationInfo>  applicationInfos = applicationDao.findAll();
         return applicationInfos;
     }
 
@@ -123,13 +116,13 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
     @Override
     public StatisticsOverview queryApplicationOverview(String application, long start, long end) {
         StatisticsOverview statisticsOverview = new StatisticsOverview();
-        List<Statistics> statisticses = findApplicationOverview(application,"concurrent",start,end);
+        List<Statistics> statisticses = statisticsDao.findApplicationOverview(application,"concurrent",start,end);
         fillConcurrentItem(statisticses,statisticsOverview);
-        statisticses = findApplicationOverview(application,"elapsed",start,end);
+        statisticses = statisticsDao.findApplicationOverview(application,"elapsed",start,end);
         fillElapsedItem(statisticses,statisticsOverview);
-        statisticses = findApplicationOverview(application,"failureCount",start,end);
+        statisticses = statisticsDao.findApplicationOverview(application,"failureCount",start,end);
         fillFaultItem(statisticses,statisticsOverview);
-        statisticses = findApplicationOverview(application,"successCount",start,end);
+        statisticses = statisticsDao.findApplicationOverview(application,"successCount",start,end);
         fillSuccessItem(statisticses,statisticsOverview);
         return statisticsOverview;
     }
@@ -137,147 +130,33 @@ public class MongoDBStatisticsStorage implements StatisticsStorage {
     @Override
     public StatisticsOverview queryServiceOverview(String application, String service, long start, long end) {
         StatisticsOverview statisticsOverview = new StatisticsOverview();
-        List<Statistics> statisticses = findServiceOverview(application,service,"concurrent",start,end);
+        List<Statistics> statisticses = statisticsDao.findServiceOverview(application,service,"concurrent",start,end);
         fillConcurrentItem(statisticses,statisticsOverview);
-        statisticses = findServiceOverview(application,service,"elapsed",start,end);
+        statisticses = statisticsDao.findServiceOverview(application,service,"elapsed",start,end);
         fillElapsedItem(statisticses,statisticsOverview);
-        statisticses = findServiceOverview(application,service,"failureCount",start,end);
+        statisticses = statisticsDao.findServiceOverview(application,service,"failureCount",start,end);
         fillFaultItem(statisticses,statisticsOverview);
-        statisticses = findServiceOverview(application,service,"successCount",start,end);
+        statisticses = statisticsDao.findServiceOverview(application,service,"successCount",start,end);
         fillSuccessItem(statisticses,statisticsOverview);
         return statisticsOverview;
     }
 
     @Override
     public Collection<ServiceInfo> queryServiceByApp(String application, long start, long end) {
-        List<ServiceInfo> infos = findServiceByApp(application);
+        List<ServiceInfo> infos = statisticsDao.findServiceByApp(application);
         Statistics statistics = null;
         for(ServiceInfo info : infos){
-            statistics = queryMaxItemByService(application,info.getName(),"concurrent",start,end);
+            statistics = statisticsDao.queryMaxItemByService(application,info.getName(),"concurrent",start,end);
             info.setMaxConcurrent(statistics == null ? 0 : statistics.getConcurrent());
-            statistics = queryMaxItemByService(application,info.getName(),"elapsed",start,end);
+            statistics = statisticsDao.queryMaxItemByService(application,info.getName(),"elapsed",start,end);
             info.setMaxElapsed(statistics == null ? 0 : statistics.getElapsed());
-            statistics = queryMaxItemByService(application,info.getName(),"failureCount",start,end);
+            statistics = statisticsDao.queryMaxItemByService(application,info.getName(),"failureCount",start,end);
             info.setMaxFault(statistics == null ? 0 : statistics.getFailureCount());
-            statistics = queryMaxItemByService(application,info.getName(),"successCount",start,end);
+            statistics = statisticsDao.queryMaxItemByService(application,info.getName(),"successCount",start,end);
             info.setMaxSuccess(statistics == null ? 0 : statistics.getSuccessCount());
         }
         return infos;
     }
-
-    /**
-     * 查询接口下的方法
-     * @param application
-     * @param serviceInterface
-     * @return
-     */
-    private List<TempMethodOveride> findMethodForService(String application,String serviceInterface){
-        TypedAggregation aggregation =new TypedAggregation(Statistics.class,
-                Aggregation.project("method","serviceInterface"),               //限制结果集包含域
-                Aggregation.match(Criteria.where("serviceInterface").is(serviceInterface)),    //过滤数据
-                Aggregation.group("method").first("method").as("m").count().as("total"), //分组聚合
-                Aggregation.sort(Sort.Direction.DESC,"total")   //数据排序
-        );
-
-        List<TempMethodOveride> methodOverides = mongoTemplate.aggregate(aggregation,
-                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()),
-                TempMethodOveride.class).getMappedResults();
-        return  methodOverides;
-    }
-
-
-    /**
-     *  查询应用接口区间倒排数据
-     * @param column
-     * @param application
-     * @param serviceInterface
-     * @param method
-     * @param startTime
-     * @param endTime
-     */
-    private Statistics findMethodMaxItemByService(String column,String application, String serviceInterface, String method, long startTime, long endTime){
-        Query query = new Query(
-                Criteria.where("serviceInterface").is(serviceInterface)
-        );
-        query.addCriteria(Criteria.where("method").is(method));
-        query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-        query.with(new Sort(Sort.Direction.DESC,column)).limit(1);
-
-        Statistics statistics = mongoTemplate.findOne(query,Statistics.class,
-                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
-        return statistics;
-    }
-
-    /**
-     *  查询应用概要信息
-     * @param application
-     * @param startTime
-     * @param item
-     * @param endTime
-     * @return
-     */
-    private List<Statistics> findApplicationOverview(String application,String item,long startTime, long endTime){
-        Query query = new Query();
-        query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-        query.with(new Sort(Sort.Direction.DESC,item)).limit(200);
-
-        List<Statistics>  statisticses = mongoTemplate.find(query,Statistics.class,
-                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
-        return statisticses;
-    }
-
-    /**
-     *  查询接口概要信息
-     * @param application
-     * @param startTime
-     * @param item
-     * @param service
-     * @param endTime
-     * @return
-     */
-    private List<Statistics> findServiceOverview(String application,String service,String item,long startTime, long endTime){
-        Query query = new Query();
-        query.addCriteria(Criteria.where("serviceInterface").is(service));
-        query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-        query.with(new Sort(Sort.Direction.DESC,item)).limit(200);
-
-        List<Statistics>  statisticses = mongoTemplate.find(query,Statistics.class,
-                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
-        return statisticses;
-    }
-
-    private List<ServiceInfo> findServiceByApp(String application){
-        TypedAggregation aggregation =new TypedAggregation(Statistics.class,
-                Aggregation.project("remoteType","serviceInterface"),
-                Aggregation.group("serviceInterface","remoteType"),
-                Aggregation.project("remoteType").and("serviceInterface").as("name")
-        );
-
-        List<ServiceInfo> serviceInfos = mongoTemplate.aggregate(aggregation,
-                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()),
-                ServiceInfo.class).getMappedResults();
-        return  serviceInfos;
-    }
-
-    /**
-     *
-     * @param application
-     * @param service
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    private Statistics queryMaxItemByService(String application,String service,String item,long startTime,long endTime){
-        Query query = new Query();
-        query.addCriteria(Criteria.where("serviceInterface").is(service));
-        query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-        query.with(new Sort(Sort.Direction.DESC,item));
-
-        Statistics statistics = mongoTemplate.findOne(query,Statistics.class,
-                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
-        return statistics;
-    }
-
 
 
     private void fillConcurrentItem(List<Statistics> statisticses,StatisticsOverview statisticsOverview){
