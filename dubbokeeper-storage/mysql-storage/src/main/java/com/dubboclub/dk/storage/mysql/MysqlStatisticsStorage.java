@@ -144,13 +144,13 @@ public class MysqlStatisticsStorage implements StatisticsStorage,InitializingBea
     }
 
     private void fillConcurrentItem(List<Statistics> statisticses,StatisticsOverview statisticsOverview){
-        List<ElapsedItem> elapsedItems = new ArrayList<ElapsedItem>();
-        statisticsOverview.setElapsedItems(elapsedItems);
+        List<ConcurrentItem> concurrentItems = new ArrayList<ConcurrentItem>();
+        statisticsOverview.setConcurrentItems(concurrentItems);
         for(Statistics statistics:statisticses){
-            ElapsedItem elapsedItem = new ElapsedItem();
-            convertItem(elapsedItem,statistics);
-            elapsedItem.setElapsed(statistics.getElapsed());
-            elapsedItems.add(elapsedItem);
+            ConcurrentItem concurrentItem = new ConcurrentItem();
+            convertItem(concurrentItem,statistics);
+            concurrentItem.setConcurrent(statistics.getConcurrent());
+            concurrentItems.add(concurrentItem);
         }
     }
 
