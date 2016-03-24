@@ -11,9 +11,9 @@
 
         <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="mongoDBStatisticsStorage"/>
 
-        <mongo:mongo id="mongo" host="${dubbo.monitor.mongodb.url}" port="${dubbo.monitor.mongodb.port}"/>
-        <mongo:db-factory id="mongoDbFactory" dbname="${dubbo.monitor.mongodb.dbname}"
-                          mongo-ref="mongo" username="" password="" />
+        <mongo:mongo id="mongo"  host="${dubbo.monitor.mongodb.url}" port="${dubbo.monitor.mongodb.port}"/>
+        <mongo:db-factory id="mongoDbFactory" dbname="${dubbo.monitor.mongodb.dbname}" mongo-ref="mongo"
+                          username="${dubbo.monitor.mongodb.username}" password="${dubbo.monitor.mongodb.password}" />
 
         <bean id="statisticsDao" class="com.dubboclub.dk.storage.mongodb.dao.StatisticsDao">
                 <property name="mongoTemplate" ref="mongoTemplate"/>
