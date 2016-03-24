@@ -118,6 +118,15 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
     @Override
     public Collection<ApplicationInfo> queryApplications() {
         List<ApplicationInfo>  applicationInfos = applicationDao.findAll();
+        for(ApplicationInfo applicationInfo:applicationInfos){
+            ApplicationStatisticsStorage applicationStatisticsStorage =APPLICATION_STORAGES.get(applicationInfo.getApplicationName());
+            if(applicationStatisticsStorage!=null){
+                applicationInfo.setMaxConcurrent(applicationStatisticsStorage.getMaxConcurrent());
+                applicationInfo.setMaxElapsed(applicationStatisticsStorage.getMaxElapsed());
+                applicationInfo.setMaxFault(applicationStatisticsStorage.getMaxFault());
+                applicationInfo.setMaxSuccess(applicationStatisticsStorage.getMaxSuccess());
+            }
+        }
         return applicationInfos;
     }
 
