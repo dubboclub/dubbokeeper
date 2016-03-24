@@ -5,11 +5,10 @@ LOG_HOME="${DK_HOME}/../logs"
 CLASSPATH="${DK_HOME}/../lib/*:${CONFDIR}"
 MAINCLASS="com.dubboclub.dk.server.Main"
 
-if [ "$JAVA_HOME" !="" ]; then
-	
-	JAVA="$JAVA_HOME/bin/java"
-else
+if [ -z $JAVA_HOME ]; then
 	JAVA=java
+else
+	JAVA="$JAVA_HOME/bin/java"
 fi
 
 DUBBO_PROPERTIES="dubbo-mysql.properties"
