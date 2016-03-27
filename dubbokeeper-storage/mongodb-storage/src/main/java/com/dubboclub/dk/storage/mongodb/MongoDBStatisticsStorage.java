@@ -140,13 +140,13 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
         applicationInfo.setApplicationName(applicationStatisticsStorage.getApplication());
         applicationInfo.setApplicationType(applicationStatisticsStorage.getType());
         Statistics concurrent=statisticsDao.queryMaxItemByService(application,null,"concurrent",start,end);
-        applicationInfo.setMaxConcurrent(concurrent==null ? null:concurrent.getConcurrent());
+        applicationInfo.setMaxConcurrent(concurrent==null ? 0:concurrent.getConcurrent());
         Statistics elapsed=statisticsDao.queryMaxItemByService(application,null,"elapsed",start,end);
-        applicationInfo.setMaxElapsed(elapsed==null ? null:elapsed.getElapsed());
+        applicationInfo.setMaxElapsed(elapsed==null ? 0:elapsed.getElapsed());
         Statistics failureCount=statisticsDao.queryMaxItemByService(application,null,"failureCount",start,end);
-        applicationInfo.setMaxFault(failureCount==null ? null:failureCount.getFailureCount());
+        applicationInfo.setMaxFault(failureCount==null ? 0:failureCount.getFailureCount());
         Statistics successCount=statisticsDao.queryMaxItemByService(application,null,"successCount",start,end);
-        applicationInfo.setMaxSuccess(successCount==null ? null:successCount.getFailureCount());
+        applicationInfo.setMaxSuccess(successCount==null ? 0:successCount.getFailureCount());
         stopWatch.stop();
         LOGGER.info(String.format("Method:%s Time:%s Param:%s,%s,%s","queryApplicationInfo",
                 stopWatch.getTime(),
