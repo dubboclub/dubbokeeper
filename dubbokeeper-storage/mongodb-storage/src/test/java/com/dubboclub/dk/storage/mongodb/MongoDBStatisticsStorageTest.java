@@ -204,7 +204,7 @@ public class MongoDBStatisticsStorageTest {
     @Test
     public void queryApplicationInfoTest(){
         String application = "pms_provider";
-        long s = DateUtils.addDays(new Date(),1).getTime();
+        long s = DateUtils.addDays(new Date(),2).getTime();
         long e = new Date().getTime();
         Query query = new Query();
         query.addCriteria(Criteria.where("timestamp").gte(s).lte(e));
@@ -241,8 +241,8 @@ public class MongoDBStatisticsStorageTest {
 
     @Test
     public void queryServiceByAppTest(){
-        String application = "test_hh_service";
-        Date sdate = DateUtils.addDays(new Date(),-1);
+        String application = "ec_core_consumer";
+        Date sdate = DateUtils.addDays(new Date(),-3);
         Date ldate = new Date();
         Collection<ServiceInfo> infos = statisticsStorage.queryServiceByApp(application,sdate.getTime(),ldate.getTime());
         Assert.assertNotNull(infos);
