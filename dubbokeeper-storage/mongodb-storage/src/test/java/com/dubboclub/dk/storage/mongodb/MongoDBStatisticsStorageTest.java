@@ -183,17 +183,7 @@ public class MongoDBStatisticsStorageTest {
         Date sdate = DateUtils.addDays(new Date(),-1);
         Date ldate = new Date();
         String application = "test_hh_service";
-
-        Query query = new Query();
-        query.addCriteria(Criteria.where("timestamp").gte(sdate.getTime()).lte(ldate.getTime()));
-        query.with(new Sort(Sort.Direction.DESC,"concurrent")).limit(200);
-
-        List<Statistics>  statisticses = mongoTemplate.find(query,Statistics.class,
-                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
-
-        for(Statistics s : statisticses){
-            LOGGER.info(s.getConcurrent()+"");
-        }
+        List<Object>  statisticses = mongoTemplate.findAll(Object.class,"test2");
     }
 
     @Test
@@ -209,6 +199,22 @@ public class MongoDBStatisticsStorageTest {
         Assert.assertNotNull(statisticsOverview.getElapsedItems());
         Assert.assertNotNull(statisticsOverview.getFaultItems());
         Assert.assertNotNull(statisticsOverview.getSuccessItems());
+    }
+
+    @Test
+    public void queryApplicationInfoTest(){
+        String application = "pms_provider";
+        long s = DateUtils.addDays(new Date(),1).getTime();
+        long e = new Date().getTime();
+        Query query = new Query();
+        query.addCriteria(Criteria.where("timestamp").gte(s).lte(e));
+        query.with(new Sort(Sort.Direction.DESC,"concurrent"));
+        LOGGER.info(query.toString());
+        Statistics statistics = mongoTemplate.findOne(query,Statistics.class,
+                String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
+        if(statistics != null){
+            LOGGER.info(statistics.getConcurrent()+"");
+        }
     }
 
     @Test

@@ -136,10 +136,14 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
         ApplicationInfo applicationInfo = new ApplicationInfo();
         applicationInfo.setApplicationName(applicationStatisticsStorage.getApplication());
         applicationInfo.setApplicationType(applicationStatisticsStorage.getType());
-        applicationInfo.setMaxConcurrent(statisticsDao.queryMaxItemByService(application,null,"concurrent",start,end).getConcurrent());
-        applicationInfo.setMaxElapsed(statisticsDao.queryMaxItemByService(application,null,"elapsed",start,end).getElapsed());
-        applicationInfo.setMaxFault(statisticsDao.queryMaxItemByService(application,null,"failureCount",start,end).getFailureCount());
-        applicationInfo.setMaxSuccess(statisticsDao.queryMaxItemByService(application,null,"successCount",start,end).getSuccessCount());
+        Statistics concurrent=statisticsDao.queryMaxItemByService(application,null,"concurrent",start,end);
+        applicationInfo.setMaxConcurrent(concurrent==null ? null:concurrent.getConcurrent());
+        Statistics elapsed=statisticsDao.queryMaxItemByService(application,null,"elapsed",start,end);
+        applicationInfo.setMaxElapsed(elapsed==null ? null:elapsed.getElapsed());
+        Statistics failureCount=statisticsDao.queryMaxItemByService(application,null,"failureCount",start,end);
+        applicationInfo.setMaxFault(failureCount==null ? null:failureCount.getFailureCount());
+        Statistics successCount=statisticsDao.queryMaxItemByService(application,null,"successCount",start,end);
+        applicationInfo.setMaxSuccess(successCount==null ? null:successCount.getFailureCount());
         return applicationInfo;
     }
 
