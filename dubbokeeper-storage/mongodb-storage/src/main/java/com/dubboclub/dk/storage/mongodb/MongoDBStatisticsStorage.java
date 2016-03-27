@@ -17,6 +17,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.zookeeper.data.Stat;
 import org.bson.Document;
 import org.springframework.beans.factory.InitializingBean;
@@ -132,6 +133,8 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
 
     @Override
     public ApplicationInfo queryApplicationInfo(String application, long start, long end) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         ApplicationStatisticsStorage applicationStatisticsStorage = APPLICATION_STORAGES.get(application);
         ApplicationInfo applicationInfo = new ApplicationInfo();
         applicationInfo.setApplicationName(applicationStatisticsStorage.getApplication());
@@ -144,6 +147,11 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
         applicationInfo.setMaxFault(failureCount==null ? null:failureCount.getFailureCount());
         Statistics successCount=statisticsDao.queryMaxItemByService(application,null,"successCount",start,end);
         applicationInfo.setMaxSuccess(successCount==null ? null:successCount.getFailureCount());
+        stopWatch.stop();
+        LOGGER.info(String.format("Method:%s Time:%s Param:%s,%s,%s","queryApplicationInfo",
+                stopWatch.getTime(),
+                application,
+                start,end));
         return applicationInfo;
     }
 
@@ -177,6 +185,8 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
 
     @Override
     public Collection<ServiceInfo> queryServiceByApp(String application, long start, long end) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         List<ServiceInfo> infos = statisticsDao.findServiceByApp(application);
         Statistics statistics = null;
         for(ServiceInfo info : infos){
@@ -189,6 +199,11 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
             statistics = statisticsDao.queryMaxItemByService(application,info.getName(),"successCount",start,end);
             info.setMaxSuccess(statistics == null ? 0 : statistics.getSuccessCount());
         }
+        stopWatch.stop();
+        LOGGER.info(String.format("Method:%s Time:%s Param:%s,%s,%s","queryServiceByApp",
+                stopWatch.getTime(),
+                application,
+                start,end));
         return infos;
     }
 
