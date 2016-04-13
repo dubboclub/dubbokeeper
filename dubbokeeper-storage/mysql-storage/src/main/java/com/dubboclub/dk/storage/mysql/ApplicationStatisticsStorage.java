@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -62,6 +63,8 @@ public class ApplicationStatisticsStorage  extends Thread{
     private ApplicationMapper applicationMapper;
 
     private ConcurrentLinkedQueue<Statistics> statisticsCollection = new ConcurrentLinkedQueue<Statistics>();
+
+    private ConcurrentLinkedQueue<Statistics> statisticsBuffer = new ConcurrentLinkedQueue<Statistics>();
 
     private String application;
 
@@ -117,14 +120,29 @@ public class ApplicationStatisticsStorage  extends Thread{
         maxSuccess=success==null?0:success;
     }
 
+
+
+
     public void addStatistics(Statistics statistics){
-        while(isWriting){
-            //waiting write finished
+        if(isWriting){//当正在写数据的时候,应该是暂时不写入到statisticsCollection里面,防止存在数据不一致,所以先换成,等待写入完毕,然后批量刷入到数据库中
+            statisticsBuffer.offer(statistics);
+            return;
         }
+
+        if(statisticsBuffer.size()>0){//说明已经有数据被换成,需要写入数据库
+            synchronized (statisticsBuffer){
+                if(statisticsBuffer.size()>0){
+                    List<Statistics> statisticses = new ArrayList<Statistics>(statisticsBuffer);
+                    statisticsBuffer.clear();
+                    statisticsMapper.batchInsert(application, statisticses);
+                }
+            }
+        }
+        //当设置的写入周期小于零,那么久一条一条的插入,否则批量插入
         if(WRITE_INTERVAL<=0){
             statisticsMapper.addOne(application,statistics);
         }else{
-            statisticsCollection.add(statistics);
+            statisticsCollection.offer(statistics);
         }
         if(maxFault<statistics.getFailureCount()){
             maxFault=statistics.getFailureCount();
@@ -151,7 +169,7 @@ public class ApplicationStatisticsStorage  extends Thread{
 
     @Override
     public void run() {
-        while(true){
+        while(WRITE_INTERVAL>0){
             isWriting=true;
             List<Statistics> statisticsList = new ArrayList<Statistics>(statisticsCollection);
             if(statisticsList.size()>0){

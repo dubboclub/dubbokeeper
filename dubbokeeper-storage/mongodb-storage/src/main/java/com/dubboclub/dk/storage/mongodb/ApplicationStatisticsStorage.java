@@ -44,6 +44,8 @@ public class ApplicationStatisticsStorage extends Thread{
 
     private ConcurrentLinkedQueue<Statistics> statisticsCollection = new ConcurrentLinkedQueue<Statistics>();
 
+    private ConcurrentLinkedQueue<Statistics> statisticsBuffer = new ConcurrentLinkedQueue<Statistics>();
+
     private static final int WRITE_INTERVAL= Integer.parseInt(ConfigUtils.getProperty("mongodb.commit.interval", "100"));
 
 
@@ -93,7 +95,7 @@ public class ApplicationStatisticsStorage extends Thread{
     @Override
     public void run() {
         LOGGER.info(String.format("%s is running.",getName()));
-      while(true){
+      while(WRITE_INTERVAL>0){
           isWriting = true;
           List<Statistics> statisticseList = new ArrayList<Statistics>(statisticsCollection);
           if(statisticseList.size() > 0){
@@ -115,8 +117,18 @@ public class ApplicationStatisticsStorage extends Thread{
      * @param statistics
      */
     public void addStatistics(Statistics statistics){
-        while(isWriting){
-            //waiting write finished
+        if(isWriting){//当正在写数据的时候,应该是暂时不写入到statisticsCollection里面,防止存在数据不一致,所以先换成,等待写入完毕,然后批量刷入到数据库中
+            statisticsBuffer.offer(statistics);
+            return;
+        }
+        if(statisticsBuffer.size()>0){//说明已经有数据被换成,需要写入数据库
+            synchronized (statisticsBuffer){
+                if(statisticsBuffer.size()>0){
+                    List<Statistics> statisticses = new ArrayList<Statistics>(statisticsBuffer);
+                    statisticsBuffer.clear();
+                    batchInsert(statisticses);
+                }
+            }
         }
         if(WRITE_INTERVAL<=0){
             statisticsDao.addOne(application,statistics);
