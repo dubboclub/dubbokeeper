@@ -1,5 +1,5 @@
 #!/bin/bash
-DK_HOME=$(pwd)
+DK_HOME=$(cd "$(dirname "$0")"; pwd)
 CONFDIR="${DK_HOME}/../conf"
 LOG_HOME="${DK_HOME}/../logs"
 CLASSPATH="${DK_HOME}/../lib/*:${CONFDIR}"
