@@ -134,6 +134,7 @@
             <![CDATA[
           t.id in (select id from `statistics_${application}` where timestamp>=#{start} and timestamp<#{end} and serviceInterface=#{serviceInterface} and method=#{method})
           ]]>
+            order by timestamp ASC
         </where>
     </select>
 
@@ -146,7 +147,7 @@
         <where>
             t.id in (
             <include refid="queryMethodSQLFragment"></include>
-            ) order by ${item} desc limit 1
+            ) order by timestamp asc limit 1
         </where>
     </select>
 
@@ -155,7 +156,7 @@
         <where>
             t.id in (
             <include refid="queryMethodSQLFragment"></include>
-            ) order by ${item} desc limit 1
+            ) order by timestamp asc limit 1
         </where>
     </select>
 
@@ -164,7 +165,7 @@
         <where>
             t.id in (
             <include refid="queryMethodSQLFragment"></include>
-            ) order by ${item} desc limit 1
+            ) order by timestamp asc limit 1
         </where>
     </select>
 
@@ -173,7 +174,7 @@
         <where>
             t.id in (
             <include refid="queryAppSQLFragment"></include>
-            ) order by ${item} desc limit 1,200
+            ) order by timestamp asc limit 1,200
         </where>
     </select>
 
@@ -183,7 +184,7 @@
             t.id in (
             <include refid="queryAppSQLFragment"></include>
             and serviceInterface=#{service}
-            ) order by ${item} desc limit 1,200
+            ) order by timestamp ASC limit 1,200
         </where>
     </select>
 

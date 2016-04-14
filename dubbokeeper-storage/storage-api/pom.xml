@@ -12,5 +12,11 @@
     <groupId>com.dubboclub.dk</groupId>
     <artifactId>storage-api</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

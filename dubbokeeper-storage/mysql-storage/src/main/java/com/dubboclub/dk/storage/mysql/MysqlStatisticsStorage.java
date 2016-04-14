@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @package:com.dubboclub.dk.storage.mysql.
  * @version:1.0.0
  * @fix:
- * @description: 描述功能
+ * @description: mysql监控数据存储器
  */
 public class MysqlStatisticsStorage implements StatisticsStorage,InitializingBean {
 
