@@ -15,9 +15,7 @@
         <jsp.jstl.api.version>1.2.1</jsp.jstl.api.version>
         <jasper.version>2.2.2.v201112011158</jasper.version>
         <taglibs.version>1.2.0.v201112081803</taglibs.version>
-<!--
         <jstl.version>1.1.2</jstl.version>
--->
     </properties>
     <artifactId>dubbokeeper-ui</artifactId>
     <packaging>war</packaging>
@@ -33,27 +31,10 @@
             <artifactId>dubbokeeper-admin</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-      <!--  <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl.version}</version>
-        </dependency>
--->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>${jstl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>${jsp-api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>javax.servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -92,17 +73,11 @@
             <version>${taglibs.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>javax.servlet</groupId>-->
-            <!--<artifactId>javax.servlet-api</artifactId>-->
-            <!--<version>3.0.1</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet-api.version}</version>
+            <version>3.0.1</version>
+            <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>

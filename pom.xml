@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+    
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dubboclub.dk</groupId>
     <artifactId>dubbokeeper</artifactId>
@@ -15,28 +15,23 @@
         <module>dubbokeeper-server</module>
     </modules>
     <packaging>pom</packaging>
-
+    
     <properties>
-        <dubbo.version>2.8.4</dubbo.version>
+        <dubbo.version>2.5.3</dubbo.version>
         <spring_version>4.1.6.RELEASE</spring_version>
-        <servlet-api.version>3.1.0</servlet-api.version>
-        <jstl.version>1.2</jstl.version>
-        <jsp-api.version>2.1</jsp-api.version>
-        <lucene_version>5.3.0</lucene_version>
+        <servlet_version>2.5</servlet_version>
+	    <lucene_version>5.3.0</lucene_version>
         <findbugs.excludeFilterFile>findbugs-exclude.xml</findbugs.excludeFilterFile>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.io.version>2.4</common.io.version>
+        <common.io.version>2.2</common.io.version>
         <dubbo.plus.netty4.version>0.0.6</dubbo.plus.netty4.version>
         <jackson.version>2.5.2</jackson.version>
         <commons.lang.version>2.6</commons.lang.version>
         <fastjson.version>1.1.41</fastjson.version>
         <zk.version>0.1</zk.version>
+        <zookeeper.version>3.3.3</zookeeper.version>
         <logback.version>1.1.2</logback.version>
         <disruptor.version>3.3.4</disruptor.version>
-        <zookeeper.version>3.4.6</zookeeper.version>
-        <curator-framework.version>1.1.10</curator-framework.version>
-        <zkclient.version>0.8</zkclient.version>
-        <curator2.version>2.9.1</curator2.version>
     </properties>
 
     <dependencyManagement>
@@ -46,15 +41,7 @@
                 <artifactId>disruptor</artifactId>
                 <version>${disruptor.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring_version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
         </dependencies>
-
     </dependencyManagement>
     <dependencies>
 
@@ -70,30 +57,25 @@
             <version>${logback.version}</version>
         </dependency>
 
-        <!-- dubbo -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dubbo</artifactId>
             <version>${dubbo.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.springframework</groupId>
                     <artifactId>spring</artifactId>
+                    <groupId>org.springframework</groupId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.log4j</groupId>
+                    <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.springframework</groupId>
+                    <groupId>org.jboss.netty</groupId>
+                    <artifactId>netty</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>net.dubboclub</groupId>
             <artifactId>netty4</artifactId>
@@ -135,7 +117,7 @@
             <version>${fastjson.version}</version>
         </dependency>
 
-        <!--zookeeper
+        <!--zookeeper-->
         <dependency>
             <groupId>com.github.sgroschupf</groupId>
             <artifactId>zkclient</artifactId>
@@ -146,106 +128,7 @@
             <artifactId>zookeeper</artifactId>
             <version>${zookeeper.version}</version>
         </dependency>
--->
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>${zookeeper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.curator</groupId>
-            <artifactId>curator-framework</artifactId>
-            <version>${curator-framework.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-framework</artifactId>
-            <version>${curator2.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-client</artifactId>
-            <version>${curator2.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.101tec</groupId>
-            <artifactId>zkclient</artifactId>
-            <version>${zkclient.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!--spring-->
         <dependency>
@@ -284,7 +167,6 @@
             <version>${spring_version}</version>
         </dependency>
 
-
         <!--test-->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -292,13 +174,18 @@
             <version>${spring_version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet-api.version}</version>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
@@ -307,7 +194,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
