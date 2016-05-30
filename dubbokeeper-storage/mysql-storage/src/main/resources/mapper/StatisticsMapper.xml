@@ -170,12 +170,14 @@
     </select>
 
     <select id="queryApplicationOverview" resultType="Statistics">
-        select ${item},method,serviceInterface,timestamp,remoteType from `statistics_${application}` t
+        select * from (select ${item},method,serviceInterface,timestamp,remoteType from
+        `statistics_${application}` t
         <where>
             t.id in (
             <include refid="queryAppSQLFragment"></include>
-            ) order by timestamp asc limit 1,200
+            ) order by ${item} desc limit 1,200
         </where>
+        ) tmp order by timestamp asc
     </select>
 
     <select id="queryServiceOverview" resultType="Statistics">
