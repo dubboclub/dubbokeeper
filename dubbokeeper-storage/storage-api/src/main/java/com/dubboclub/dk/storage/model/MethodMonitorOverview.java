@@ -9,21 +9,21 @@ public class MethodMonitorOverview implements Serializable {
 
     private String method;
 
-    private long maxElapsed;
+    private Long maxElapsed;
 
-    private long maxConcurrent;
+    private Long maxConcurrent;
 
-    private long maxInput;
+    private Long maxInput;
 
-    private long minInput;
+    private Long minInput;
 
-    private long maxOutput;
+    private Long maxOutput;
 
-    private long minOutput;
+    private Long minOutput;
 
-    private long minConcurrent;
+    private Long minConcurrent;
 
-    private long minElapsed;
+    private Long minElapsed;
 
     private int minFailure;
 
@@ -105,35 +105,35 @@ public class MethodMonitorOverview implements Serializable {
         this.minKbps = minKbps;
     }
 
-    public long getMinInput() {
+    public Long getMinInput() {
         return minInput;
     }
 
-    public void setMinInput(long minInput) {
+    public void setMinInput(Long minInput) {
         this.minInput = minInput;
     }
 
-    public long getMinOutput() {
+    public Long getMinOutput() {
         return minOutput;
     }
 
-    public void setMinOutput(long minOutput) {
+    public void setMinOutput(Long minOutput) {
         this.minOutput = minOutput;
     }
 
-    public long getMinConcurrent() {
+    public Long getMinConcurrent() {
         return minConcurrent;
     }
 
-    public void setMinConcurrent(long minConcurrent) {
+    public void setMinConcurrent(Long minConcurrent) {
         this.minConcurrent = minConcurrent;
     }
 
-    public long getMinElapsed() {
+    public Long getMinElapsed() {
         return minElapsed;
     }
 
-    public void setMinElapsed(long minElapsed) {
+    public void setMinElapsed(Long minElapsed) {
         this.minElapsed = minElapsed;
     }
 
@@ -145,35 +145,35 @@ public class MethodMonitorOverview implements Serializable {
         this.method = method;
     }
 
-    public long getMaxElapsed() {
+    public Long getMaxElapsed() {
         return maxElapsed;
     }
 
-    public void setMaxElapsed(long maxElapsed) {
+    public void setMaxElapsed(Long maxElapsed) {
         this.maxElapsed = maxElapsed;
     }
 
-    public long getMaxConcurrent() {
+    public Long getMaxConcurrent() {
         return maxConcurrent;
     }
 
-    public void setMaxConcurrent(long maxConcurrent) {
+    public void setMaxConcurrent(Long maxConcurrent) {
         this.maxConcurrent = maxConcurrent;
     }
 
-    public long getMaxInput() {
+    public Long getMaxInput() {
         return maxInput;
     }
 
-    public void setMaxInput(long maxInput) {
+    public void setMaxInput(Long maxInput) {
         this.maxInput = maxInput;
     }
 
-    public long getMaxOutput() {
+    public Long getMaxOutput() {
         return maxOutput;
     }
 
-    public void setMaxOutput(long maxOutput) {
+    public void setMaxOutput(Long maxOutput) {
         this.maxOutput = maxOutput;
     }
 

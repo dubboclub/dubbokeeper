@@ -54,13 +54,13 @@ public class MongoDBStatisticsStorageTest {
     public void storeStatisticsTest() throws InterruptedException {
         Statistics statistics = new Statistics();
         statistics.setApplication("test_aa_service");
-        statistics.setConcurrent(6);
-        statistics.setElapsed(1);
+        statistics.setConcurrent(Long.valueOf(6));
+        statistics.setElapsed(Long.valueOf(1));
         statistics.setFailureCount(5);
         statistics.setSuccessCount(3);
         statistics.setHost("10.100.152.111");
-        statistics.setInput(100);
-        statistics.setOutput(200);
+        statistics.setInput(Long.valueOf(100));
+        statistics.setOutput(Long.valueOf(200));
         statistics.setKbps(300);
         statistics.setMethod("fetchData");
         statistics.setRemoteAddress("10.100.152.200");

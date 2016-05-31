@@ -5,13 +5,13 @@ package com.dubboclub.dk.storage.model;
  */
 public class ConcurrentItem extends  BaseItem{
 
-    private long concurrent;
+    private Long concurrent;
 
-    public long getConcurrent() {
+    public Long getConcurrent() {
         return concurrent;
     }
 
-    public void setConcurrent(long concurrent) {
+    public void setConcurrent(Long concurrent) {
         this.concurrent = concurrent;
     }
 }
