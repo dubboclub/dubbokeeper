@@ -45,9 +45,10 @@ public class DubboKeeperMonitorService implements MonitorService {
 		Statistics statistics = new Statistics();
 		statistics.setTimestamp(System.currentTimeMillis());
 		statistics.setApplication(statisticsURL.getParameter(MonitorService.APPLICATION));
-		statistics.setConcurrent(statisticsURL.getParameter(MonitorService.CONCURRENT, 1));
+		statistics.setConcurrent(
+			Long.valueOf(statisticsURL.getParameter(MonitorService.CONCURRENT, 1)));
 		if(statistics.getConcurrent()==0){
-			statistics.setConcurrent(1);
+			statistics.setConcurrent(Long.valueOf(1));
 		}
 		statistics.setHost(statisticsURL.getHost());
 		statistics.setServiceInterface(statisticsURL.getParameter(MonitorService.INTERFACE));
@@ -61,9 +62,12 @@ public class DubboKeeperMonitorService implements MonitorService {
         if(totalCount<=0){
             return;
         }
-        statistics.setElapsed(statisticsURL.getParameter(MonitorService.ELAPSED, 0)/totalCount);
-        statistics.setInput(statisticsURL.getParameter(MonitorService.INPUT,0)/totalCount);
-        statistics.setOutput(statisticsURL.getParameter(MonitorService.OUTPUT,0)/totalCount);
+        statistics.setElapsed(
+			Long.valueOf(statisticsURL.getParameter(MonitorService.ELAPSED, 0)/totalCount));
+        statistics.setInput(
+			Long.valueOf(statisticsURL.getParameter(MonitorService.INPUT,0)/totalCount));
+        statistics.setOutput(
+			Long.valueOf(statisticsURL.getParameter(MonitorService.OUTPUT,0)/totalCount));
         if(statistics.getElapsed()!=0){
 			//TPS=并发数/响应时间
 			BigDecimal tps = new BigDecimal(statistics.getConcurrent());

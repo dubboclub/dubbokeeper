@@ -5,14 +5,14 @@ package com.dubboclub.dk.storage.model;
  */
 public class ElapsedItem extends  BaseItem{
 
-    private long elapsed;
+    private Long elapsed;
 
 
-    public long getElapsed() {
+    public Long getElapsed() {
         return elapsed;
     }
 
-    public void setElapsed(long elapsed) {
+    public void setElapsed(Long elapsed) {
         this.elapsed = elapsed;
     }
 }

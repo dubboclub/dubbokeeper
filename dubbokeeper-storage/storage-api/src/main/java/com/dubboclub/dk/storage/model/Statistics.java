@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Statistics implements Comparable<Statistics>,Serializable {
 	//发生的时间戳
-	private long timestamp;
+	private Long timestamp;
 	private String serviceInterface;
 	private String method;
 	private ApplicationType type;
@@ -15,13 +15,13 @@ public class Statistics implements Comparable<Statistics>,Serializable {
 	//发生的应用名称
 	private String application;
 	// 计算调用耗时
-	private long elapsed;
+	private Long elapsed;
 	// 当前并发数
-	private long concurrent;
+	private Long concurrent;
 	//当前请求的输入
-	private long input;
+	private Long input;
 	//当前请求的输出
-	private long output;
+	private Long output;
 
     private int successCount;
 
@@ -82,11 +82,11 @@ public class Statistics implements Comparable<Statistics>,Serializable {
 
 
 
-	public long getTimestamp() {
+	public Long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(long timestamp) {
+	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -131,35 +131,35 @@ public class Statistics implements Comparable<Statistics>,Serializable {
 	}
 
 
-	public long getElapsed() {
+	public Long getElapsed() {
 		return elapsed;
 	}
 
-	public void setElapsed(long elapsed) {
+	public void setElapsed(Long elapsed) {
 		this.elapsed = elapsed;
 	}
 
-	public long getConcurrent() {
+	public Long getConcurrent() {
 		return concurrent;
 	}
 
-	public void setConcurrent(long concurrent) {
+	public void setConcurrent(Long concurrent) {
 		this.concurrent = concurrent;
 	}
 
-	public long getInput() {
+	public Long getInput() {
 		return input;
 	}
 
-	public void setInput(long input) {
+	public void setInput(Long input) {
 		this.input = input;
 	}
 
-	public long getOutput() {
+	public Long getOutput() {
 		return output;
 	}
 
-	public void setOutput(long output) {
+	public void setOutput(Long output) {
 		this.output = output;
 	}
 
