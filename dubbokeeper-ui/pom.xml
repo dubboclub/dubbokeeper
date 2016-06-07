@@ -80,4 +80,17 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>  
+                        <artifactId>maven-war-plugin</artifactId>  
+                        <configuration>  
+                            <warSourceDirectory>  
+                                ${basedir}/src/main/webapp  
+                            </warSourceDirectory>  
+                            <webXml>${basedir}/src/main/webapp/WEB-INF/web-${web.xml.name}.xml</webXml>  
+                        </configuration>  
+                    </plugin>  
+        </plugins>
+      </build>
 </project>

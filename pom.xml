@@ -268,5 +268,17 @@
                 <final-name>mongodb</final-name>
             </properties>
         </profile>
+         <profile>
+            <id>tomcat</id>
+            <properties>
+                <web.xml.name>tomcat</web.xml.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>weblogic</id>
+            <properties>
+                <web.xml.name>weblogic</web.xml.name>
+            </properties>
+        </profile>
     </profiles>
 </project>
