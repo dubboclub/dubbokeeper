@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by bieber on 2015/9/24.
@@ -29,7 +30,7 @@ import java.util.*;
 @RequestMapping("/peeper")
 public class ZooPeeperController implements InitializingBean{
 
-    private static final Map<String,ZooKeeper> ZK_CLIENT_MAP = new HashMap<String, ZooKeeper>();
+    private static final ConcurrentHashMap<String,ZooKeeper> ZK_CLIENT_MAP = new ConcurrentHashMap<String, ZooKeeper>();
     
     private static final Logger logger = LoggerFactory.getLogger(ZooPeeperController.class);
 
