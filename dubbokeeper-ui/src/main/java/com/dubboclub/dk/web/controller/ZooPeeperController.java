@@ -97,6 +97,14 @@ public class ZooPeeperController implements InitializingBean{
         public void process(WatchedEvent watchedEvent) {
             if(watchedEvent.getState()== Event.KeeperState.Expired||watchedEvent.getState()==Event.KeeperState.Disconnected){
                 try {
+                    ZooKeeper zooKeeper = ZK_CLIENT_MAP.get(host);
+                    if(zooKeeper!=null){
+                        try {
+                            zooKeeper.close();
+                        } catch (InterruptedException e) {
+                            //do nothing
+                        }
+                    }
                     ZK_CLIENT_MAP.put(host,new ZooKeeper(host,Integer.parseInt(ConfigUtils.getProperty("spy.zookeeper.session.timeout","60000")),this));
                 } catch (IOException e) {
                     logger.error("failed to reconnect zookeeper server",e);
