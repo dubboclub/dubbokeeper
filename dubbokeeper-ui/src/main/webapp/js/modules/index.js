@@ -20,6 +20,11 @@ dubbokeeper.barDataset=[{
         icon:"icon-cloud",
         isHome:true
     },{
+        showName:"服务列表",
+        identify:"admin/services",
+        href:"/admin/services",
+        icon:"icon-share",
+    },{
         showName:"动态配置",
         identify:"admin/dynamicConfig",
         href:"/admin/override/list",

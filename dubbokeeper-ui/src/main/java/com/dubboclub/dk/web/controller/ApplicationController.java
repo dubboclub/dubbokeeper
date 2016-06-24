@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bieber on 2015/6/4.
@@ -49,6 +47,55 @@ public class ApplicationController {
     @RequestMapping("/list.htm")
     public @ResponseBody List<Application> getApplications(){
         return applicationService.getApplications();
+    }
+
+    /**
+     * 查询所有应用的服务列表数据
+     * @return
+     */
+    @RequestMapping("/services.htm")
+    public  @ResponseBody  List<AppProvideInfo> getServices() throws UnsupportedEncodingException {
+        List<AppProvideInfo> provideInfoList = new ArrayList<AppProvideInfo>();
+        Set<String> containMark = new HashSet<String>();
+        StringBuilder protocolString = new StringBuilder();
+
+        List<Provider> providers = providerService.listAllProvider();
+        for(Provider provider : providers){
+            if(containMark.contains(provider.getServiceKey())){
+                continue;
+            }
+            containMark.add(provider.getServiceKey());
+            AppProvideInfo provideInfo = new AppProvideInfo();
+            provideInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(provider.getServiceKey(), "UTF-8"), "UTF-8"));
+            provideInfo.setService(Tool.getInterface(provider.getServiceKey()));
+            provideInfo.setVersion(provider.getVersion());
+            provideInfo.setGroup(provider.getGroup());
+            provideInfo.setId(provider.getId());
+            List<Provider> providerList  = providerService.listProviderByConditions(
+                    Constants.INTERFACE_KEY,
+                    provideInfo.getService(),
+                    Constants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()),
+                    Constants.VERSION_KEY,
+                    Tool.getVersion(provider.getServiceKey()));
+            for(Provider item:providerList){
+                URL url = URL.valueOf(item.getUrl());
+                protocolString
+                        .append(url.getProtocol())
+                        .append("://")
+                        .append(url.getIp())
+                        .append(":")
+                        .append(url.getPort())
+                        .append(",");
+            }
+
+            if(protocolString.length()>0){
+                protocolString.setLength(protocolString.length()-1);
+            }
+            provideInfo.setProtocol(protocolString.toString());
+            protocolString.setLength(0);
+            provideInfoList.add(provideInfo);
+        }
+        return provideInfoList;
     }
 
 
@@ -100,13 +147,14 @@ public class ApplicationController {
     public @ResponseBody  List<AppProvideInfo> getProvides(@PathVariable("appName")String appName) throws UnsupportedEncodingException {
         List<Provider>  providers = providerService.listProviderByApplication(appName);
         List<AppProvideInfo> provideInfos = new ArrayList<AppProvideInfo>();
-        List<String> containMark = new ArrayList<String>();
-        StringBuffer protocolBuffer = new StringBuffer();
+        Set<String> containMark = new HashSet<String>();
+        StringBuilder protocolBuffer = new StringBuilder();
         for(Provider provider : providers){
             if(containMark.contains(provider.getServiceKey())){
                 continue;
             }
             containMark.add(provider.getServiceKey());
+
             AppProvideInfo provideInfo = new AppProvideInfo();
             provideInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(provider.getServiceKey(), "UTF-8"), "UTF-8"));
             provideInfo.setService(Tool.getInterface(provider.getServiceKey()));
