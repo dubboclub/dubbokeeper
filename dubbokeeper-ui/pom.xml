@@ -88,7 +88,7 @@
                             <warSourceDirectory>  
                                 ${basedir}/src/main/webapp  
                             </warSourceDirectory>  
-                            <webXml>${basedir}/src/main/webapp/WEB-INF/web-${web.xml.name}.xml</webXml>  
+                            <webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
                         </configuration>  
                     </plugin>  
         </plugins>

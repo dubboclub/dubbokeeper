@@ -10,7 +10,7 @@
         <param-value>classpath*:/META-INF/spring/*.xml</param-value>
     </context-param>
     <servlet>
-        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-name>springMVC</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
@@ -19,7 +19,7 @@
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-name>springMVC</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
