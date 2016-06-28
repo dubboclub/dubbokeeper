@@ -7,7 +7,7 @@ aboutus.config(function($routeProvider){
 });
 aboutus.controller('aboutus',function($scope,$httpWrapper,$menu){
     $menu.switchBarOnly("aboutus");
-    $httpWrapper.post({
+    $httpWrapper.get({
         url:"templates/aboutus/aboutus.md",
         success:function(mdText){
             var converter = new showdown.Converter();
