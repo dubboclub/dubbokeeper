@@ -3,24 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>dubbokeeper-storage</artifactId>
+        <artifactId>dubbokeeper</artifactId>
         <groupId>com.dubboclub.dk</groupId>
         <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dubboclub.dk</groupId>
-    <artifactId>storage-api</artifactId>
+    <artifactId>dubbokeeper-collector</artifactId>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.lmax</groupId>
-            <artifactId>disruptor</artifactId>
+            <groupId>com.dubboclub.dk</groupId>
+            <artifactId>storage-api</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>net.dubboclub</groupId>
             <artifactId>tracing-api</artifactId>
-            <version>0.0.6</version>
+            <version>${traceing.api.version}</version>
         </dependency>
     </dependencies>
 

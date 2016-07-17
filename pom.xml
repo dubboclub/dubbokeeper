@@ -13,6 +13,7 @@
         <module>dubbokeeper-ui</module>
         <module>dubbokeeper-storage</module>
         <module>dubbokeeper-server</module>
+        <module>dubbokeeper-collector</module>
     </modules>
     <packaging>pom</packaging>
     
@@ -32,6 +33,7 @@
         <zookeeper.version>3.3.3</zookeeper.version>
         <logback.version>1.1.2</logback.version>
         <disruptor.version>3.3.4</disruptor.version>
+        <traceing.api.version>0.0.6</traceing.api.version>
     </properties>
 
     <dependencyManagement>
