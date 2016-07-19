@@ -56,7 +56,7 @@
             serviceInterface=#{service} and
         </if>
         <![CDATA[
-         timestamp>=#{start} and timestamp<=#{end}  order by elapsed DESC limit 1,1
+         timestamp>=#{start} and timestamp<=#{end}  order by elapsed DESC limit 0,1
         ]]>
     </select>
     <select id="queryMaxConcurrent" resultType="long">
@@ -65,7 +65,7 @@
             serviceInterface=#{service} and
         </if>
         <![CDATA[
-           timestamp>=#{start} and timestamp<=#{end}  order by concurrent DESC limit 1,1
+           timestamp>=#{start} and timestamp<=#{end}  order by concurrent DESC limit 0,1
         ]]>
     </select>
     <select id="queryMaxFault" resultType="int">
@@ -74,7 +74,7 @@
             serviceInterface=#{service} and
         </if>
         <![CDATA[
-        timestamp>=#{start} and timestamp<=#{end}  order by failureCount DESC limit 1,1
+        timestamp>=#{start} and timestamp<=#{end}  order by failureCount DESC limit 0,1
       ]]>
     </select>
     <select id="queryMaxSuccess" resultType="int">
@@ -83,7 +83,7 @@
             serviceInterface=#{service} and
         </if>
         <![CDATA[
-         timestamp>=#{start} and timestamp<=#{end}  order by successCount DESC limit 1,1
+         timestamp>=#{start} and timestamp<=#{end}  order by successCount DESC limit 0,1
       ]]>
     </select>
 
@@ -175,7 +175,7 @@
         <where>
             t.id in (
             <include refid="queryAppSQLFragment"></include>
-            ) order by ${item} desc limit 1,200
+            ) order by ${item} desc limit 0,200
         </where>
         ) tmp order by timestamp asc
     </select>
@@ -186,7 +186,7 @@
             t.id in (
             <include refid="queryAppSQLFragment"></include>
             and serviceInterface=#{service}
-            ) order by timestamp ASC limit 1,200
+            ) order by timestamp ASC limit 0,200
         </where>
     </select>
 
