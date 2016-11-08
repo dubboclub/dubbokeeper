@@ -37,14 +37,14 @@ public class MysqlStatisticsStorageTest extends ApplicationStartUp {
         for(int i=0;i<10000;i++){
             Statistics statistics = new Statistics();
             statistics.setApplication("hello"+i%10);
-            statistics.setConcurrent(random.nextInt(100));
-            statistics.setElapsed(random.nextInt(100000));
+            statistics.setConcurrent(new Long(random.nextInt(100)));
+            statistics.setElapsed(Long.valueOf(random.nextInt(100000)));
             statistics.setFailureCount(random.nextInt(10));
             statistics.setHost("192.168.0.1");
-            statistics.setInput(random.nextInt(400));
+            statistics.setInput(Long.valueOf(random.nextInt(400)));
             statistics.setKbps(random.nextInt(500));
             statistics.setMethod("save");
-            statistics.setOutput(random.nextInt(100));
+            statistics.setOutput(Long.valueOf(random.nextInt(100)));
             statistics.setRemoteAddress("21.2.2.1");
             statistics.setType(Statistics.ApplicationType.CONSUMER);
             statistics.setTps(random.nextInt(100));

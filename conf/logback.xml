@@ -33,11 +33,29 @@
             <immediateFlush>true</immediateFlush>
         </encoder>
     </appender>
+    <appender name="writeRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/dubbokeeper/Monitor-writer.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/dubbokeeper/Monitor-writer-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>100MB</MaxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+    </appender>
     <!--dubbo-->
     <logger
             name="com.alibaba.dubbo"
             level="DEBUG">
         <appender-ref ref="dubboRolling" />
+    </logger>
+    <logger
+            name="Application-Writer" level="INFO">
+        <appender-ref ref="writeRolling" />
     </logger>
     <!--dubbo-->
     <logger

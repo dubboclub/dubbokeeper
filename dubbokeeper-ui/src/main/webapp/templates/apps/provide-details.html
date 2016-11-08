@@ -1,6 +1,9 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div ng-show="!isForAllService" class="panel-heading">
         <i class="icon-cloud"></i> <span ng-show="isForOneConsumer"><strong class="text-primary">{{consumer | uppercase}}</strong>应用依赖<strong class="text-primary">{{provider | uppercase}}</strong>应用的服务列表</span><span ng-show="!isForOneConsumer"><strong class="text-primary">{{application | uppercase}}</strong>提供服务列表</span>
+    </div>
+    <div ng-show="isForAllService" class="panel-heading">
+        <i class="icon-share"></i> 服务列表
     </div>
     <div class="panel-body">
         <div class="row">

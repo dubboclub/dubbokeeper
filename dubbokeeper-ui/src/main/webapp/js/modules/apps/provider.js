@@ -182,7 +182,7 @@ serviceProvider.controller("serviceReadme",function($scope,$http,$routeParams,$q
     $menu.switchMenu("admin/apps");
     $breadcrumb.pushCrumb($scope.serviceKey,"查看服务"+$scope.serviceKey+"调用文档","serviceReadme");
 	(function(){
-        $httpWrapper.post({
+        $httpWrapper.get({
             url:"templates/apps/service-readme.md",
             success:function(mdText){
             	$httpWrapper.post({

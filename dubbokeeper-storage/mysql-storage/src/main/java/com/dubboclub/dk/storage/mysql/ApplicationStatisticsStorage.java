@@ -1,6 +1,7 @@
 package com.dubboclub.dk.storage.mysql;
 
 import com.alibaba.dubbo.common.utils.ConfigUtils;
+import com.dubboclub.dk.storage.AbstractApplicationStatisticsStorage;
 import com.dubboclub.dk.storage.model.ApplicationInfo;
 import com.dubboclub.dk.storage.model.Statistics;
 import com.dubboclub.dk.storage.mysql.mapper.ApplicationMapper;
@@ -16,6 +17,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -28,7 +30,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @fix:
  * @description: 描述功能
  */
-public class ApplicationStatisticsStorage  extends Thread{
+public class ApplicationStatisticsStorage  extends AbstractApplicationStatisticsStorage{
 
     private static final String APPLICATION_TEMPLATE="CREATE TABLE `statistics_{}` (\n" +
             "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
@@ -61,37 +63,19 @@ public class ApplicationStatisticsStorage  extends Thread{
 
     private ApplicationMapper applicationMapper;
 
-    private ConcurrentLinkedQueue<Statistics> statisticsCollection = new ConcurrentLinkedQueue<Statistics>();
-
-    private String application;
-
-    private volatile long maxElapsed;
-
-    private volatile long maxConcurrent;
-
-    private volatile int maxFault;
-
-    private volatile int maxSuccess;
-
-    private volatile boolean isWriting=false;
-
     private int type;
-
-    private static final int WRITE_INTERVAL= Integer.parseInt(ConfigUtils.getProperty("mysql.commit.interval", "100"));
-
 
     public ApplicationStatisticsStorage(ApplicationMapper applicationMapper,StatisticsMapper statisticsMapper,DataSource dataSource,TransactionTemplate transactionTemplate,String application,int type){
         this(applicationMapper,statisticsMapper,dataSource,transactionTemplate,application,type,false);
     }
 
     public ApplicationStatisticsStorage(ApplicationMapper applicationMapper,StatisticsMapper statisticsMapper,DataSource dataSource,TransactionTemplate transactionTemplate,String application,int type,boolean needCreateTable){
+        super(application);
         this.application = application;
         this.statisticsMapper = statisticsMapper;
         this.dataSource = dataSource;
         this.transactionTemplate = transactionTemplate;
         this.applicationMapper = applicationMapper;
-        this.setName(application+"_statisticsWriter");
-        this.setDaemon(true);
         if(needCreateTable){
             ApplicationInfo applicationInfo = new ApplicationInfo();
             applicationInfo.setApplicationName(application);
@@ -117,56 +101,11 @@ public class ApplicationStatisticsStorage  extends Thread{
         maxSuccess=success==null?0:success;
     }
 
-    public void addStatistics(Statistics statistics){
-        while(isWriting){
-            //waiting write finished
-        }
-        if(WRITE_INTERVAL<=0){
-            statisticsMapper.addOne(application,statistics);
-        }else{
-            statisticsCollection.add(statistics);
-        }
-        if(maxFault<statistics.getFailureCount()){
-            maxFault=statistics.getFailureCount();
-        }
-        if(maxSuccess<statistics.getSuccessCount()){
-            maxSuccess=statistics.getSuccessCount();
-        }
-        if(maxConcurrent<statistics.getConcurrent()){
-            maxConcurrent = statistics.getConcurrent();
-        }
-        if(maxElapsed<statistics.getElapsed()){
-            maxElapsed = statistics.getElapsed();
-        }
-        if((type==0&&statistics.getType()== Statistics.ApplicationType.PROVIDER)||(type==1&&statistics.getType()== Statistics.ApplicationType.CONSUMER)){
-            synchronized (this){
-                if(type!=2){
-                    applicationMapper.updateAppType(application,2);
-                    type=2;
-                }
-            }
-        }
-    }
-
-
     @Override
-    public void run() {
-        while(true){
-            isWriting=true;
-            List<Statistics> statisticsList = new ArrayList<Statistics>(statisticsCollection);
-            if(statisticsList.size()>0){
-                if(batchInsert(statisticsList)){
-                    statisticsCollection.clear();
-                }
-            }
-            isWriting=false;
-            try {
-                Thread.sleep(WRITE_INTERVAL);
-            } catch (InterruptedException e) {
-                //do nothing
-            }
-        }
+    protected void batchAddStatistics(List<Statistics> statisticsList) {
+        batchInsert(statisticsList);
     }
+
 
     public boolean batchInsert(final List<Statistics> statisticsList){
         return transactionTemplate.execute(new TransactionCallback<Boolean>() {
@@ -210,26 +149,6 @@ public class ApplicationStatisticsStorage  extends Thread{
         });
     }
 
-
-    public int getMaxSuccess() {
-        return maxSuccess;
-    }
-
-    public int getMaxFault() {
-        return maxFault;
-    }
-
-    public long getMaxConcurrent() {
-        return maxConcurrent;
-    }
-
-    public long getMaxElapsed() {
-        return maxElapsed;
-    }
-
-    public String getApplication() {
-        return application;
-    }
 
     public int getType() {
         return type;

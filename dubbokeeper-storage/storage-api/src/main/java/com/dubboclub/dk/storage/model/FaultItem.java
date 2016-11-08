@@ -5,13 +5,13 @@ package com.dubboclub.dk.storage.model;
  */
 public class FaultItem extends  BaseItem{
 
-    private int fault;
+    private Integer fault;
 
-    public int getFault() {
+    public Integer getFault() {
         return fault;
     }
 
-    public void setFault(int fault) {
+    public void setFault(Integer fault) {
         this.fault = fault;
     }
 }

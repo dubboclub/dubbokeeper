@@ -9,7 +9,7 @@ public class Usage implements Serializable {
     
     private String remoteAddress;
     
-    private long count;
+    private Long count;
 
     public String getRemoteAddress() {
         return remoteAddress;
@@ -19,11 +19,11 @@ public class Usage implements Serializable {
         this.remoteAddress = remoteAddress;
     }
 
-    public long getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(long count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 }

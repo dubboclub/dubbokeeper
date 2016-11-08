@@ -6,44 +6,44 @@ import java.io.Serializable;
  * Created by bieber on 2015/11/17.
  */
 public abstract class BaseInfo implements Serializable {
-    private long maxElapsed;
+    private Long maxElapsed;
 
 
-    private long maxConcurrent;
+    private Long maxConcurrent;
 
-    private int maxFault;
+    private Integer maxFault;
 
-    private int maxSuccess;
+    private Integer maxSuccess;
 
-    public long getMaxElapsed() {
+    public Long getMaxElapsed() {
         return maxElapsed;
     }
 
-    public void setMaxElapsed(long maxElapsed) {
+    public void setMaxElapsed(Long maxElapsed) {
         this.maxElapsed = maxElapsed;
     }
 
-    public long getMaxConcurrent() {
+    public Long getMaxConcurrent() {
         return maxConcurrent;
     }
 
-    public void setMaxConcurrent(long maxConcurrent) {
+    public void setMaxConcurrent(Long maxConcurrent) {
         this.maxConcurrent = maxConcurrent;
     }
 
-    public int getMaxFault() {
+    public Integer getMaxFault() {
         return maxFault;
     }
 
-    public void setMaxFault(int maxFault) {
+    public void setMaxFault(Integer maxFault) {
         this.maxFault = maxFault;
     }
 
-    public int getMaxSuccess() {
+    public Integer getMaxSuccess() {
         return maxSuccess;
     }
 
-    public void setMaxSuccess(int maxSuccess) {
+    public void setMaxSuccess(Integer maxSuccess) {
         this.maxSuccess = maxSuccess;
     }
 }

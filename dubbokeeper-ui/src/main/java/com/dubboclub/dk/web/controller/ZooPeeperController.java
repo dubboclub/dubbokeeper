@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by bieber on 2015/9/24.
@@ -29,7 +30,7 @@ import java.util.*;
 @RequestMapping("/peeper")
 public class ZooPeeperController implements InitializingBean{
 
-    private static final Map<String,ZooKeeper> ZK_CLIENT_MAP = new HashMap<String, ZooKeeper>();
+    private static final ConcurrentHashMap<String,ZooKeeper> ZK_CLIENT_MAP = new ConcurrentHashMap<String, ZooKeeper>();
     
     private static final Logger logger = LoggerFactory.getLogger(ZooPeeperController.class);
 
@@ -97,6 +98,14 @@ public class ZooPeeperController implements InitializingBean{
         public void process(WatchedEvent watchedEvent) {
             if(watchedEvent.getState()== Event.KeeperState.Expired||watchedEvent.getState()==Event.KeeperState.Disconnected){
                 try {
+                    ZooKeeper zooKeeper = ZK_CLIENT_MAP.get(host);
+                    if(zooKeeper!=null){
+                        try {
+                            zooKeeper.close();
+                        } catch (InterruptedException e) {
+                            //do nothing
+                        }
+                    }
                     ZK_CLIENT_MAP.put(host,new ZooKeeper(host,Integer.parseInt(ConfigUtils.getProperty("spy.zookeeper.session.timeout","60000")),this));
                 } catch (IOException e) {
                     logger.error("failed to reconnect zookeeper server",e);

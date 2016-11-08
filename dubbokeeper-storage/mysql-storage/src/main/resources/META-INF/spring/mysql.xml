@@ -13,9 +13,27 @@
         <property name="maxActive" value="${dubbo.monitor.mysql.pool.max}"/>
         <property name="minIdle" value="${dubbo.monitor.mysql.pool.min}"/>
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="validationQuery" value="SELECT 1"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="600"></property>
+        <property name="minEvictableIdleTimeMillis" value="1200"></property>
+        <!-- 超时自动收回 -->
+        <property name="removeAbandoned" value="true"></property>
+        <!--
+                   超时时间(以秒数为单位)设置超时时间有一个要注意的地方，
+                   超时时间=现在的时间-程序中创建Connection的时间，如果
+                   maxActive比较大，比如超过100，那么removeAbandonedTimeout
+                   可以设置长一点比如180， 也就是三分钟无响应的连接进行回收，
+                   当然应用的不同设置长度也不同。
+        -->
+        <property name="removeAbandonedTimeout" value="180"></property>
+        <!-- 在自动回收超时连接的时候打印连接的超时错误 -->
+        <property name="logAbandoned" value="true"></property>
     </bean>
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="basicDataSource" />
+        <property name="dataSource" ref="basicDataSource"/>
         <property name="configLocation" value="META-INF/mybatis/config.xml"/>
         <property name="mapperLocations" value="classpath*:mapper/*Mapper.xml"/>
     </bean>
@@ -24,17 +42,21 @@
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
-    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <bean id="dataSourceTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="basicDataSource"/>
     </bean>
 
-    <bean class="org.springframework.transaction.support.TransactionTemplate" id="transactionTemplate">
+    <bean class="org.springframework.transaction.support.TransactionTemplate"
+          id="transactionTemplate">
         <property name="transactionManager" ref="dataSourceTransactionManager"/>
     </bean>
 
-    <bean class="com.dubboclub.dk.storage.mysql.MysqlStatisticsStorage" id="mysqlStatisticsStorage" autowire="byType">
+    <bean class="com.dubboclub.dk.storage.mysql.MysqlStatisticsStorage" id="mysqlStatisticsStorage"
+          autowire="byType">
     </bean>
 
-    <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="mysqlStatisticsStorage"/>
+    <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage"
+                   ref="mysqlStatisticsStorage"/>
 
 </beans>

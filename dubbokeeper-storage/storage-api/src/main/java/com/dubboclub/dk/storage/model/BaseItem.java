@@ -11,7 +11,7 @@ public class BaseItem implements Serializable{
 
     private String service;
 
-    private long timestamp;
+    private Long timestamp;
 
     private String remoteType;
 
@@ -39,11 +39,11 @@ public class BaseItem implements Serializable{
         this.service = service;
     }
 
-    public long getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 }

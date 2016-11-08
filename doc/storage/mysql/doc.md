@@ -18,10 +18,13 @@ dubbo.protocol.name=dubbo
 #监控数据收集协议端口
 dubbo.protocol.port=20884
 
+
 #被监控端同步监控数据周期时间，可不配置，默认是一分钟同步一次
 monitor.collect.interval=100
 #use netty4
 dubbo.provider.transporter=netty4
+#监控数据持久化周期,默认是一分钟,单位是秒
+monitor.write.interval=6000
 
 #mysql相关信息
 #mysql数据库地址
@@ -34,7 +37,5 @@ dubbo.monitor.mysql.password=root
 dubbo.monitor.mysql.pool.max=10
 #mysql数据库链接池最小连接数
 dubbo.monitor.mysql.pool.min=10
-#间隔多久进行一次收集数据的提交
-mysql.commit.interval=100
 ```
 

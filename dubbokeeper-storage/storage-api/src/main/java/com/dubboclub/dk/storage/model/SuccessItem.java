@@ -5,13 +5,13 @@ package com.dubboclub.dk.storage.model;
  */
 public class SuccessItem extends BaseItem {
 
-    private int success;
+    private Integer success;
 
-    public int getSuccess() {
+    public Integer getSuccess() {
         return success;
     }
 
-    public void setSuccess(int success) {
+    public void setSuccess(Integer success) {
         this.success = success;
     }
 }

@@ -3,6 +3,9 @@ apps.config(function($routeProvider){
     $routeProvider.when("/admin/apps",{
         templateUrl:"templates/apps/application-table.html",
         controller:"appTable"
+    }).when("/admin/services", {
+        templateUrl:"templates/apps/provide-details.html",
+        controller:"serviceTable"
     }).when("/admin/:application/nodes",{
         templateUrl:"templates/apps/node-details.html",
         controller:"nodesDetail"
@@ -273,6 +276,51 @@ apps.controller("appTable",function($scope,$httpWrapper,$queryFilter,$breadcrumb
             return ;
         }
         $scope.applications=$queryFilter($scope.originData,$scope.query);
+    }
+});
+
+apps.controller("serviceTable",function($scope,$httpWrapper,$routeParams,$queryFilter,$breadcrumb,$menu){
+    $menu.switchMenu("admin/services");
+    $scope.details=[];
+    $scope.isEmpty=false;
+    $scope.isForAllService=true;
+    $breadcrumb.pushCrumb("服务列表","查看服务列表","admin/services");
+    $httpWrapper.post({
+        url:"app/services.htm",
+        success:function(data){
+            $scope.details=data;
+            if(!data||data.length<=0){
+                $scope.isEmpty=true;
+            }
+            $scope.originData=data;
+        }
+    });
+    $scope.currentParameters="";
+    $scope.viewParameters=function(detail){
+        $scope.currentParameters=detail.parameters;
+    }
+
+    $scope.dynamicOptios=[{
+        val:true,
+        text:"动态"
+    },{
+        val:false,
+        text:"静态"
+    }];
+    $scope.enabledOptios=[{
+        val:true,
+        text:"已启用"
+    },{
+        val:false,
+        text:"已禁用"
+    }];
+    $scope.query={};
+    $scope.filter=function(){
+        var filterResult=[];
+        if($scope.isEmpty){
+            return ;
+        }
+        $scope.details=$queryFilter($scope.originData,$scope.query);
     }
 });
 
