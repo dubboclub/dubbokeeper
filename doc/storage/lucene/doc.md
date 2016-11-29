@@ -1,6 +1,6 @@
 ```xml
 #dubbo应用名称
-dubbo.application.name=mysql-monitor
+dubbo.application.name=lucene-monitor
 #dubbo应用所有者
 dubbo.application.owner=bieber
 #dubbo的注册中心地址，保存和被监控应用一个注册中心
