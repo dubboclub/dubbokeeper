@@ -12,7 +12,7 @@
     <groupId>com.dubboclub.dk</groupId>
     <artifactId>mongodb-storage</artifactId>
     <properties>
-        <mongodb.version>3.0.4</mongodb.version>
+        <mongodb.version>2.14.3</mongodb.version>
         <spring.data.mongodb.version>1.8.1.RELEASE</spring.data.mongodb.version>
     </properties>
 
