@@ -1,18 +1,20 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-    <dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}"/>
+	<dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
 
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <value>
-                classpath*:/*.properties
-            </value>
-        </property>
-    </bean>
+	<dubbo:provider transporter="${dubbo.provider.transporter}" />
+	<dubbo:protocol transporter="${dubbo.provider.transporter}" port="${dubbo.protocol.port}" />
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<value>
+				classpath*:/*.properties
+			</value>
+		</property>
+	</bean>
 
 </beans>

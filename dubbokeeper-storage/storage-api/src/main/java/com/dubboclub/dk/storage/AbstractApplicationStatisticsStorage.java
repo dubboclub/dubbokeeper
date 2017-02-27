@@ -43,7 +43,7 @@ public abstract class AbstractApplicationStatisticsStorage implements EventHandl
     protected volatile int maxSuccess;
 
     //默认是1分钟持久化一次
-    private static final int WRITE_INTERVAL= Integer.parseInt(ConfigUtils.getProperty("monitor.write.interval","6000"));
+    private static final int WRITE_INTERVAL= Integer.parseInt(ConfigUtils.getProperty("monitor.write.interval","60"));
 
     private long lastWrite=0;
 
