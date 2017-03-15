@@ -20,7 +20,7 @@ dubbokeeper是一个开源版本基于spring mvc开发的社区版dubboadmin，�
 ### zookeeper信息查看
 > 通过配置zookeeper地址，可以查看多个zookeeper中的节点信息
 
-##1.0.1版本变动内容
+## 1.0.1版本变动内容
 
 dubbokeeper在1.0.1版本对监控数据存储模块抽离出来，做为单独的应用部署，而不是和1.0.0版本和前端展示集成在一个应用里面
 
