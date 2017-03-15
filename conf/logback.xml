@@ -59,21 +59,16 @@
     -->
 
     <!--dubbo-->
-    <logger
-        name="com.alibaba.dubbo"
-        level="DEBUG">
-        <appender-ref ref="dubboRolling" />
+    <logger name="com.alibaba.dubbo" level="DEBUG">
+        <appender-ref ref="dubboRolling"/>
     </logger>
-    <logger
-        name="Application-Writer" level="INFO">
-        <appender-ref ref="writeRolling" />
+    <logger name="Application-Writer" level="INFO">
+        <appender-ref ref="writeRolling"/>
     </logger>
 
     <!--dubbo-->
-    <logger
-        name="com.dubboclub"
-        level="DEBUG">
-        <appender-ref ref="dkRolling" />
+    <logger name="com.dubboclub" level="DEBUG">
+        <appender-ref ref="dkRolling"/>
     </logger>
 
     <!--
