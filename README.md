@@ -1,21 +1,23 @@
 # Dubbokeeper
-##Dubbokeeper是什么
+
+## Dubbokeeper是什么
 dubbokeeper是一个开源版本基于spring mvc开发的社区版dubboadmin，同时修复了官方admin存在的一些问题，以及添加了一下必要的功能
 例如服务统计，依赖关系等图表展示功能，当前dubbokeeper还属于开发阶段。最终dubbokeeper会集成服务管理以及服务监控一体的DUBBO服务管理系统
-##Dubbokeeper包含哪些功能
-###应用管理
+
+## Dubbokeeper包含哪些功能
+### 应用管理
 > 包含当前系统所有子应用信息列表，以及各个引用服务引用消费列表信息，同时可以对某个应用的服务进行上下线操作，权重调整等，同时可以查看应用部署实体信息列表。目的是实现服务的可管理
 
-###动态配置
+### 动态配置
 > 这是利用dubbo基于注册中心来管理服务实现对服务的参数在服务运行状态进行调整，比如对服务的超时时间调整，对服务的mock以及可以添加自定义参数的调整等，目的是服务的可配置。
 
-###统计信息
+### 统计信息
 > 除了对服务的可管理，可配置。同时通过图表的方式对服务相关信息进行统计，例如对整体系统的应用暴露，消费服务统计信息，应用依赖关系图信息等
 
-###Dubbo服务监控
+### Dubbo服务监控
 > 通过扩展dubbo提供的MonitorService接口来实现对服务的监控，由于官方版本的监控功能比较局限，所以将通过收集各方意见重新开发一套监控系统，从而可以实时对服务可控。
 
-###zookeeper信息查看
+### zookeeper信息查看
 > 通过配置zookeeper地址，可以查看多个zookeeper中的节点信息
 
 ##1.0.1版本变动内容
@@ -28,20 +30,20 @@ dubbokeeper在1.0.1版本对监控数据存储模块抽离出来，做为单独�
 
 所以1.0.1以后的版本，对dubbokeeper的部署将包含两部分，一部分是监控数据存储端以及另一部分是监控数据展示的部署
 
-##规划中的功能
+## 规划中的功能
 
-###服务调用Trace
+### 服务调用Trace
 > 将基于dubbo的框架可扩展性，对服务的调用过程进行跟踪，并且汇总分析，通过形象的方式呈现服务调用过程，从而帮助对服务问题进行定位。具体将参考谷歌的[Dapper](https://github.com/sdcuike/DistributedTracingSystem/blob/master/dapper-2010-1.pdf
 )。
-###Zookeeper
+### Zookeeper
 > 基于zookeeper的四字命令完成对zookeeper的基本监控
 
-##部署过程：
+## 部署过程：
 > 1、下载源码
 
 `git clone https://github.com/dubboclub/dubbokeeper.git `
 
->2、编译打包
+> 2、编译打包
 
 由于监控数据的存储和展示显示进行了分离，那么打包有所变动。在下载源码的根目录会发现install-xxx.bat(sh),这个可以根据你想要的不同存储执行对应的脚本。
 
@@ -50,7 +52,7 @@ dubbokeeper在1.0.1版本对监控数据存储模块抽离出来，做为单独�
 其中`xxx-dubbokeeper-ui`下会有一个war包，将该war包部署到tomcat或者jetty里面（或者其他servlet容器），那么就部署好了监控展示应用了
 
 
->3、监控数据暂时端调整配置
+> 3、监控数据暂时端调整配置
 
 对上面的war包解压出来后对其中`WEB-INF/classes/dubbo.properties`文件中的配置项进行调整。
 
@@ -79,7 +81,7 @@ monitor.collect.interval=60000
 monitor.log.home=/usr/dev/op_disk/monitor-log
 ```
 
->4、监控数据存储端配置调整以及启动
+> 4、监控数据存储端配置调整以及启动
 
 通过上面编译后会得到`xxx-dubbokeeper-server`目录，在改名了的`xxx-server`下面包含三个子目录`bin`,`conf`以及`lib`。
 
