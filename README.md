@@ -96,6 +96,8 @@ monitor.log.home=/usr/dev/op_disk/monitor-log
 
 [mysql存储配置介绍](doc/storage/mysql/doc.md)
 
+[mongodb存储配置介绍](doc/storage/mongodb/doc.md)
+
 
 
 按照上面对应存储配置完毕之后，执行`start-xx.sh(bat)`，便启动了dk的存储

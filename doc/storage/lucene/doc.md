@@ -4,7 +4,7 @@ dubbo.application.name=lucene-monitor
 #dubbo应用所有者
 dubbo.application.owner=bieber
 #dubbo的注册中心地址，保存和被监控应用一个注册中心
-dubbo.registry.address=zookeeper://10.59.32.145:2181
+dubbo.registry.address=zookeeper://localhost:2181
 #监控数据收集协议
 dubbo.protocol.name=dubbo
 #监控数据收集协议端口
