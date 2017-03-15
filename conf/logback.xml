@@ -19,6 +19,7 @@
             <immediateFlush>true</immediateFlush>
         </encoder>
     </appender>
+
     <appender name="dkRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/dubbokeeper/DubboKeeper.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -33,6 +34,7 @@
             <immediateFlush>true</immediateFlush>
         </encoder>
     </appender>
+
     <appender name="writeRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/dubbokeeper/Monitor-writer.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -47,23 +49,31 @@
             <immediateFlush>true</immediateFlush>
         </encoder>
     </appender>
+
+    <!--
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    -->
+
     <!--dubbo-->
-    <logger
-            name="com.alibaba.dubbo"
-            level="DEBUG">
-        <appender-ref ref="dubboRolling" />
+    <logger name="com.alibaba.dubbo" level="DEBUG">
+        <appender-ref ref="dubboRolling"/>
     </logger>
-    <logger
-            name="Application-Writer" level="INFO">
-        <appender-ref ref="writeRolling" />
+    <logger name="Application-Writer" level="INFO">
+        <appender-ref ref="writeRolling"/>
     </logger>
+
     <!--dubbo-->
-    <logger
-            name="com.dubboclub"
-            level="DEBUG">
-        <appender-ref ref="dkRolling" />
+    <logger name="com.dubboclub" level="DEBUG">
+        <appender-ref ref="dkRolling"/>
     </logger>
-    <!--<root level="DEBUG">
-             <appender-ref ref="STDOUT" />
-   </root>-->
+
+    <!--
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+    -->
 </configuration>
