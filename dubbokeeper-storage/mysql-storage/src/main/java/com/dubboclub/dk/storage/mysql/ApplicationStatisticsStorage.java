@@ -75,8 +75,12 @@ public class ApplicationStatisticsStorage  extends AbstractApplicationStatistics
             ApplicationInfo applicationInfo = new ApplicationInfo();
             applicationInfo.setApplicationName(application);
             applicationInfo.setApplicationType(type);
-            this.applicationMapper.addApplication(applicationInfo);
-            createNewAppTable(application);
+            try {
+                this.applicationMapper.addApplication(applicationInfo);
+                createNewAppTable(application);
+            } catch(DuplicateKeyException e) {
+                e.printStackTrace();
+            }
         }
         init();
         this.type=type;
