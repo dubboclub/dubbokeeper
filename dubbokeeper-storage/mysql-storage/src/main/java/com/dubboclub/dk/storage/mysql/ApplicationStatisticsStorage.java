@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.List;
 import javax.sql.DataSource;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
