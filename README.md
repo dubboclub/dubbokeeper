@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/dubboclub/dubbokeeper.svg?branch=master)](https://travis-ci.org/dubboclub/dubbokeeper)
+[![Latest Version](http://img.shields.io/badge/latest-1.0.0-brightgreen.svg)](https://github.com/dubboclub/dubbokeeper/releases/tag/dubbokeeper-1.0.0)
+[![License](http://img.shields.io/badge/license-apache%202-brightgreen.svg)](https://github.com/dubboclub/dubbokeeper/blob/master/LICENSE)
+
 # Dubbokeeper
 
 ## Dubbokeeper是什么
