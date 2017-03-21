@@ -4,6 +4,7 @@ import com.dubboclub.dk.storage.model.ApplicationInfo;
 import com.dubboclub.dk.storage.mysql.ApplicationStartUp;
 import com.dubboclub.dk.storage.mysql.DBTransactionTestCallback;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.support.TransactionCallback;
@@ -21,6 +22,7 @@ import java.sql.Statement;
  * @fix:
  * @description: 描述功能
  */
+@Ignore
 public class ApplicationMapperTest extends ApplicationStartUp {
 
 
