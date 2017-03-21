@@ -1,6 +1,7 @@
 package com.dubboclub.dk.web.controller;
 
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @fix:
  * @description: 描述功能
  */
+@Ignore
 public class IndexControllerTest extends SetUp{
 
     @Test

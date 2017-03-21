@@ -7,6 +7,8 @@ import com.dubboclub.dk.storage.model.StatisticsOverview;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @fix:
  * @description: 描述功能
  */
+@Ignore
 public class MysqlStatisticsStorageTest extends ApplicationStartUp {
 
     @Autowired
