@@ -59,15 +59,22 @@ appDependencies.directive("appDependencies",function(){
             var generateOptions = function(nodes,edges,clickEvent,clickEdge){
                 return  {
                     layout: {
-                        name: 'cose',
-                        padding: 10
+                        name: 'concentric',
+                        padding: 10,
+                        minNodeSpacing: 5,
+                        concentric: function( node ){
+                          return node.degree();
+                        },
+                        levelWidth: function( nodes ){
+                          return nodes.maxDegree() / 4;
+                        }
                     },
 
                     style: cytoscape.stylesheet()
                         .selector('node')
                         .css({
                             'shape': 'data(faveShape)',
-                            'width': '60',
+                            'width': '100',
                             'content': 'data(name)',
                             'text-valign': 'center',
                             'text-outline-width': 2,
@@ -83,10 +90,11 @@ appDependencies.directive("appDependencies",function(){
                         .selector('edge')
                         .css({
                             'opacity': 0.666,
-                            'width': '1',
+                            'width': '2',
+                            'curve-style': 'unbundled-bezier',
                             'target-arrow-shape': 'triangle',
                             'source-arrow-shape': 'circle',
-                            'line-stype':'dotted',
+                            'line-style':'dotted',
                             'line-color': 'data(faveColor)',
                             'source-arrow-color': 'data(faveColor)',
                             'target-arrow-color': 'data(faveColor)'
@@ -160,7 +168,7 @@ appDependencies.directive("appDependencies",function(){
                 if($scope.graph&&$scope.graph.nodes){
                     var nodes = [];
                     for(var i=0;i<$scope.graph.nodes.length;i++){
-                        var node = { data: { id: $scope.graph.nodes[i].name, name:  $scope.graph.nodes[i].name, weight: 65, faveColor:$scope.styles[$scope.graph.nodes[i].category].color, faveShape: $scope.styles[$scope.graph.nodes[i].category].faveShape } }
+                        var node = { data: { id: $scope.graph.nodes[i].name, category: $scope.graph.nodes[i].category, name:  $scope.graph.nodes[i].name, weight: 65, faveColor:$scope.styles[$scope.graph.nodes[i].category].color, faveShape: $scope.styles[$scope.graph.nodes[i].category].faveShape } }
                         nodes.push(node);
                     }
                     var edges=[];
