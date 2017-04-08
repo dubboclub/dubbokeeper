@@ -56,7 +56,7 @@
           autowire="byType">
     </bean>
 
-    <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage"
+    <dubbo:service filter="dst" interface="com.dubboclub.dk.storage.StatisticsStorage"
                    ref="mysqlStatisticsStorage"/>
 
 </beans>
