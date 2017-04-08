@@ -16,6 +16,9 @@
         <module>dubbokeeper-ui</module>
         <module>dubbokeeper-storage</module>
         <module>dubbokeeper-server</module>
+        <module>dubbokeeper-collector</module>
+        <module>dubbokeeper-tracing-api</module>
+        <module>dubbokeeper-tracing-client</module>
     </modules>
 
     <properties>
@@ -52,6 +55,7 @@
         <commons-dbutils.version>1.6</commons-dbutils.version>
         <spring-data-mongodb.version>1.8.1.RELEASE</spring-data-mongodb.version>
         <lucene-core.version>5.3.0</lucene-core.version>
+        <traceing.api.version>0.0.6</traceing.api.version>
     </properties>
 
     <dependencyManagement>
@@ -67,23 +71,18 @@
                 <artifactId>netty4</artifactId>
                 <version>${dubbo.plus.netty4.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.dubboclub</groupId>
+                <artifactId>tracing-api</artifactId>
+                <version>${traceing.api.version}</version>
+            </dependency>
 
             <!--spring-->
-            <!--<dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring_version}</version>
-            </dependency>-->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>${spring_version}</version>
             </dependency>
-            <!--<dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context-support</artifactId>
-                <version>${spring_version}</version>
-            </dependency>-->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
@@ -104,11 +103,6 @@
                 <artifactId>spring-jdbc</artifactId>
                 <version>${spring_version}</version>
             </dependency>
-            <!--<dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-tx</artifactId>
-                <version>${spring_version}</version>
-            </dependency>-->
 
             <!--commons-->
             <dependency>
@@ -294,7 +288,6 @@
                 <version>${spring_version}</version>
                 <scope>test</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
