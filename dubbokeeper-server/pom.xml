@@ -48,7 +48,7 @@
             <artifactId>spring-context</artifactId>
         </dependency>
 
-        <!-- nettry -->
+        <!-- netty -->
         <dependency>
             <groupId>net.dubboclub</groupId>
             <artifactId>netty4</artifactId>

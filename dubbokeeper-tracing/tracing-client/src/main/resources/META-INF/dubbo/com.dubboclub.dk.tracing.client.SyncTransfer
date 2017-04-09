@@ -1,1 +1,1 @@
-default=com.dubboclub.dk.tracing.client.DefaultSyncTransfer
+default=com.dubboclub.dk.tracing.client.support.DefaultSyncTransfer
