@@ -28,6 +28,12 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.dubboclub.dk</groupId>
+            <artifactId>tracing-client</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
         <!--lucene-->
         <dependency>
             <groupId>org.apache.lucene</groupId>
