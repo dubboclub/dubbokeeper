@@ -6,9 +6,9 @@
 
     <timestamp key="byDate" datePattern="yyyyMMdd" />
 
-    <!-- web log -->
+    <!-- web dubbo log -->
     <appender name="dubboRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/DUBBO.log</file>
+        <file>${LOG_HOME}/ui/dubbo.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${DUBBO_LOG_HOME}/DUBBO-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
@@ -21,9 +21,10 @@
             <immediateFlush>true</immediateFlush>
         </encoder>
     </appender>
-    <!-- web log -->
+
+    <!-- web dubbokeeper log -->
     <appender name="dkRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/DubboKeeper.log</file>
+        <file>${LOG_HOME}/ui/dubboKeeper.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${DUBBO_LOG_HOME}/DubboKeeper-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
@@ -42,19 +43,18 @@
             <immediateFlush>true</immediateFlush>
         </encoder>
     </appender>
+
     <!--dubbo-->
-    <logger
-            name="com.alibaba.dubbo"
-            level="DEBUG">
+    <logger name="com.alibaba.dubbo" level="DEBUG">
         <appender-ref ref="dubboRolling" />
     </logger>
-    <!--dubbo-->
-    <logger
-            name="com.dubboclub"
-            level="DEBUG">
+
+    <!--dubbo club-->
+    <logger name="com.dubboclub" level="DEBUG">
         <appender-ref ref="dkRolling" />
     </logger>
+
     <root level="DEBUG">
-             <appender-ref ref="STDOUT" />
-   </root>
+        <appender-ref ref="STDOUT"/>
+    </root>
 </configuration>
