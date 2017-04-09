@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>com.dubboclub.dk</groupId>
-            <artifactId>dubbokeeper-tracing-client</artifactId>
+            <artifactId>tracing-client</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

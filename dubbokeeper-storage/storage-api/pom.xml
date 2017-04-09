@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>com.dubboclub.dk</groupId>
-            <artifactId>dubbokeeper-tracing-api</artifactId>
+            <artifactId>tracing-api</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <!-- dubbo -->

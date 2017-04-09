@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>dubbokeeper</artifactId>
+        <artifactId>dubbokeeper-tracing</artifactId>
         <groupId>com.dubboclub.dk</groupId>
         <version>1.0.1</version>
     </parent>
 
-    <artifactId>dubbokeeper-tracing-api</artifactId>
+    <artifactId>tracing-api</artifactId>
     <packaging>jar</packaging>
 </project>

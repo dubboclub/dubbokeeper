@@ -16,9 +16,7 @@
         <module>dubbokeeper-ui</module>
         <module>dubbokeeper-storage</module>
         <module>dubbokeeper-server</module>
-        <module>dubbokeeper-collector</module>
-        <module>dubbokeeper-tracing-api</module>
-        <module>dubbokeeper-tracing-client</module>
+        <module>dubbokeeper-tracing</module>
     </modules>
 
     <properties>
