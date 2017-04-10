@@ -44,6 +44,7 @@ public class Tracer {
         }
 
         setAttachment();
+        logger.debug("{}. add attachment...", isConsumerSide ? 4 : 8);
     }
 
     public void afterInvoke(boolean isConsumerSide) {
@@ -53,6 +54,7 @@ public class Tracer {
             addServerSendAnnotation();
         }
         send();
+        logger.debug("{}. send span...", isConsumerSide ? 12 : 10);
     }
 
     private void send() {
@@ -90,6 +92,7 @@ public class Tracer {
             span.setServiceName(getServiceName());
             span.setName(getMethodName());
             ContextHolder.setSpan(span);
+            logger.debug("2. create consumer side span: {}", span);
         }
         return ContextHolder.getSpan();
     }
@@ -108,6 +111,7 @@ public class Tracer {
             span.setServiceName(getServiceName());
             span.setName(getMethodName());
             ContextHolder.setSpan(span);
+            logger.debug("6. create provider side span: {}", span);
         }
 
         return ContextHolder.getSpan();
@@ -122,6 +126,7 @@ public class Tracer {
                 ContextHolder.setLocalSample(false);
             }
         }
+        logger.debug("1. create consumer side trace id: {}", ContextHolder.getTraceId());
         return ContextHolder.getTraceId();
     }
 
@@ -137,6 +142,7 @@ public class Tracer {
         } else {
             ContextHolder.setTraceId(traceId);
         }
+        logger.debug("5. create provider side trace id: {}", ContextHolder.getTraceId());
         return ContextHolder.getTraceId();
     }
 
@@ -167,18 +173,22 @@ public class Tracer {
     }
 
     private void addClientSendAnnotation() {
+        logger.debug("3. create client side annotation: {}", Annotation.CLIENT_SEND);
         addAnnotation(Annotation.CLIENT_SEND);
     }
 
     private void addClientReceiveAnnotation() {
+        logger.debug("11. create client side annotation: {}", Annotation.CLIENT_RECEIVE);
         addAnnotation(Annotation.CLIENT_RECEIVE);
     }
 
     private void addServerSendAnnotation() {
+        logger.debug("9. create server side annotation: {}", Annotation.SERVER_SEND);
         addAnnotation(Annotation.SERVER_SEND);
     }
 
     private void addServerReceiveAnnotation() {
+        logger.debug("7. create server side annotation: {}", Annotation.SERVER_RECEIVE);
         addAnnotation(Annotation.SERVER_RECEIVE);
     }
 
