@@ -10,7 +10,6 @@ import com.alibaba.dubbo.rpc.cluster.Cluster;
 import com.alibaba.dubbo.rpc.cluster.directory.StaticDirectory;
 import com.alibaba.dubbo.rpc.cluster.support.AvailableCluster;
 import com.dubboclub.dk.tracing.api.TracingCollector;
-
 import java.util.ArrayList;
 import java.util.List;
 

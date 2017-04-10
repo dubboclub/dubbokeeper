@@ -3,8 +3,6 @@ package com.dubboclub.dk.tracing.client.dubbo;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.extension.Activate;
-import com.alibaba.dubbo.common.logger.Logger;
-import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.dubbo.rpc.Filter;
 import com.alibaba.dubbo.rpc.Invocation;
 import com.alibaba.dubbo.rpc.Invoker;
@@ -14,6 +12,8 @@ import com.alibaba.dubbo.rpc.RpcException;
 import com.dubboclub.dk.tracing.api.TracingCollector;
 import com.dubboclub.dk.tracing.client.ContextHolder;
 import com.dubboclub.dk.tracing.client.Tracer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Zetas on 2016/7/8.

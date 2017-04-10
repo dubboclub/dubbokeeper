@@ -45,7 +45,7 @@ public class Sampler {
             metaData = new MetaData();
             metaData = samplerMap.putIfAbsent(serviceName, metaData);
         }
-        return metaData;
+        return metaData == null ? samplerMap.get(serviceName) : metaData;
     }
 
 
