@@ -57,7 +57,10 @@ public class DefaultCollectionService implements TracingCollector, InitializingB
         }
 
         public void run() {
-            logger.debug("add span: ", insertingSpanList);
+            logger.debug("add span, size: {}", insertingSpanList.size());
+            for (Span span : insertingSpanList) {
+                logger.debug("{}", span);
+            }
 //            storage.addSpan(insertingSpanList);
         }
     }

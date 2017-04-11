@@ -61,7 +61,7 @@ public class DefaultSyncTransfer implements SyncTransfer {
                         collector =tracingCollectorFactory.getTracingCollector();
                         inited=true;
                     }
-//                    collector.push(cacheList);
+                    collector.push(cacheList);
                     logger.debug("push cached span, size: {}", cacheList.size());
                     cacheList.clear();
                 } catch (InterruptedException e) {

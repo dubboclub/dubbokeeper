@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo
+	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- collector service -->
+    <dubbo:reference id="tracingCollector" client="netty4" filter="-dst" check="false"
+        interface="com.dubboclub.dk.tracing.api.TracingCollector" timeout="2000">
+    </dubbo:reference>
+
+    <bean id="defaultTracingCollectorFactory" class="com.dubboclub.dk.tracing.client.support.DefaultTracingCollectorFactory">
+        <property name="tracingCollector" ref="tracingCollector"/>
+    </bean>
+</beans>
