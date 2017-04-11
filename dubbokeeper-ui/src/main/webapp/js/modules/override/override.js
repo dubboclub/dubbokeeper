@@ -492,7 +492,7 @@ override.controller('providerOverrides',function($scope,$httpWrapper,$routeParam
             size:"small",
             callback:function(){
                 $httpWrapper.post({
-                    url:"/override/"+item.id+"/"+type+".htm",
+                    url:"override/"+item.id+"/"+type+".htm",
                     success:function(data){
                         if(data.result==ajaxResultStatu.SUCCESS){
                             $dialog.info({
