@@ -23,23 +23,51 @@
     <bean id="applicationDao" class="com.dubboclub.dk.storage.mongodb.dao.ApplicationDao">
         <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
-    <bean id="tracingSpanDao" class="com.dubboclub.dk.storage.mongodb.dao.TracingSpanDao">
-        <property name="mongoTemplate" ref="mongoTemplate"/>
-    </bean>
 
     <bean id="mongoDBStatisticsStorage" class="com.dubboclub.dk.storage.mongodb.MongoDBStatisticsStorage">
         <property name="applicationDao" ref="applicationDao"/>
         <property name="statisticsDao" ref="statisticsDao"/>
     </bean>
 
+    <bean id="tracingAnnotationDao" class="com.dubboclub.dk.storage.mongodb.dao.TracingAnnotationDao">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+    <bean id="tracingApplicationDao" class="com.dubboclub.dk.storage.mongodb.dao.TracingApplicationDao">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+    <bean id="tracingServiceDao" class="com.dubboclub.dk.storage.mongodb.dao.TracingServiceDao">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+    <bean id="tracingSpanDao" class="com.dubboclub.dk.storage.mongodb.dao.TracingSpanDao">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+    <bean id="tracingTraceDao" class="com.dubboclub.dk.storage.mongodb.dao.TracingTraceDao">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+    <bean id="annotationHandle" class="com.dubboclub.dk.storage.mongodb.handle.AnnotationHandle">
+        <property name="dao" ref="tracingAnnotationDao"/>
+    </bean>
+    <bean id="applicationHandle" class="com.dubboclub.dk.storage.mongodb.handle.ApplicationHandle">
+        <property name="dao" ref="tracingApplicationDao"/>
+    </bean>
+    <bean id="serviceHandle" class="com.dubboclub.dk.storage.mongodb.handle.ServiceHandle">
+        <property name="dao" ref="tracingServiceDao"/>
+    </bean>
     <bean id="spanHandle" class="com.dubboclub.dk.storage.mongodb.handle.SpanHandle">
         <property name="dao" ref="tracingSpanDao"/>
+    </bean>
+    <bean id="traceHandle" class="com.dubboclub.dk.storage.mongodb.handle.TraceHandle">
+        <property name="dao" ref="tracingTraceDao"/>
     </bean>
 
     <bean id="traceDataStorageMongo" class="com.dubboclub.dk.storage.mongodb.TraceDataStorageMongo">
         <property name="traceDataHandleList">
             <list>
+                <ref bean="annotationHandle"/>
+                <ref bean="applicationHandle"/>
+                <ref bean="serviceHandle"/>
                 <ref bean="spanHandle"/>
+                <ref bean="traceHandle"/>
             </list>
         </property>
     </bean>
