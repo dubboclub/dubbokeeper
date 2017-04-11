@@ -1,13 +1,14 @@
 package com.dubboclub.dk.storage.mongodb;
 
 
+import com.dubboclub.dk.storage.TraceDataStorage;
 import com.dubboclub.dk.tracing.api.Span;
 import java.util.List;
 
 /**
  * Created by Zetas on 2016/7/11.
  */
-public class TraceDataStorage implements com.dubboclub.dk.storage.TraceDataStorage {
+public class TraceDataStorageMongo implements TraceDataStorage {
 
     private List<TraceDataHandle> traceDataHandleList;
 

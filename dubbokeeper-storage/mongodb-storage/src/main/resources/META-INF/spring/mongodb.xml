@@ -1,33 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/data/mongo
         http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
-        <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="mongoDBStatisticsStorage" timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
+    <mongo:mongo id="mongo" host="${dubbo.monitor.mongodb.url}"
+        port="${dubbo.monitor.mongodb.port}"/>
+    <mongo:db-factory id="mongoDbFactory" dbname="${dubbo.monitor.mongodb.dbname}" mongo-ref="mongo"
+        username="${dubbo.monitor.mongodb.username}" password="${dubbo.monitor.mongodb.password}"/>
 
-        <mongo:mongo id="mongo"  host="${dubbo.monitor.mongodb.url}" port="${dubbo.monitor.mongodb.port}"/>
-        <mongo:db-factory id="mongoDbFactory" dbname="${dubbo.monitor.mongodb.dbname}" mongo-ref="mongo"
-                          username="${dubbo.monitor.mongodb.username}" password="${dubbo.monitor.mongodb.password}" />
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+    </bean>
+    <bean id="statisticsDao" class="com.dubboclub.dk.storage.mongodb.dao.StatisticsDao">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+    <bean id="applicationDao" class="com.dubboclub.dk.storage.mongodb.dao.ApplicationDao">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
+    <bean id="tracingSpanDao" class="com.dubboclub.dk.storage.mongodb.dao.TracingSpanDao">
+        <property name="mongoTemplate" ref="mongoTemplate"/>
+    </bean>
 
-        <bean id="statisticsDao" class="com.dubboclub.dk.storage.mongodb.dao.StatisticsDao">
-                <property name="mongoTemplate" ref="mongoTemplate"/>
-        </bean>
-        <bean id="applicationDao" class="com.dubboclub.dk.storage.mongodb.dao.ApplicationDao">
-                <property name="mongoTemplate" ref="mongoTemplate"/>
-        </bean>
+    <bean id="mongoDBStatisticsStorage" class="com.dubboclub.dk.storage.mongodb.MongoDBStatisticsStorage">
+        <property name="applicationDao" ref="applicationDao"/>
+        <property name="statisticsDao" ref="statisticsDao"/>
+    </bean>
 
-        <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-                <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
-        </bean>
-        <bean class="com.dubboclub.dk.storage.mongodb.MongoDBStatisticsStorage" id="mongoDBStatisticsStorage">
-                <property name="applicationDao" ref="applicationDao"  />
-                <property name="statisticsDao" ref="statisticsDao"  />
-        </bean>
+    <bean id="spanHandle" class="com.dubboclub.dk.storage.mongodb.handle.SpanHandle">
+        <property name="dao" ref="tracingSpanDao"/>
+    </bean>
 
+    <bean id="traceDataStorageMongo" class="com.dubboclub.dk.storage.mongodb.TraceDataStorageMongo">
+        <property name="traceDataHandleList">
+            <list>
+                <ref bean="spanHandle"/>
+            </list>
+        </property>
+    </bean>
+
+    <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage"
+        ref="mongoDBStatisticsStorage" timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
+
+    <dubbo:service interface="com.dubboclub.dk.storage.TraceDataStorage"
+        ref="traceDataStorageMongo" timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
 </beans>

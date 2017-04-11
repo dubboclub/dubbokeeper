@@ -61,8 +61,9 @@ public class DefaultSyncTransfer implements SyncTransfer {
                         collector =tracingCollectorFactory.getTracingCollector();
                         inited=true;
                     }
-                    collector.push(cacheList);
                     logger.debug("push cached span, size: {}", cacheList.size());
+
+                    collector.push(cacheList);
                     cacheList.clear();
                 } catch (InterruptedException e) {
                     logger.error("Dst-span-transfer-task-thread occur an error", e);

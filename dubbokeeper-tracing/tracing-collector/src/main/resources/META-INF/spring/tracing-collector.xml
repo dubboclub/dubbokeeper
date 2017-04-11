@@ -15,10 +15,13 @@
         <property name="threadPoolSize" value="${tracing.collector.storage.thread.size}"/>
     </bean>
 
-    <bean id="defaultCollectionService" class="com.dubboclub.dk.collector.support.DefaultCollectionService">
-        <constructor-arg name="configuration" ref="configuration"/>
-        <!--<property name="traceDataStorage" ref="traceDataStorage"/>-->
-    </bean>
 
     <dubbo:service interface="com.dubboclub.dk.tracing.api.TracingCollector" ref="defaultCollectionService"/>
+
+    <dubbo:reference id="traceDataStorage" interface="com.dubboclub.dk.storage.TraceDataStorage" check="false"/>
+
+    <bean id="defaultCollectionService" class="com.dubboclub.dk.collector.support.DefaultCollectionService">
+        <constructor-arg name="configuration" ref="configuration"/>
+        <property name="traceDataStorage" ref="traceDataStorage"/>
+    </bean>
 </beans>
