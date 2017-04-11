@@ -40,6 +40,18 @@
             </exclusions>
         </dependency>
 
+        <!-- rocket mq -->
+        <dependency>
+            <groupId>com.alibaba.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+        </dependency>
+
+        <!-- fast json -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
         <!-- log -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
