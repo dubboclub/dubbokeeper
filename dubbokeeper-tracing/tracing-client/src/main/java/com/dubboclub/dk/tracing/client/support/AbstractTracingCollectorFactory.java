@@ -32,6 +32,8 @@ public abstract class AbstractTracingCollectorFactory implements TracingCollecto
             url=url.setPath(TracingCollector.class.getName());
             url=url.addParameter(Constants.INTERFACE_KEY,TracingCollector.class.getName());
             url=url.addParameter(Constants.REFERENCE_FILTER_KEY,"-dst");
+            url=url.addParameter("registry.transporter","netty4");
+            url=url.addParameter("transporter","netty4");
             urls.add(url);
         }
         return createTracingCollector(urls);

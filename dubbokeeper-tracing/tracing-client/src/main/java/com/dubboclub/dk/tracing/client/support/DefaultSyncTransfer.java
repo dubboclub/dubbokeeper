@@ -1,11 +1,13 @@
 package com.dubboclub.dk.tracing.client.support;
 
+import com.alibaba.dubbo.common.extension.ExtensionLoader;
 import com.alibaba.dubbo.common.utils.ConfigUtils;
 import com.alibaba.dubbo.rpc.Protocol;
 import com.dubboclub.dk.tracing.api.Span;
 import com.dubboclub.dk.tracing.api.TracingCollector;
 import com.dubboclub.dk.tracing.client.DstConstants;
 import com.dubboclub.dk.tracing.client.SyncTransfer;
+import com.dubboclub.dk.tracing.client.TracingCollectorFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -53,10 +55,10 @@ public class DefaultSyncTransfer implements SyncTransfer {
                         continue;
                     }
                     if(!inited&&collector==null){
-//                        TracingCollectorFactory tracingCollectorFactory = ExtensionLoader
-//                                .getExtensionLoader(TracingCollectorFactory.class)
-//                                .getExtension(ConfigUtils.getProperty(DstConstants.TRACING_COLLECTOR, DstConstants.DEFAULT_COLLECTOR_TYPE));
-//                        collector =tracingCollectorFactory.getTracingCollector();
+                        TracingCollectorFactory tracingCollectorFactory = ExtensionLoader
+                                .getExtensionLoader(TracingCollectorFactory.class)
+                                .getExtension(ConfigUtils.getProperty(DstConstants.TRACING_COLLECTOR, DstConstants.DEFAULT_COLLECTOR_TYPE));
+                        collector =tracingCollectorFactory.getTracingCollector();
                         inited=true;
                     }
 //                    collector.push(cacheList);
