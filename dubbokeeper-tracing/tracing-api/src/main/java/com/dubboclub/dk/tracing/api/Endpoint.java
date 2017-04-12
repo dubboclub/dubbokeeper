@@ -6,6 +6,9 @@ import java.io.Serializable;
  * Created by Zetas on 2016/7/7.
  */
 public class Endpoint implements Serializable {
+
+    private static final long serialVersionUID = 6330697727522370307L;
+
     private String ip;
     private Integer port;
     private String applicationName;
@@ -37,9 +40,9 @@ public class Endpoint implements Serializable {
     @Override
     public String toString() {
         return "Endpoint{" +
-                "ip='" + ip + '\'' +
-                ", port=" + port +
-                ", applicationName='" + applicationName + '\'' +
-                '}';
+            "ip='" + ip + '\'' +
+            ", port=" + port +
+            ", applicationName='" + applicationName + '\'' +
+            '}';
     }
 }

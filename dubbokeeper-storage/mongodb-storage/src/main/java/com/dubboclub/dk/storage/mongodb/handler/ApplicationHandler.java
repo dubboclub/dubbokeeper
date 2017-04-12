@@ -1,7 +1,8 @@
-package com.dubboclub.dk.storage.mongodb.handle;
+package com.dubboclub.dk.storage.mongodb.handler;
 
 
-import com.dubboclub.dk.storage.mongodb.TraceDataHandle;
+import com.dubboclub.dk.storage.TraceDataHandler;
+import com.dubboclub.dk.storage.model.Application;
 import com.dubboclub.dk.storage.mongodb.dao.TracingApplicationDao;
 import com.dubboclub.dk.storage.mongodb.dto.TracingApplicationDto;
 import com.dubboclub.dk.tracing.api.Annotation;
@@ -13,7 +14,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,9 +21,9 @@ import org.springframework.beans.factory.InitializingBean;
 /**
  * Created by Zetas on 2016/7/11.
  */
-public class ApplicationHandle implements TraceDataHandle, InitializingBean {
+public class ApplicationHandler implements TraceDataHandler, InitializingBean {
 
-    private static Logger logger = LoggerFactory.getLogger(ApplicationHandle.class);
+    private static Logger logger = LoggerFactory.getLogger(ApplicationHandler.class);
 
     private static final ConcurrentMap<Integer, Boolean> applicationNameHashMap = new ConcurrentHashMap<Integer, Boolean>();
 
@@ -32,6 +32,7 @@ public class ApplicationHandle implements TraceDataHandle, InitializingBean {
     private BlockingQueue<String> queue;
 
     private class SyncLoadTask extends Thread {
+
         private SyncLoadTask() {
             setName("Dst-application-sync-load-task-thread");
         }
@@ -49,7 +50,7 @@ public class ApplicationHandle implements TraceDataHandle, InitializingBean {
         }
     }
 
-    public ApplicationHandle() {
+    public ApplicationHandler() {
         syncLoadApplicationThread = new SyncLoadTask();
         queue = new LinkedBlockingQueue<String>();
     }
@@ -97,11 +98,11 @@ public class ApplicationHandle implements TraceDataHandle, InitializingBean {
     }
 
     private void addApplication(String applicationName) {
-        TracingApplicationDto dto = new TracingApplicationDto();
-        dto.setApplicationId(applicationName.hashCode());
-        dto.setApplicationName(applicationName);
-        dto.setCreateTime(System.currentTimeMillis());
-        dao.add(dto);
+        Application application = new Application();
+        application.setId(applicationName.hashCode());
+        application.setName(applicationName);
+        application.setTimestamp(System.currentTimeMillis());
+        dao.add(application);
 
         applicationNameHashMap.put(applicationName.hashCode(), true);
     }

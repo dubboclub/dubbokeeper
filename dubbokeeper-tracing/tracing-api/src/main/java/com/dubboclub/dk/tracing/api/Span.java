@@ -8,9 +8,12 @@ import java.util.List;
  * Created by Zetas on 2016/7/7.
  */
 public class Span implements Serializable {
-    private String id;
-    private String parentId;
-    private String traceId;
+
+    private static final long serialVersionUID = -528732423985017988L;
+
+    private Long id;
+    private Long parentId;
+    private Long traceId;
     private String name;
     private String serviceName;
     private List<Annotation> annotationList;
@@ -29,27 +32,27 @@ public class Span implements Serializable {
         binaryAnnotationList.add(binaryAnnotation);
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(String parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 
-    public String getTraceId() {
+    public Long getTraceId() {
         return traceId;
     }
 
-    public void setTraceId(String traceId) {
+    public void setTraceId(Long traceId) {
         this.traceId = traceId;
     }
 
@@ -88,13 +91,13 @@ public class Span implements Serializable {
     @Override
     public String toString() {
         return "Span{" +
-                "id='" + id + '\'' +
-                ", parentId='" + parentId + '\'' +
-                ", traceId='" + traceId + '\'' +
-                ", name='" + name + '\'' +
-                ", serviceName='" + serviceName + '\'' +
-                ", annotationList=" + annotationList +
-                ", binaryAnnotationList=" + binaryAnnotationList +
-                '}';
+            "id=" + id +
+            ", parentId=" + parentId +
+            ", traceId=" + traceId +
+            ", name='" + name + '\'' +
+            ", serviceName='" + serviceName + '\'' +
+            ", annotationList=" + annotationList +
+            ", binaryAnnotationList=" + binaryAnnotationList +
+            '}';
     }
 }

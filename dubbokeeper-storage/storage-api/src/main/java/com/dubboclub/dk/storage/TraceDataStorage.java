@@ -8,5 +8,5 @@ import java.util.List;
  */
 public interface TraceDataStorage {
 
-    public void addSpan(List<Span> spanList);
+    void addSpan(List<Span> spanList);
 }

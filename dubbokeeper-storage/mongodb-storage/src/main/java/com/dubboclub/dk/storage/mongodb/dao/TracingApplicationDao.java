@@ -1,5 +1,6 @@
 package com.dubboclub.dk.storage.mongodb.dao;
 
+import com.dubboclub.dk.storage.model.Application;
 import com.dubboclub.dk.storage.mongodb.dto.TracingApplicationDto;
 import java.util.List;
 import org.slf4j.Logger;
@@ -23,17 +24,17 @@ public class TracingApplicationDao {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public TracingApplicationDto findOneByApplicationId(Integer applicationId) {
-        return mongoTemplate.findOne(new Query(Criteria.where("applicationId").is(applicationId)), TracingApplicationDto.class, APPLICATION_COLLECTIONS);
+    public Application findById(Integer id) {
+        return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), Application.class, APPLICATION_COLLECTIONS);
     }
 
     public List<TracingApplicationDto> findAll() {
         return mongoTemplate.findAll(TracingApplicationDto.class, APPLICATION_COLLECTIONS);
     }
 
-    public void add(TracingApplicationDto dto) {
-        if (findOneByApplicationId(dto.getApplicationId()) == null) {
-            mongoTemplate.save(dto, APPLICATION_COLLECTIONS);
+    public void add(Application application) {
+        if (findById(application.getId()) == null) {
+            mongoTemplate.save(application, APPLICATION_COLLECTIONS);
         }
     }
 }

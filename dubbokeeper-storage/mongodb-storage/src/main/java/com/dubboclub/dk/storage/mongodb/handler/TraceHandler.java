@@ -1,6 +1,6 @@
-package com.dubboclub.dk.storage.mongodb.handle;
+package com.dubboclub.dk.storage.mongodb.handler;
 
-import com.dubboclub.dk.storage.mongodb.TraceDataHandle;
+import com.dubboclub.dk.storage.TraceDataHandler;
 import com.dubboclub.dk.storage.mongodb.dao.TracingTraceDao;
 import com.dubboclub.dk.storage.mongodb.dto.TracingTraceDto;
 import com.dubboclub.dk.tracing.api.Annotation;
@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Zetas on 2016/7/11.
  */
-public class TraceHandle implements TraceDataHandle {
+public class TraceHandler implements TraceDataHandler {
 
-    private static Logger logger = LoggerFactory.getLogger(TraceHandle.class);
+    private static Logger logger = LoggerFactory.getLogger(TraceHandler.class);
 
     private TracingTraceDao dao;
 

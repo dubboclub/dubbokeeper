@@ -44,30 +44,30 @@
     <bean id="tracingTraceDao" class="com.dubboclub.dk.storage.mongodb.dao.TracingTraceDao">
         <property name="mongoTemplate" ref="mongoTemplate"/>
     </bean>
-    <bean id="annotationHandle" class="com.dubboclub.dk.storage.mongodb.handle.AnnotationHandle">
+    <bean id="annotationHandler" class="com.dubboclub.dk.storage.mongodb.handler.AnnotationHandler">
         <property name="dao" ref="tracingAnnotationDao"/>
     </bean>
-    <bean id="applicationHandle" class="com.dubboclub.dk.storage.mongodb.handle.ApplicationHandle">
+    <bean id="applicationHandler" class="com.dubboclub.dk.storage.mongodb.handler.ApplicationHandler">
         <property name="dao" ref="tracingApplicationDao"/>
     </bean>
-    <bean id="serviceHandle" class="com.dubboclub.dk.storage.mongodb.handle.ServiceHandle">
+    <bean id="serviceHandler" class="com.dubboclub.dk.storage.mongodb.handler.ServiceHandler">
         <property name="dao" ref="tracingServiceDao"/>
     </bean>
-    <bean id="spanHandle" class="com.dubboclub.dk.storage.mongodb.handle.SpanHandle">
+    <bean id="spanHandler" class="com.dubboclub.dk.storage.mongodb.handler.SpanHandler">
         <property name="dao" ref="tracingSpanDao"/>
     </bean>
-    <bean id="traceHandle" class="com.dubboclub.dk.storage.mongodb.handle.TraceHandle">
+    <bean id="traceHandler" class="com.dubboclub.dk.storage.mongodb.handler.TraceHandler">
         <property name="dao" ref="tracingTraceDao"/>
     </bean>
 
     <bean id="traceDataStorageMongo" class="com.dubboclub.dk.storage.mongodb.TraceDataStorageMongo">
-        <property name="traceDataHandleList">
+        <property name="traceDataHandlerList">
             <list>
-                <ref bean="annotationHandle"/>
-                <ref bean="applicationHandle"/>
-                <ref bean="serviceHandle"/>
-                <ref bean="spanHandle"/>
-                <ref bean="traceHandle"/>
+                <ref bean="annotationHandler"/>
+                <ref bean="applicationHandler"/>
+                <ref bean="serviceHandler"/>
+                <ref bean="spanHandler"/>
+                <ref bean="traceHandler"/>
             </list>
         </property>
     </bean>

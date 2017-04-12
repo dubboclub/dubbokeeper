@@ -6,6 +6,9 @@ import java.io.Serializable;
  * Created by Zetas on 2016/7/7.
  */
 public class BinaryAnnotation implements Serializable {
+
+    private static final long serialVersionUID = 6197179344911907748L;
+
     private String key;
     private String value;
     private String type;
@@ -55,11 +58,11 @@ public class BinaryAnnotation implements Serializable {
     @Override
     public String toString() {
         return "BinaryAnnotation{" +
-                "key='" + key + '\'' +
-                ", value='" + value + '\'' +
-                ", type='" + type + '\'' +
-                ", duration=" + duration +
-                ", host=" + host +
-                '}';
+            "key='" + key + '\'' +
+            ", value='" + value + '\'' +
+            ", type='" + type + '\'' +
+            ", duration=" + duration +
+            ", host=" + host +
+            '}';
     }
 }
