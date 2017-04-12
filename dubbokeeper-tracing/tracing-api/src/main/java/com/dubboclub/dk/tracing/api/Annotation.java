@@ -6,6 +6,9 @@ import java.io.Serializable;
  * Created by Zetas on 2016/7/7.
  */
 public class Annotation implements Serializable {
+
+    private static final long serialVersionUID = 8198107034302904447L;
+
     public static final String CLIENT_SEND = "cs";
     public static final String CLIENT_RECEIVE = "cr";
     public static final String SERVER_SEND = "ss";
@@ -16,9 +19,10 @@ public class Annotation implements Serializable {
     private Integer duration;
     private Endpoint host;
 
-    public Annotation(){
+    public Annotation() {
 
     }
+
     public Annotation(Long timestamp, String value, Endpoint host) {
         this.timestamp = timestamp;
         this.value = value;
@@ -60,10 +64,10 @@ public class Annotation implements Serializable {
     @Override
     public String toString() {
         return "Annotation{" +
-                "timestamp=" + timestamp +
-                ", value='" + value + '\'' +
-                ", duration=" + duration +
-                ", host=" + host +
-                '}';
+            "timestamp=" + timestamp +
+            ", value='" + value + '\'' +
+            ", duration=" + duration +
+            ", host=" + host +
+            '}';
     }
 }

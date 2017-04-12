@@ -1,18 +1,34 @@
 package com.dubboclub.dk.storage.model;
 
+import java.io.Serializable;
+
 /**
- * Created by zetas on 2016/7/16.
+ * Created by qct on 2017/4/12.
  */
-public class Annotation {
+public class Annotation implements Serializable {
+
+    private static final long serialVersionUID = 7914586656880862607L;
+
+    private Long id;
     private String key;
     private String value;
     private String ip;
     private Integer port;
-    private Long time;
+    private Long timestamp;
     private Integer duration;
-    private String spanId;
-    private String traceId;
+
+    private Long spanId;
+    private Long traceId;
+    private Integer serviceId;
     private String serviceName;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getKey() {
         return key;
@@ -46,12 +62,12 @@ public class Annotation {
         this.port = port;
     }
 
-    public Long getTime() {
-        return time;
+    public Long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTime(Long time) {
-        this.time = time;
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Integer getDuration() {
@@ -62,20 +78,28 @@ public class Annotation {
         this.duration = duration;
     }
 
-    public String getSpanId() {
+    public Long getSpanId() {
         return spanId;
     }
 
-    public void setSpanId(String spanId) {
+    public void setSpanId(Long spanId) {
         this.spanId = spanId;
     }
 
-    public String getTraceId() {
+    public Long getTraceId() {
         return traceId;
     }
 
-    public void setTraceId(String traceId) {
+    public void setTraceId(Long traceId) {
         this.traceId = traceId;
+    }
+
+    public Integer getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
     }
 
     public String getServiceName() {
@@ -84,5 +108,22 @@ public class Annotation {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    @Override
+    public String toString() {
+        return "Annotation{" +
+            "id=" + id +
+            ", key='" + key + '\'' +
+            ", value='" + value + '\'' +
+            ", ip='" + ip + '\'' +
+            ", port=" + port +
+            ", timestamp=" + timestamp +
+            ", duration=" + duration +
+            ", spanId=" + spanId +
+            ", traceId=" + traceId +
+            ", serviceId=" + serviceId +
+            ", serviceName='" + serviceName + '\'' +
+            '}';
     }
 }

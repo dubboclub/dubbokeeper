@@ -1,7 +1,7 @@
-package com.dubboclub.dk.storage.mongodb.handle;
+package com.dubboclub.dk.storage.mongodb.handler;
 
 
-import com.dubboclub.dk.storage.mongodb.TraceDataHandle;
+import com.dubboclub.dk.storage.TraceDataHandler;
 import com.dubboclub.dk.storage.mongodb.dao.TracingServiceDao;
 import com.dubboclub.dk.storage.mongodb.dto.TracingServiceDto;
 import com.dubboclub.dk.tracing.api.Span;
@@ -17,9 +17,9 @@ import org.springframework.beans.factory.InitializingBean;
 /**
  * Created by Zetas on 2016/7/11.
  */
-public class ServiceHandle implements TraceDataHandle, InitializingBean {
+public class ServiceHandler implements TraceDataHandler, InitializingBean {
 
-    private static Logger logger = LoggerFactory.getLogger(ServiceHandle.class);
+    private static Logger logger = LoggerFactory.getLogger(ServiceHandler.class);
 
     private static final ConcurrentMap<Integer, Boolean> serviceNameHashMap = new ConcurrentHashMap<Integer, Boolean>();
 
@@ -45,7 +45,7 @@ public class ServiceHandle implements TraceDataHandle, InitializingBean {
         }
     }
 
-    public ServiceHandle() {
+    public ServiceHandler() {
         syncLoadServiceThread = new SyncLoadTask();
         queue = new LinkedBlockingQueue<Span>();
     }
