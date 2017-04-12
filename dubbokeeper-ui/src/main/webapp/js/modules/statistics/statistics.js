@@ -150,7 +150,13 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                         {
                                             type : 'category',
                                             data : xAxisData,
-                                            show:false
+                                            axisLabel: {
+                                                interval: 0,
+                                                rotate: 40,
+                                                textStyle: {
+                                                    fontSize:9
+                                                }
+                                            }
                                         }
                                     ],
                                     yAxis : [
@@ -221,7 +227,13 @@ statistics.controller("statisticsIndex",function($scope,$httpWrapper,$breadcrumb
                                         {
                                             type : 'category',
                                             data : xAxisData,
-                                            show:false
+                                            axisLabel: {
+                                                interval: 0,
+                                                rotate: 40,
+                                                textStyle: {
+                                                    fontSize:9
+                                                }
+                                            }
                                         }
                                     ],
                                     yAxis : [
