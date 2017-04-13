@@ -6,7 +6,13 @@
 		 http://www.springframework.org/schema/beans/spring-beans.xsd
 		 http://www.springframework.org/schema/security
 		 http://www.springframework.org/schema/security/spring-security.xsd">
-		  
+		
+		<!-- 不拦截静态资源 -->
+	    <http pattern="/css/**" security="none" />
+	    <http pattern="/img/**" security="none" />
+	    <http pattern="/js/**" security="none" />
+	    <http pattern="/templates/**" security="none" />
+	      
 		<http use-expressions="true">
 			<intercept-url pattern="/**" access="authenticated"/>
 			<http-basic />
