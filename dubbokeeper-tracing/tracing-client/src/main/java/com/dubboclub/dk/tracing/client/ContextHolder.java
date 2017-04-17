@@ -17,7 +17,7 @@ public class ContextHolder {
         }
     };
 
-    private static ThreadLocal<String> localTraceId = new ThreadLocal<String>();
+    private static ThreadLocal<Long> localTraceId = new ThreadLocal<Long>();
 
     private static ThreadLocal<Boolean> localSample = new ThreadLocal<Boolean>(){
         @Override
@@ -26,11 +26,11 @@ public class ContextHolder {
         }
     };
 
-    static String getTraceId(){
+    static Long getTraceId(){
        return localTraceId.get();
     }
 
-    static void setTraceId(String traceId){
+    static void setTraceId(Long traceId){
         localTraceId.set(traceId);
     }
 

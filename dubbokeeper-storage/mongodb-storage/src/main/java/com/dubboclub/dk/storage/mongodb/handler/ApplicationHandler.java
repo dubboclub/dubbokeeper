@@ -4,7 +4,6 @@ package com.dubboclub.dk.storage.mongodb.handler;
 import com.dubboclub.dk.storage.TraceDataHandler;
 import com.dubboclub.dk.storage.model.Application;
 import com.dubboclub.dk.storage.mongodb.dao.TracingApplicationDao;
-import com.dubboclub.dk.storage.mongodb.dto.TracingApplicationDto;
 import com.dubboclub.dk.tracing.api.Annotation;
 import com.dubboclub.dk.tracing.api.BinaryAnnotation;
 import com.dubboclub.dk.tracing.api.Endpoint;
@@ -25,10 +24,10 @@ public class ApplicationHandler implements TraceDataHandler, InitializingBean {
 
     private static Logger logger = LoggerFactory.getLogger(ApplicationHandler.class);
 
-    private static final ConcurrentMap<Integer, Boolean> applicationNameHashMap = new ConcurrentHashMap<Integer, Boolean>();
+    private static final ConcurrentMap<Integer, Boolean> APPLICATIONS_CACHE = new ConcurrentHashMap<Integer, Boolean>();
 
     private TracingApplicationDao dao;
-    private SyncLoadTask syncLoadApplicationThread;
+    private SyncLoadTask syncLoadTask;
     private BlockingQueue<String> queue;
 
     private class SyncLoadTask extends Thread {
@@ -51,7 +50,7 @@ public class ApplicationHandler implements TraceDataHandler, InitializingBean {
     }
 
     public ApplicationHandler() {
-        syncLoadApplicationThread = new SyncLoadTask();
+        syncLoadTask = new SyncLoadTask();
         queue = new LinkedBlockingQueue<String>();
     }
 
@@ -60,14 +59,7 @@ public class ApplicationHandler implements TraceDataHandler, InitializingBean {
     }
 
     @Override
-    public void handle(List<Span> spanList) {
-        logger.debug("span list size: {}", spanList.size());
-        for (Span span : spanList) {
-            handle(span);
-        }
-    }
-
-    private void handle(Span span) {
+    public void handle(Span span) {
         for (Annotation annotation : span.getAnnotationList()) {
             handle(annotation);
         }
@@ -85,13 +77,13 @@ public class ApplicationHandler implements TraceDataHandler, InitializingBean {
     }
 
     private void handle(Endpoint endpoint) {
-        if (!applicationNameHashMap.containsKey(endpoint.getApplicationName().hashCode())) {
+        if (!APPLICATIONS_CACHE.containsKey(endpoint.getApplicationName().hashCode())) {
             prepareAddApplication(endpoint.getApplicationName());
         }
     }
 
     private void prepareAddApplication(String applicationName) {
-        Boolean value = applicationNameHashMap.putIfAbsent(applicationName.hashCode(), false);
+        Boolean value = APPLICATIONS_CACHE.putIfAbsent(applicationName.hashCode(), false);
         if (value == null) {
             queue.add(applicationName);
         }
@@ -104,7 +96,7 @@ public class ApplicationHandler implements TraceDataHandler, InitializingBean {
         application.setTimestamp(System.currentTimeMillis());
         dao.add(application);
 
-        applicationNameHashMap.put(applicationName.hashCode(), true);
+        APPLICATIONS_CACHE.put(applicationName.hashCode(), true);
     }
 
     @Override
@@ -120,18 +112,18 @@ public class ApplicationHandler implements TraceDataHandler, InitializingBean {
     }
 
     private void loadApplication() {
-        List<TracingApplicationDto> dtoList = dao.findAll();
-        for (TracingApplicationDto dto : dtoList) {
-            applicationNameHashMap.put(dto.getApplicationId(), true);
+        List<Application> applications = dao.findAll();
+        for (Application application : applications) {
+            APPLICATIONS_CACHE.put(application.getId(), true);
         }
     }
 
     private void start() {
-        syncLoadApplicationThread.start();
+        syncLoadTask.start();
     }
 
     private void cancel() {
-        syncLoadApplicationThread.interrupt();
+        syncLoadTask.interrupt();
     }
 
 }

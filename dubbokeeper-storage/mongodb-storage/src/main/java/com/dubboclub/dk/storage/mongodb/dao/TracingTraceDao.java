@@ -1,6 +1,6 @@
 package com.dubboclub.dk.storage.mongodb.dao;
 
-import com.dubboclub.dk.storage.mongodb.dto.TracingTraceDto;
+import com.dubboclub.dk.storage.model.Trace;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,24 +22,24 @@ public class TracingTraceDao {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public void add(TracingTraceDto dto) {
-        mongoTemplate.insert(dto, TRACE_COLLECTIONS);
+    public void add(Trace trace) {
+        mongoTemplate.insert(trace, TRACE_COLLECTIONS);
     }
 
-    public void add(List<TracingTraceDto> dtoList) {
-        mongoTemplate.insert(dtoList, TRACE_COLLECTIONS);
+    public void add(List<Trace> traces) {
+        mongoTemplate.insert(traces, TRACE_COLLECTIONS);
     }
 
-    public List<TracingTraceDto> findByServiceIdAndDurationBetweenAndTimeBetween(Integer serviceId, Long startTime, Long endTime, Integer minDuration, Integer maxDuration) {
+    public List<Trace> findByServiceIdAndDurationBetweenAndTimeBetween(Integer serviceId, Long startTime, Long endTime, Integer minDuration, Integer maxDuration) {
         Criteria criteria = Criteria
                 .where("serviceId").is(serviceId)
                 .and("duration").gte(minDuration).lte(maxDuration)
                 .and("time").gte(startTime).lte(endTime);
 
-        return mongoTemplate.find(new Query(criteria), TracingTraceDto.class, TRACE_COLLECTIONS);
+        return mongoTemplate.find(new Query(criteria), Trace.class, TRACE_COLLECTIONS);
     }
 
-    public List<TracingTraceDto> findByTraceId(String traceId) {
-        return mongoTemplate.find(new Query(Criteria.where("traceId").is(traceId)), TracingTraceDto.class, TRACE_COLLECTIONS);
+    public Trace findById(Long id) {
+        return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), Trace.class, TRACE_COLLECTIONS);
     }
 }

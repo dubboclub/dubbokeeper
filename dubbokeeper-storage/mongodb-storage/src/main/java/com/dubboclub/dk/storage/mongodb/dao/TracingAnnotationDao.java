@@ -1,6 +1,6 @@
 package com.dubboclub.dk.storage.mongodb.dao;
 
-import com.dubboclub.dk.storage.mongodb.dto.TracingAnnotationDto;
+import com.dubboclub.dk.storage.model.AnnotationEntity;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,19 +23,18 @@ public class TracingAnnotationDao {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public void add(TracingAnnotationDto dto) {
-        mongoTemplate.insert(dto, ANNOTATION_COLLECTIONS);
+    public void add(AnnotationEntity annotation) { mongoTemplate.insert(annotation, ANNOTATION_COLLECTIONS);
     }
 
-    public void add(List<TracingAnnotationDto> dtoList) {
-        mongoTemplate.insert(dtoList, ANNOTATION_COLLECTIONS);
+    public void add(List<AnnotationEntity> annotations) {
+        mongoTemplate.insert(annotations, ANNOTATION_COLLECTIONS);
     }
 
-    public List<TracingAnnotationDto> findByTraceId(String traceId) {
-        return mongoTemplate.find(new Query(Criteria.where("traceId").is(traceId)), TracingAnnotationDto.class, ANNOTATION_COLLECTIONS);
+    public List<AnnotationEntity> findByTraceId(String traceId) {
+        return mongoTemplate.find(new Query(Criteria.where("traceId").is(traceId)), AnnotationEntity.class, ANNOTATION_COLLECTIONS);
     }
 
-    public List<TracingAnnotationDto> findBySpanId(String spanId) {
-        return mongoTemplate.find(new Query(Criteria.where("spanId").is(spanId)), TracingAnnotationDto.class, ANNOTATION_COLLECTIONS);
+    public List<AnnotationEntity> findBySpanId(String spanId) {
+        return mongoTemplate.find(new Query(Criteria.where("spanId").is(spanId)), AnnotationEntity.class, ANNOTATION_COLLECTIONS);
     }
 }

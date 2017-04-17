@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by qct on 2017/4/12.
  */
-public class Annotation implements Serializable {
+public class AnnotationEntity implements Serializable {
 
     private static final long serialVersionUID = 7914586656880862607L;
 

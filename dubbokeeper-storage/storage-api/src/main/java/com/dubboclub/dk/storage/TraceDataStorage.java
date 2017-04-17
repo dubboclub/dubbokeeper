@@ -4,9 +4,13 @@ import com.dubboclub.dk.tracing.api.Span;
 import java.util.List;
 
 /**
- * Created by Zetas on 2016/7/11.
+ * <p>Created by Damon.Q on 2017/4/12.
  */
 public interface TraceDataStorage {
 
-    void addSpan(List<Span> spanList);
+    /**
+     * 持久化trace数据
+     * @param spans trace 数据
+     */
+    void storeTraceData(List<Span> spans);
 }

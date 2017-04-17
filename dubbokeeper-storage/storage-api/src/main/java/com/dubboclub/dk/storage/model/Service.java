@@ -10,9 +10,7 @@ public class Service implements Serializable {
     private static final long serialVersionUID = 1704080694787990420L;
 
     private Integer id;
-    private Integer appId;
-    private Integer serviceId;
-    private String serviceName;
+    private String name;
     private Long timestamp;
 
     public Integer getId() {
@@ -23,28 +21,12 @@ public class Service implements Serializable {
         this.id = id;
     }
 
-    public Integer getAppId() {
-        return appId;
+    public String getName() {
+        return name;
     }
 
-    public void setAppId(Integer appId) {
-        this.appId = appId;
-    }
-
-    public Integer getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Integer serviceId) {
-        this.serviceId = serviceId;
-    }
-
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getTimestamp() {
@@ -53,5 +35,14 @@ public class Service implements Serializable {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Service{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", timestamp=" + timestamp +
+            '}';
     }
 }

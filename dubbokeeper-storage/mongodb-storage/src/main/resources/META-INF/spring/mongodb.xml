@@ -61,13 +61,13 @@
     </bean>
 
     <bean id="traceDataStorageMongo" class="com.dubboclub.dk.storage.mongodb.TraceDataStorageMongo">
-        <property name="traceDataHandlerList">
+        <property name="handlers">
             <list>
-                <ref bean="annotationHandler"/>
                 <ref bean="applicationHandler"/>
                 <ref bean="serviceHandler"/>
-                <ref bean="spanHandler"/>
                 <ref bean="traceHandler"/>
+                <ref bean="spanHandler"/>
+                <ref bean="annotationHandler"/>
             </list>
         </property>
     </bean>
@@ -75,6 +75,6 @@
     <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage"
         ref="mongoDBStatisticsStorage" timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
 
-    <dubbo:service interface="com.dubboclub.dk.storage.TraceDataStorage"
+    <dubbo:service interface="com.dubboclub.dk.storage.TraceDataStorage" filter="-dst"
         ref="traceDataStorageMongo" timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
 </beans>

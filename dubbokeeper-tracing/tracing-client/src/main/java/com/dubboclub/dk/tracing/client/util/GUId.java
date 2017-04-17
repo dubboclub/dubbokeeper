@@ -56,7 +56,7 @@ public class GUId {
         return Holder.instance;
     }
 
-    public synchronized String nextId() {
+    /*public synchronized String nextId() {
         long timestamp = timeGen();
         if (lastTimestamp == timestamp) {
             sequence = sequence + 1 & maxSequence;
@@ -71,6 +71,23 @@ public class GUId {
         BigInteger time = BigInteger.valueOf(timestamp).shiftLeft(timeShiftLeft);
         BigInteger seq = BigInteger.valueOf(sequence).shiftLeft(sequenceShiftLeft);
         return time.or(seq).or(id).or(ip).toString(32);
+    }*/
+
+    public synchronized long nextId() {
+        long timestamp = timeGen();
+        if (lastTimestamp == timestamp) {
+            sequence = sequence + 1 & maxSequence;
+            if (sequence == 0) {
+                timestamp = tilNextMillis(lastTimestamp);
+            }
+        } else {
+            sequence = 0;
+        }
+
+        lastTimestamp = timestamp;
+        BigInteger time = BigInteger.valueOf(timestamp).shiftLeft(timeShiftLeft);
+        BigInteger seq = BigInteger.valueOf(sequence).shiftLeft(sequenceShiftLeft);
+        return time.or(seq).or(id).or(ip).longValue();
     }
 
     private long ip() throws UnknownHostException {
