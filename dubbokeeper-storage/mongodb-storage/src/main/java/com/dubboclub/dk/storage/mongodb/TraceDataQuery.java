@@ -1,23 +1,7 @@
 package com.dubboclub.dk.storage.mongodb;
 
 
-import com.dubboclub.dk.storage.model.Annotation;
-import com.dubboclub.dk.storage.model.Application;
-import com.dubboclub.dk.storage.model.Service;
-import com.dubboclub.dk.storage.model.Span;
-import com.dubboclub.dk.storage.model.Trace;
-import com.dubboclub.dk.storage.mongodb.dao.TracingAnnotationDao;
-import com.dubboclub.dk.storage.mongodb.dao.TracingApplicationDao;
-import com.dubboclub.dk.storage.mongodb.dao.TracingServiceDao;
-import com.dubboclub.dk.storage.mongodb.dao.TracingSpanDao;
-import com.dubboclub.dk.storage.mongodb.dao.TracingTraceDao;
-import com.dubboclub.dk.storage.mongodb.dto.TracingAnnotationDto;
-import com.dubboclub.dk.storage.mongodb.dto.TracingApplicationDto;
-import com.dubboclub.dk.storage.mongodb.dto.TracingServiceDto;
-import com.dubboclub.dk.storage.mongodb.dto.TracingSpanDto;
-import com.dubboclub.dk.storage.mongodb.dto.TracingTraceDto;
-import java.util.LinkedList;
-import java.util.List;
+
 
 /**
  * Created by Zetas on 2016/7/14.

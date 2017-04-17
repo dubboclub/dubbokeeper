@@ -1,7 +1,7 @@
 package com.dubboclub.dk.storage;
 
 
-import com.dubboclub.dk.storage.model.Annotation;
+import com.dubboclub.dk.storage.model.AnnotationEntity;
 import com.dubboclub.dk.storage.model.Application;
 import com.dubboclub.dk.storage.model.Service;
 import com.dubboclub.dk.storage.model.Trace;
@@ -24,8 +24,8 @@ public interface TraceDataQuery {
 
     public List<Span> findSpanByTraceId(String traceId);
 
-    public List<Annotation> findAnnotationBySpanId(String spanId);
+    public List<AnnotationEntity> findAnnotationBySpanId(String spanId);
 
-    public List<Annotation> findAnnotationByTraceId(String traceId);
+    public List<AnnotationEntity> findAnnotationByTraceId(String traceId);
 
 }

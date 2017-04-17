@@ -28,7 +28,7 @@ public class DefaultSyncTransfer implements SyncTransfer {
     private volatile BlockingQueue<Span> queue;
     private volatile TransferTask transferTask;
 
-    private volatile boolean inited=false;
+    private volatile boolean inited = false;
 
     public void setProtocol(Protocol protocol) {
         this.protocol = protocol;
@@ -54,12 +54,12 @@ public class DefaultSyncTransfer implements SyncTransfer {
                     if(cacheList.size()<=0){
                         continue;
                     }
-                    if(!inited&&collector==null){
+                    if(!inited &&collector==null){
                         TracingCollectorFactory tracingCollectorFactory = ExtensionLoader
                                 .getExtensionLoader(TracingCollectorFactory.class)
                                 .getExtension(ConfigUtils.getProperty(DstConstants.TRACING_COLLECTOR, DstConstants.DEFAULT_COLLECTOR_TYPE));
                         collector =tracingCollectorFactory.getTracingCollector();
-                        inited=true;
+                        inited =true;
                     }
                     logger.debug("push cached span, size: {}", cacheList.size());
 

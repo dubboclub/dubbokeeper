@@ -14,6 +14,7 @@ public class Span implements Serializable {
     private Long id;
     private Long parentId;
     private Long traceId;
+    private Integer serviceId;
     private String name;
     private String serviceName;
     private List<Annotation> annotationList;
@@ -30,6 +31,14 @@ public class Span implements Serializable {
 
     public void addAnnotation(BinaryAnnotation binaryAnnotation) {
         binaryAnnotationList.add(binaryAnnotation);
+    }
+
+    public Integer getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
     }
 
     public Long getId() {
@@ -94,6 +103,7 @@ public class Span implements Serializable {
             "id=" + id +
             ", parentId=" + parentId +
             ", traceId=" + traceId +
+            ", serviceId=" + serviceId +
             ", name='" + name + '\'' +
             ", serviceName='" + serviceName + '\'' +
             ", annotationList=" + annotationList +

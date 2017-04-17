@@ -1,12 +1,10 @@
 package com.dubboclub.dk.storage.mongodb.handler;
 
 import com.dubboclub.dk.storage.TraceDataHandler;
+import com.dubboclub.dk.storage.model.Trace;
 import com.dubboclub.dk.storage.mongodb.dao.TracingTraceDao;
-import com.dubboclub.dk.storage.mongodb.dto.TracingTraceDto;
 import com.dubboclub.dk.tracing.api.Annotation;
 import com.dubboclub.dk.tracing.api.Span;
-import java.util.LinkedList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,26 +22,19 @@ public class TraceHandler implements TraceDataHandler {
     }
 
     @Override
-    public void handle(List<Span> spanList) {
-        logger.debug("span list size: {}", spanList.size());
-        List<TracingTraceDto> dtoList = new LinkedList<TracingTraceDto>();
-        for (Span span : spanList) {
-            if (isRoot(span)) {
-                dtoList.add(handle(span));
-            }
-        }
-        dao.add(dtoList);
-    }
+    public void handle(Span span) {
+        if (isRoot(span)) {
+            long startTime = startTime(span);
+            long endTime = endTime(span);
 
-    public TracingTraceDto handle(Span span) {
-        long startTime = startTime(span);
-        long endTime = endTime(span);
-        TracingTraceDto dto = new TracingTraceDto();
-        dto.setTraceId(span.getTraceId());
-        dto.setDuration((int) (endTime - startTime));
-        dto.setTime(endTime);
-        dto.setServiceId(span.getServiceName().hashCode());
-        return dto;
+            Trace trace = new Trace();
+            trace.setId(span.getTraceId());
+            trace.setDuration((int) (endTime - startTime));
+            trace.setTimestamp(endTime);
+            trace.setServiceId(span.getServiceName().hashCode());
+
+            dao.add(trace);
+        }
     }
 
     private boolean isRoot(Span span) {

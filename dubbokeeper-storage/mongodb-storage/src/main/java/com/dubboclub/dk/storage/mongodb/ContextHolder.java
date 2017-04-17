@@ -1,10 +1,10 @@
 package com.dubboclub.dk.storage.mongodb;
 
 
+import com.dubboclub.dk.storage.model.Application;
+import com.dubboclub.dk.storage.model.Service;
 import com.dubboclub.dk.storage.mongodb.dao.TracingApplicationDao;
 import com.dubboclub.dk.storage.mongodb.dao.TracingServiceDao;
-import com.dubboclub.dk.storage.mongodb.dto.TracingApplicationDto;
-import com.dubboclub.dk.storage.mongodb.dto.TracingServiceDto;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,14 +14,14 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class ContextHolder implements InitializingBean {
 
-    private final ConcurrentMap<Integer, TracingApplicationDto> applicationMap;
-    private final ConcurrentMap<Integer, TracingServiceDto> serviceMap;
+    private final ConcurrentMap<Integer, Application> applicationMap;
+    private final ConcurrentMap<Integer, Service> serviceMap;
     private TracingApplicationDao applicationDao;
     private TracingServiceDao serviceDao;
 
     public ContextHolder() {
-        applicationMap = new ConcurrentHashMap<Integer, TracingApplicationDto>();
-        serviceMap = new ConcurrentHashMap<Integer, TracingServiceDto>();
+        applicationMap = new ConcurrentHashMap<Integer, Application>();
+        serviceMap = new ConcurrentHashMap<Integer, Service>();
     }
 
     public void setTracingApplicationDao(TracingApplicationDao applicationDao) {
@@ -32,36 +32,36 @@ public class ContextHolder implements InitializingBean {
         this.serviceDao = serviceDao;
     }
 
-    public TracingApplicationDto findTracingApplicatonDtoById(Integer applicationId) {
-        TracingApplicationDto dto = applicationMap.get(applicationId);
-        if (dto == null) {
-            dto = loadTracingApplicationDto(applicationId);
+    public Application findTracingApplicatonById(Integer applicationId) {
+        Application application = applicationMap.get(applicationId);
+        if (application == null) {
+            application = loadTracingApplication(applicationId);
         }
-        return dto;
+        return application;
     }
 
-    public TracingServiceDto findTracingServiceDtoById(Integer serviceId) {
-        TracingServiceDto dto = serviceMap.get(serviceId);
-        if (dto == null) {
-            dto = loadTracingServiceDto(serviceId);
+    public Service findTracingServiceById(Integer serviceId) {
+        Service service = serviceMap.get(serviceId);
+        if (service == null) {
+            service = loadTracingService(serviceId);
         }
-        return dto;
+        return service;
     }
 
-    private synchronized TracingApplicationDto loadTracingApplicationDto(Integer applicationId) {
-        TracingApplicationDto dto = applicationDao.findOneByApplicationId(applicationId);
-        if (dto != null) {
-            applicationMap.put(dto.getApplicationId(), dto);
+    private synchronized Application loadTracingApplication(Integer applicationId) {
+        Application application = applicationDao.findById(applicationId);
+        if (application != null) {
+            applicationMap.put(application.getId(), application);
         }
-        return dto;
+        return application;
     }
 
-    private synchronized TracingServiceDto loadTracingServiceDto(Integer serviceId) {
-        TracingServiceDto dto = serviceDao.findOneByServiceId(serviceId);
-        if (dto != null) {
-            serviceMap.put(dto.getServiceId(), dto);
+    private synchronized Service loadTracingService(Integer serviceId) {
+        Service service = serviceDao.findId(serviceId);
+        if (service != null) {
+            serviceMap.put(service.getId(), service);
         }
-        return dto;
+        return service;
     }
 
     @Override

@@ -32,7 +32,7 @@ public class Tracer {
 
     public void beforeInvoke(boolean isConsumerSide) {
         if (isConsumerSide) {
-            String traceId = createConsumerSideTraceId();
+            Long traceId = createConsumerSideTraceId();
             if(traceId!=null){
                 createConsumerSideSpan();
                 addClientSendAnnotation();
@@ -102,12 +102,11 @@ public class Tracer {
         String traceId = rpcContext.getAttachment(DstConstants.DST_TRACE_ID);
         String spanId = rpcContext.getAttachment(DstConstants.DST_SPAN_ID);
         String parentSpanId = rpcContext.getAttachment(DstConstants.DST_PARENT_SPAN_ID);
-        if (StringUtils.isNotEmpty(traceId)
-                && StringUtils.isNotEmpty(spanId)) {//只需要判断traceId和spanid即可
+        if (StringUtils.isNotEmpty(traceId) && StringUtils.isNotEmpty(spanId)) {//只需要判断traceId和spanid即可
             Span span = new Span();
-            span.setId(spanId);
-            span.setParentId(parentSpanId);
-            span.setTraceId(traceId);
+            span.setId(Long.parseLong(spanId));
+            span.setParentId("null".equalsIgnoreCase(parentSpanId) ? null : Long.parseLong(parentSpanId));
+            span.setTraceId(Long.parseLong(traceId));
             span.setServiceName(getServiceName());
             span.setName(getMethodName());
             ContextHolder.setSpan(span);
@@ -117,9 +116,9 @@ public class Tracer {
         return ContextHolder.getSpan();
     }
 
-    private String createConsumerSideTraceId() {
-        String traceId = ContextHolder.getTraceId();
-        if (StringUtils.isBlank(traceId)) {//启动一个新的链路
+    private Long createConsumerSideTraceId() {
+        Long traceId = ContextHolder.getTraceId();
+        if (traceId == null) {//启动一个新的链路
             if(ContextHolder.isSample()&& Sampler.isSample(getServiceName())){
                 ContextHolder.setTraceId(GUId.singleton().nextId());
             }else{
@@ -130,7 +129,7 @@ public class Tracer {
         return ContextHolder.getTraceId();
     }
 
-    private String createProvideSideTraceId() {
+    private Long createProvideSideTraceId() {
         RpcContext rpcContext = RpcContext.getContext();
         String isSample = rpcContext.getAttachment(DstConstants.DST_IS_SAMPLE);
         if(StringUtils.isNotEmpty(isSample)){
@@ -140,7 +139,7 @@ public class Tracer {
         if (StringUtils.isBlank(traceId)) {
             ContextHolder.setTraceId(GUId.singleton().nextId());
         } else {
-            ContextHolder.setTraceId(traceId);
+            ContextHolder.setTraceId(Long.parseLong(traceId));
         }
         logger.debug("5. create provider side trace id: {}", ContextHolder.getTraceId());
         return ContextHolder.getTraceId();
@@ -148,15 +147,15 @@ public class Tracer {
 
     private void setAttachment() {
         RpcContext rpcContext = RpcContext.getContext();
-        String traceId = ContextHolder.getTraceId();
+        Long traceId = ContextHolder.getTraceId();
         rpcContext.setAttachment(DstConstants.DST_IS_SAMPLE,ContextHolder.isSample()+"");
         if (traceId != null) {
-            rpcContext.setAttachment(DstConstants.DST_TRACE_ID, traceId);
+            rpcContext.setAttachment(DstConstants.DST_TRACE_ID, String.valueOf(traceId));
         }
         Span span = ContextHolder.getSpan();
         if (span != null) {
-            rpcContext.setAttachment(DstConstants.DST_SPAN_ID, span.getId());
-            rpcContext.setAttachment(DstConstants.DST_PARENT_SPAN_ID, span.getParentId());
+            rpcContext.setAttachment(DstConstants.DST_SPAN_ID, String.valueOf(span.getId()));
+            rpcContext.setAttachment(DstConstants.DST_PARENT_SPAN_ID, String.valueOf(span.getParentId()));
         }
     }
 
