@@ -70,8 +70,8 @@ public class ServiceHandler implements TraceDataHandler, InitializingBean {
 
     private void addService(Span span) {
         Service service = new Service();
-        service.setName(span.getServiceName());
         service.setId(service.getName().hashCode());
+        service.setName(span.getServiceName());
         service.setTimestamp(System.currentTimeMillis());
         dao.add(service);
 

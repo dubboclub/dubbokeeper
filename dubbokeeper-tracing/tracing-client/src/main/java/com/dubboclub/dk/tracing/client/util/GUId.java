@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.channels.FileChannel;
+import java.util.UUID;
 
 /**
  * Created by Zetas on 2016/7/8.
@@ -74,20 +75,7 @@ public class GUId {
     }*/
 
     public synchronized long nextId() {
-        long timestamp = timeGen();
-        if (lastTimestamp == timestamp) {
-            sequence = sequence + 1 & maxSequence;
-            if (sequence == 0) {
-                timestamp = tilNextMillis(lastTimestamp);
-            }
-        } else {
-            sequence = 0;
-        }
-
-        lastTimestamp = timestamp;
-        BigInteger time = BigInteger.valueOf(timestamp).shiftLeft(timeShiftLeft);
-        BigInteger seq = BigInteger.valueOf(sequence).shiftLeft(sequenceShiftLeft);
-        return time.or(seq).or(id).or(ip).longValue();
+        return UUID.randomUUID().getMostSignificantBits();
     }
 
     private long ip() throws UnknownHostException {
