@@ -45,6 +45,7 @@ public class Tracer {
 
         setAttachment();
         logger.debug("{}. add attachment...", isConsumerSide ? 4 : 8);
+        logger.debug("before RpcContext : {}", RpcContext.getContext().getAttachments());
     }
 
     public void afterInvoke(boolean isConsumerSide) {
@@ -55,6 +56,7 @@ public class Tracer {
         }
         send();
         logger.debug("{}. send span...", isConsumerSide ? 12 : 10);
+        logger.debug("after RpcContext : {}", RpcContext.getContext().getAttachments());
     }
 
     private void send() {
@@ -119,9 +121,9 @@ public class Tracer {
     private Long createConsumerSideTraceId() {
         Long traceId = ContextHolder.getTraceId();
         if (traceId == null) {//启动一个新的链路
-            if(ContextHolder.isSample()&& Sampler.isSample(getServiceName())){
+            if (ContextHolder.isSample() && Sampler.isSample(getServiceName())) {
                 ContextHolder.setTraceId(GUId.singleton().nextId());
-            }else{
+            } else {
                 ContextHolder.setLocalSample(false);
             }
         }
