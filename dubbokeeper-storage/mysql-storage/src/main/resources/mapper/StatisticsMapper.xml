@@ -177,7 +177,7 @@
             <include refid="queryAppSQLFragment"></include>
             ) order by ${item} desc limit 0,200
         </where>
-        ) tmp order by timestamp asc
+        ) tmp order by timestamp desc
     </select>
 
     <select id="queryServiceOverview" resultType="Statistics">
