@@ -18,6 +18,7 @@
         <module>dubbokeeper-storage</module>
         <module>dubbokeeper-server</module>
         <module>dubbokeeper-tracing</module>
+        <module>dubbokeeper-samples</module>
     </modules>
 
     <properties>

@@ -4,7 +4,7 @@ import com.dubboclub.dk.tracing.api.Span;
 import java.util.List;
 
 /**
- * <p>Created by Damon.Q on 2017/4/12.
+ * <p>Created by qct on 2017/4/12.
  */
 public interface TraceDataStorage {
 
