@@ -14,6 +14,7 @@ public class BinaryAnnotation implements Serializable {
     private String type;
     private Integer duration;
     private Endpoint host;
+    private Long timestamp;
 
     public Endpoint getHost() {
         return host;
@@ -55,6 +56,14 @@ public class BinaryAnnotation implements Serializable {
         this.duration = duration;
     }
 
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString() {
         return "BinaryAnnotation{" +
@@ -63,6 +72,7 @@ public class BinaryAnnotation implements Serializable {
             ", type='" + type + '\'' +
             ", duration=" + duration +
             ", host=" + host +
+            ", timestamp=" + timestamp +
             '}';
     }
 }
