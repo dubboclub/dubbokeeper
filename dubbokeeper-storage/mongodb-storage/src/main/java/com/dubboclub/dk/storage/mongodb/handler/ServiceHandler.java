@@ -21,7 +21,7 @@ public class ServiceHandler implements TraceDataHandler, InitializingBean {
 
     private static Logger logger = LoggerFactory.getLogger(ServiceHandler.class);
 
-    private static final ConcurrentMap<Integer, Boolean> serviceNameHashMap = new ConcurrentHashMap<Integer, Boolean>();
+    private static final ConcurrentMap<Integer, Boolean> SERVICES_CACHE = new ConcurrentHashMap<Integer, Boolean>();
 
     private TracingServiceDao dao;
     private SyncLoadTask syncLoadServiceThread;
@@ -56,13 +56,13 @@ public class ServiceHandler implements TraceDataHandler, InitializingBean {
 
     @Override
     public void handle(Span span) {
-        if (!serviceNameHashMap.containsKey(span.getServiceName().hashCode())) {
+        if (!SERVICES_CACHE.containsKey(span.getServiceName().hashCode())) {
             prepareAddService(span);
         }
     }
 
     private void prepareAddService(Span span) {
-        Boolean value = serviceNameHashMap.putIfAbsent(span.getServiceName().hashCode(), false);
+        Boolean value = SERVICES_CACHE.putIfAbsent(span.getServiceName().hashCode(), false);
         if (value == null) {
             queue.add(span);
         }
@@ -70,12 +70,12 @@ public class ServiceHandler implements TraceDataHandler, InitializingBean {
 
     private void addService(Span span) {
         Service service = new Service();
-        service.setId(service.getName().hashCode());
+        service.setId(span.getServiceName().hashCode());
         service.setName(span.getServiceName());
         service.setTimestamp(System.currentTimeMillis());
         dao.add(service);
 
-        serviceNameHashMap.put(span.getServiceName().hashCode(), true);
+        SERVICES_CACHE.put(span.getServiceName().hashCode(), true);
     }
 
     public void afterPropertiesSet() throws Exception {
@@ -85,10 +85,9 @@ public class ServiceHandler implements TraceDataHandler, InitializingBean {
 
     private void loadService() {
         List<Service> services = dao.findAll();
-        if (services != null) {
-            for (Service service : services) {
-                serviceNameHashMap.put(service.getId(), true);
-            }
+        for (Service service : services) {
+            SERVICES_CACHE.put(service.getId(), true);
+            logger.debug("preload services: {}:{}", service.getId(), SERVICES_CACHE.get(service.getId()));
         }
     }
 
