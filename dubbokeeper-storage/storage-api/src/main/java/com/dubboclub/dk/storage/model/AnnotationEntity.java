@@ -21,6 +21,9 @@ public class AnnotationEntity implements Serializable {
     private Long traceId;
     private Integer serviceId;
     private String serviceName;
+    private String applicationName;
+
+    private String type;
 
     public Long getId() {
         return id;
@@ -110,9 +113,25 @@ public class AnnotationEntity implements Serializable {
         this.serviceName = serviceName;
     }
 
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return "Annotation{" +
+        return "AnnotationEntity{" +
             "id=" + id +
             ", key='" + key + '\'' +
             ", value='" + value + '\'' +
@@ -124,6 +143,7 @@ public class AnnotationEntity implements Serializable {
             ", traceId=" + traceId +
             ", serviceId=" + serviceId +
             ", serviceName='" + serviceName + '\'' +
+            ", applicationName='" + applicationName + '\'' +
             '}';
     }
 }

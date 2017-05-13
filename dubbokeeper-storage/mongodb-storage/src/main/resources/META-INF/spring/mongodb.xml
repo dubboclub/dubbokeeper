@@ -66,8 +66,8 @@
                 <ref bean="applicationHandler"/>
                 <ref bean="serviceHandler"/>
                 <ref bean="traceHandler"/>
-                <ref bean="spanHandler"/>
                 <ref bean="annotationHandler"/>
+                <ref bean="spanHandler"/>
             </list>
         </property>
     </bean>

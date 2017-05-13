@@ -4,7 +4,9 @@ package com.dubboclub.dk.storage.mongodb.handler;
 import com.dubboclub.dk.storage.TraceDataHandler;
 import com.dubboclub.dk.storage.mongodb.dao.TracingSpanDao;
 import com.dubboclub.dk.tracing.api.Annotation;
+import com.dubboclub.dk.tracing.api.BinaryAnnotation;
 import com.dubboclub.dk.tracing.api.Span;
+import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,8 @@ public class SpanHandler implements TraceDataHandler {
     @Override
     public void handle(Span span) {
         if (isConsumerSideSpan(span)) {
+            span.setAnnotationList(Collections.<Annotation>emptyList());
+            span.setBinaryAnnotationList(Collections.<BinaryAnnotation>emptyList());
             dao.add(span);
         }
     }

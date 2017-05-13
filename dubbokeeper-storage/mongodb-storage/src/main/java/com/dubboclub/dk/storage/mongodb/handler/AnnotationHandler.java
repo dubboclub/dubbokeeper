@@ -40,13 +40,15 @@ public class AnnotationHandler implements TraceDataHandler {
     private AnnotationEntity handle(Span span, Annotation annotation) {
         AnnotationEntity entity = new AnnotationEntity();
         entity.setId(Long.valueOf(annotation.hashCode()));
-        entity.setKey(annotation.getValue());
+        entity.setValue(annotation.getValue());
         entity.setIp(annotation.getHost().getIp());
         entity.setPort(annotation.getHost().getPort());
+        entity.setApplicationName(annotation.getHost().getApplicationName());
         entity.setTimestamp(annotation.getTimestamp());
         entity.setTraceId(span.getTraceId());
         entity.setSpanId(span.getId());
         entity.setServiceId(span.getServiceName().hashCode());
+        entity.setServiceName(span.getServiceName());
         return entity;
     }
 
@@ -57,9 +59,13 @@ public class AnnotationHandler implements TraceDataHandler {
         entity.setValue(annotation.getValue());
         entity.setIp(annotation.getHost().getIp());
         entity.setPort(annotation.getHost().getPort());
+        entity.setApplicationName(annotation.getHost().getApplicationName());
+        entity.setTimestamp(annotation.getTimestamp());
         entity.setTraceId(span.getTraceId());
         entity.setSpanId(span.getId());
         entity.setServiceId(span.getServiceName().hashCode());
+        entity.setServiceName(span.getServiceName());
+        entity.setType(annotation.getType());
         return entity;
     }
 }
