@@ -115,6 +115,7 @@ public class ApplicationHandler implements TraceDataHandler, InitializingBean {
         List<Application> applications = dao.findAll();
         for (Application application : applications) {
             APPLICATIONS_CACHE.put(application.getId(), true);
+            logger.debug("preload applications: {}:{}", application.getId(), APPLICATIONS_CACHE.get(application.getId()));
         }
     }
 

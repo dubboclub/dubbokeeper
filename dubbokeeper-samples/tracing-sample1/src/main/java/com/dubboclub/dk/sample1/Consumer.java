@@ -22,8 +22,12 @@ public class Consumer implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         for (int i = 0; i < 1; i++) {
-            logger.debug("calling: {}", serviceB.methodB("consumer"));
-            Thread.sleep(2000l);
+            try {
+                logger.debug("calling: {}", serviceB.methodB("consumer"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                Thread.sleep(2000l);
+            }
         }
     }
 }
