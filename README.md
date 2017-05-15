@@ -43,6 +43,9 @@ dubbokeeper在1.0.1版本对监控数据存储模块抽离出来，做为单独�
 > 基于zookeeper的四字命令完成对zookeeper的基本监控
 
 ## 部署过程：
+
+dubbokeeper包括了两部分：存储服务和ui管理界面，后者依赖前者，分别对应dubbokeeper-storage和dubbokeeper-ui。
+
 > 1、下载源码
 
 `git clone https://github.com/dubboclub/dubbokeeper.git `
@@ -106,7 +109,10 @@ monitor.log.home=/usr/dev/op_disk/monitor-log
 
 
 
-按照上面对应存储配置完毕之后，执行`start-xx.sh(bat)`，便启动了dk的存储
+按照上面对应存储配置完毕之后，执行`start-xx.sh(bat)`，便启动了dk的存储。
 
+> 5、启动UI界面的web服务
+
+经过上文的步骤2和步骤3之后，UI界面的运行配置已经配置好（尚未启动），在步骤4启动了存储服务之后，就可以启动UI界面的web服务，将配置好的web容器启动即可。
 
 
