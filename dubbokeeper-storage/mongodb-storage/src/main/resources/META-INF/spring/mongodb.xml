@@ -75,6 +75,6 @@
     <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage"
         ref="mongoDBStatisticsStorage" timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
 
-    <dubbo:service interface="com.dubboclub.dk.storage.TraceDataStorage" filter="-dst"
+    <dubbo:service interface="com.dubboclub.dk.storage.TraceDataStorage"
         ref="traceDataStorageMongo" timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
 </beans>
