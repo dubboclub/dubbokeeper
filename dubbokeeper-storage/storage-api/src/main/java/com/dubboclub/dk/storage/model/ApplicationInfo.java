@@ -8,7 +8,7 @@ public class ApplicationInfo extends  BaseInfo{
 
     private String applicationName;
 
-    //0 消费者，1 提供者 2 即是消费者也是提供者
+    //0 消费者，1 提供者 2 既是消费者也是提供者
     private Integer applicationType;
 
 

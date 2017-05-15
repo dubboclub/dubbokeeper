@@ -33,7 +33,7 @@
                 <td class="text-center ">{{$index+1}}</td>
                 <td class="text-left td-30-width">{{app.application}}</td>
                 <td class="text-left td-30-width">{{app.username}}</td>
-                <td class="text-left td-15-width"><span class="label {{app.type==1?'label-primary':(app.type==2?'label-warning':'label-success')}}" title="{{app.type==1?'纯提供者':(app.type==2?'纯消费者':'即是提供者也是消费者')}}">{{app.type==1?"P":(app.type==2?"C":"P.AND.C")}}</span></td>
+                <td class="text-left td-15-width"><span class="label {{app.type==1?'label-primary':(app.type==2?'label-warning':'label-success')}}" title="{{app.type==1?'纯提供者':(app.type==2?'纯消费者':'既是提供者也是消费者')}}">{{app.type==1?"P":(app.type==2?"C":"P.AND.C")}}</span></td>
                 <td class="text-left" ng-show="!isConsumer">
                     <a href="#/admin/{{app.application}}/nodes" class="link" style="text-underline: none;"
                        title="部署节点列表">

@@ -254,7 +254,7 @@ monitor.controller("index",function($scope,$httpWrapper,$routeParams,$breadcrumb
                 });
                 if(consumerAndProvider.length>0){
                     apps.push({
-                        name: '<strong>即是消费者也是提供者</strong>',
+                        name: '<strong>既是消费者也是提供者</strong>',
                         appGroup: true
                     });
                     apps=apps.concat(consumerAndProvider);
