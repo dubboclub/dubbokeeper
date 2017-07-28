@@ -115,4 +115,6 @@ monitor.log.home=/usr/dev/op_disk/monitor-log
 
 经过上文的步骤2和步骤3之后，UI界面的运行配置已经配置好（尚未启动），在步骤4启动了存储服务之后，就可以启动UI界面的web服务，将配置好的web容器启动即可。
 
+OK
+
 
