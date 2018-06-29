@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by bieber on 2015/9/24.
@@ -30,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/peeper")
 public class ZooPeeperController implements InitializingBean{
 
-    private static final ConcurrentHashMap<String,ZooKeeper> ZK_CLIENT_MAP = new ConcurrentHashMap<String, ZooKeeper>();
+    private static final ConcurrentMap<String,ZooKeeper> ZK_CLIENT_MAP = new ConcurrentHashMap<String, ZooKeeper>();
     
     private static final Logger logger = LoggerFactory.getLogger(ZooPeeperController.class);
 
