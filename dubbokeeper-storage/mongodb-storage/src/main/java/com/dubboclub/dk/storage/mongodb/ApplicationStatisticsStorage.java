@@ -18,19 +18,17 @@ public class ApplicationStatisticsStorage extends AbstractApplicationStatisticsS
 
     private StatisticsDao statisticsDao;
 
-    private int type;
+//    private int type;
 
     public ApplicationStatisticsStorage(ApplicationDao applicationDao,
                                         StatisticsDao statisticsDao,
-                                        String application,
-                                        int type){
-        this(applicationDao,statisticsDao,application,type,false);
+                                        String application){
+        this(applicationDao,statisticsDao,application,false);
     }
 
     public ApplicationStatisticsStorage(ApplicationDao applicationDao,
                                         StatisticsDao statisticsDao,
                                         String applicationName,
-                                        int type,
                                         boolean needCreateTable){
         super(applicationName);
         this.applicationDao = applicationDao;
@@ -39,11 +37,10 @@ public class ApplicationStatisticsStorage extends AbstractApplicationStatisticsS
         if(needCreateTable){
             ApplicationInfo applicationInfo = new ApplicationInfo();
             applicationInfo.setApplicationName(application);
-            applicationInfo.setApplicationType(type);
             this.applicationDao.addApplication(applicationInfo);
         }
         init();
-        this.type = type;
+//        this.type = type;
     }
 
     /**
@@ -81,7 +78,7 @@ public class ApplicationStatisticsStorage extends AbstractApplicationStatisticsS
 
 
 
-    public int getType() {
-        return type;
-    }
+//    public int getType() {
+//        return type;
+//    }
 }
