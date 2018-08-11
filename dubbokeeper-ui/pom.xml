@@ -91,7 +91,7 @@
 
         <!-- zookeeper -->
         <dependency>
-            <groupId>com.github.sgroschupf</groupId>
+            <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
             <exclusions>
                 <exclusion>
@@ -99,6 +99,12 @@
                     <groupId>log4j</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>${curator.version}</version>
         </dependency>
 
         <!--log-->

@@ -6,9 +6,13 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
+    <!--注册中心配置-->
+    <dubbo:registry id="registryConfig" client="curator" protocol="zookeeper" address="${dubbo.registry.address}"
+                    group="${dubbo.registry.group}" username="${dubbo.registry.username}"
+                    password="${dubbo.registry.password}"/>
 
-
-    <dubbo:reference id="registryService" interface="com.alibaba.dubbo.registry.RegistryService" check="false" />
+    <dubbo:reference id="registryService" interface="com.alibaba.dubbo.registry.RegistryService"
+                     registry="registryConfig" check="false"/>
 
     <bean class="com.dubboclub.dk.admin.sync.RegistryServerSync" id="registryServerSync">
         <property name="registryService" ref="registryService"/>
