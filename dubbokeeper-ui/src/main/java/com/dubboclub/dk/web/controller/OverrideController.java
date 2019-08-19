@@ -1,7 +1,7 @@
 package com.dubboclub.dk.web.controller;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.utils.StringUtils;
 import com.dubboclub.dk.admin.model.Override;
 import com.dubboclub.dk.admin.model.Provider;
 import com.dubboclub.dk.admin.service.OverrideService;
@@ -76,9 +76,9 @@ public class OverrideController {
         if(providers.size()>0){
             Provider provider = providers.get(0);
             Map<String,String> params = StringUtils.parseQueryString(provider.getParameters());
-            String methodStr = params.get(Constants.METHODS_KEY);
+            String methodStr = params.get(CommonConstants.METHODS_KEY);
             if(!StringUtils.isEmpty(methodStr)){
-                String[] methodArray = Constants.COMMA_SPLIT_PATTERN.split(methodStr);
+                String[] methodArray = CommonConstants.COMMA_SPLIT_PATTERN.split(methodStr);
                 for(String method:methodArray){
                     methods.add(method);
                 }
@@ -126,7 +126,7 @@ public class OverrideController {
     @RequestMapping("/batch/{type}.htm")
     public @ResponseBody BasicResponse batchOperate(@RequestParam("ids")String ids,@PathVariable("type")String type){
         BasicResponse response = new BasicResponse();
-        String[] idArray = Constants.COMMA_SPLIT_PATTERN.split(ids);
+        String[] idArray = CommonConstants.COMMA_SPLIT_PATTERN.split(ids);
         if("enable".equals(type)){
             for(String id:idArray){
                 Override override = overrideService.getById(Long.parseLong(id));

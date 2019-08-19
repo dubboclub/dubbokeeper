@@ -1,8 +1,11 @@
 package com.dubboclub.dk.admin.service.impl;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+import org.apache.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.rpc.cluster.Constants;
+
 import com.dubboclub.dk.admin.model.Override;
 import com.dubboclub.dk.admin.model.Provider;
 import com.dubboclub.dk.admin.service.AbstractService;
@@ -28,7 +31,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
             public Provider convert(Pair<Long, URL> pair) {
                 return SyncUtils.url2Provider(pair);
             }
-        },Constants.PROVIDERS_CATEGORY);
+        }, RegistryConstants.PROVIDERS_CATEGORY);
     }
 
     public List<Provider> listProviderByApplication(String appName) {
@@ -36,7 +39,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
             public Provider convert(Pair<Long, URL> pair) {
                 return SyncUtils.url2Provider(pair);
             }
-        },Constants.PROVIDERS_CATEGORY,Constants.APPLICATION_KEY,appName);
+        },RegistryConstants.PROVIDERS_CATEGORY,CommonConstants.APPLICATION_KEY,appName);
     }
 
     public List<Provider> listProviderByService(String service) {
@@ -49,7 +52,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
                 hadContained.add(pair.getValue().getHost()+":"+pair.getValue().getPort());
                 return SyncUtils.url2Provider(pair);
             }
-        },Constants.PROVIDERS_CATEGORY,Constants.INTERFACE_KEY,service);
+        },RegistryConstants.PROVIDERS_CATEGORY,CommonConstants.INTERFACE_KEY,service);
     }
 
     public List<Provider> listProviderByConditions(String... conditions) {
@@ -61,16 +64,16 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
                 }
                 return provider;
             }
-        },Constants.PROVIDERS_CATEGORY,conditions);
+        },RegistryConstants.PROVIDERS_CATEGORY,conditions);
     }
 
     @java.lang.Override
     public List<Provider> listProviderByServiceKey(String serviceKey) {
-        return listProviderByConditions(Constants.INTERFACE_KEY, Tool.getInterface(serviceKey),Constants.GROUP_KEY,Tool.getGroup(serviceKey),Constants.VERSION_KEY,Tool.getVersion(serviceKey));
+        return listProviderByConditions(CommonConstants.INTERFACE_KEY, Tool.getInterface(serviceKey),CommonConstants.GROUP_KEY,Tool.getGroup(serviceKey),CommonConstants.VERSION_KEY,Tool.getVersion(serviceKey));
     }
 
     public Provider getProviderById(long id) {
-        URL url = getOneById(Constants.PROVIDERS_CATEGORY,id);
+        URL url = getOneById(RegistryConstants.PROVIDERS_CATEGORY,id);
         if(url!=null){
             Provider provider = SyncUtils.url2Provider(new Pair<Long, URL>(id, url));
             if(provider.isDynamic()){
@@ -88,17 +91,17 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         if(newProvider.isDynamic()){
             Map<String,String> params = Tool.convertParametersMap(newProvider.getParameters());
             Override override = generateDefaultOverride(newProvider);
-            if(params.containsKey(Constants.ENABLED_KEY)&&!Boolean.parseBoolean(params.get(Constants.ENABLED_KEY))){
-                override.setParams(Constants.DISABLED_KEY + "=true");
+            if(params.containsKey(CommonConstants.ENABLED_KEY)&&!Boolean.parseBoolean(params.get(CommonConstants.ENABLED_KEY))){
+                override.setParams(CommonConstants.DISABLED_KEY + "=true");
             }else{
-                override.setParams(Constants.DISABLED_KEY + "=false");
+                override.setParams(CommonConstants.DISABLED_KEY + "=false");
             }
             overrideService.add(override);
             List<Override> overrides = overrideService.listByProvider(oldProvider);
             URL editOverrideUrl = override.toUrl();
             for(Override item:overrides){
                 URL overrideUrl = item.toUrl();
-                if(overrideUrl.getParameter(Constants.DISABLED_KEY,false)!=editOverrideUrl.getParameter(Constants.DISABLED_KEY,false)){
+                if(overrideUrl.getParameter(CommonConstants.DISABLED_KEY,false)!=editOverrideUrl.getParameter(CommonConstants.DISABLED_KEY,false)){
                     overrideService.delete(item.getId());
                 }else if(!StringUtils.isEmpty(params.get(Constants.WEIGHT_KEY))&&!params.get(Constants.WEIGHT_KEY).equals(overrideUrl.getParameter(Constants.WEIGHT_KEY))){
                     overrideService.delete(item.getId());
@@ -121,13 +124,13 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         if(!StringUtils.isEmpty(params.get(Constants.WEIGHT_KEY))){
             override.setParams(Constants.WEIGHT_KEY+"="+params.get(Constants.WEIGHT_KEY));
         }
-        override.setParams(Constants.ANYHOST_KEY+"="+params.get(Constants.ANYHOST_KEY));
-        override.setParams(Constants.APPLICATION_KEY+"="+Constants.ANY_VALUE);
-        if(!StringUtils.isEmpty(params.get(Constants.GROUP_KEY))){
-            override.setParams(Constants.GROUP_KEY+"="+params.get(Constants.GROUP_KEY));
+        override.setParams(CommonConstants.ANYHOST_KEY+"="+params.get(CommonConstants.ANYHOST_KEY));
+        override.setParams(CommonConstants.APPLICATION_KEY+"="+CommonConstants.ANY_VALUE);
+        if(!StringUtils.isEmpty(params.get(CommonConstants.GROUP_KEY))){
+            override.setParams(CommonConstants.GROUP_KEY+"="+params.get(CommonConstants.GROUP_KEY));
         }
-        if(!StringUtils.isEmpty(params.get(Constants.VERSION_KEY))){
-            override.setParams(Constants.VERSION_KEY+"="+ params.get(Constants.VERSION_KEY));
+        if(!StringUtils.isEmpty(params.get(CommonConstants.VERSION_KEY))){
+            override.setParams(CommonConstants.VERSION_KEY+"="+ params.get(CommonConstants.VERSION_KEY));
         }
         override.setParams("owner="+params.get("owner"));
         return override;
@@ -138,7 +141,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         Provider provider = getProviderById(id);
         if(provider.isDynamic()){
             URL url = overrideService.configProviderURL(provider);
-            url=url.addParameter(Constants.ENABLED_KEY, false);
+            url=url.addParameter(CommonConstants.ENABLED_KEY, false);
             updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
         }else{
             provider.setEnabled(false);
@@ -152,7 +155,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         Provider provider = getProviderById(id);
         if(provider.isDynamic()){
             URL url = overrideService.configProviderURL(provider);
-            url=url.addParameter(Constants.ENABLED_KEY, true);
+            url=url.addParameter(CommonConstants.ENABLED_KEY, true);
             updateProvider(SyncUtils.url2Provider(new Pair<Long, URL>(id,url)));
         }else{
             provider.setEnabled(true);
@@ -205,7 +208,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         }
         provider.setEnabled(false);
         URL url = SyncUtils.provider2URL(provider);
-        url=url.addParameter(Constants.TIMESTAMP_KEY,System.currentTimeMillis());
+        url=url.addParameter(CommonConstants.TIMESTAMP_KEY,System.currentTimeMillis());
         add(url);
     }
 

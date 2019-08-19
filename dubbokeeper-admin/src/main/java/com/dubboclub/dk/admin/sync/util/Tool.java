@@ -1,8 +1,8 @@
 package com.dubboclub.dk.admin.sync.util;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,12 +69,12 @@ public class Tool {
         int groupIndex = serviceKey.indexOf("/");
         int versionIndex = serviceKey.indexOf(":");
         if(groupIndex>0){
-            params.put(Constants.GROUP_KEY,serviceKey.substring(0,groupIndex));
+            params.put(CommonConstants.GROUP_KEY,serviceKey.substring(0,groupIndex));
         }
         if(versionIndex>0){
-            params.put(Constants.VERSION_KEY,serviceKey.substring(versionIndex+1));
+            params.put(CommonConstants.VERSION_KEY,serviceKey.substring(versionIndex+1));
         }
-        params.put(Constants.INTERFACE_KEY,getInterface(serviceKey));
+        params.put(CommonConstants.INTERFACE_KEY,getInterface(serviceKey));
         return params;
     }
 

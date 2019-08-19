@@ -1,7 +1,7 @@
 package com.dubboclub.dk.web.controller;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.utils.ConfigUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.utils.ConfigUtils;
 import com.dubboclub.dk.web.model.SpyZooResponse;
 import com.dubboclub.dk.web.model.SpyZooNode;
 
@@ -38,7 +38,7 @@ public class ZooPeeperController implements InitializingBean{
     public void afterPropertiesSet() throws Exception {
         String zookeepers = ConfigUtils.getProperty("peeper.zookeepers");
         if(!StringUtils.isEmpty(zookeepers)){
-            String[] zookeeperArray = Constants.COMMA_SPLIT_PATTERN.split(zookeepers);
+            String[] zookeeperArray = CommonConstants.COMMA_SPLIT_PATTERN.split(zookeepers);
             for(String zk:zookeeperArray){
                 ZooKeeper zooKeeper  = new ZooKeeper(zk, Integer.parseInt(ConfigUtils.getProperty("peeper.zookeeper.session.timeout","60000")), new ZkWatcher(zk));
                 ZK_CLIENT_MAP.put(zk, zooKeeper);

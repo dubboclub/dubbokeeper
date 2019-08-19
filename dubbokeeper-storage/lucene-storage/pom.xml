@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dubbokeeper-storage</artifactId>
         <groupId>com.dubboclub.dk</groupId>
-        <version>1.0.1</version>
+        <version>1.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -38,12 +38,16 @@
         <dependency>
             <groupId>com.dubboclub.dk</groupId>
             <artifactId>storage-api</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.dubboclub.dk</groupId>
             <artifactId>dubbokeeper-monitor</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
     </dependencies>
 

@@ -15,8 +15,10 @@
  */
 package com.dubboclub.dk.admin.model;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+
 import com.dubboclub.dk.admin.sync.util.Tool;
 
 import java.util.Date;
@@ -217,7 +219,7 @@ public class Provider extends BasicModel {
 
         boolean dynamic = isDynamic();
         if (!dynamic) {
-            url = url.addParameter(Constants.DYNAMIC_KEY, false);
+            url = url.addParameter(RegistryConstants.DYNAMIC_KEY, false);
         }
         boolean enabled = isEnabled();
         if (enabled != url.getParameter("enabled", true)) {

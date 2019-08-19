@@ -1,8 +1,8 @@
 package com.dubboclub.dk.admin.service;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.utils.StringUtils;
 import com.dubboclub.dk.admin.model.BasicModel;
 import com.dubboclub.dk.admin.sync.RegistryServerSync;
 import com.dubboclub.dk.admin.sync.util.Pair;
@@ -55,7 +55,7 @@ public abstract class AbstractService {
     }
 
     protected <T extends BasicModel> List<T> filterCategoryDataByServiceKey(ConvertURL2Entity<T> convertURLTOEntity,String category,String serviceKey){
-        return filterCategoryData(convertURLTOEntity,category,Constants.INTERFACE_KEY, Tool.getInterface(serviceKey),Constants.GROUP_KEY,Tool.getGroup(serviceKey),Constants.VERSION_KEY,Tool.getVersion(serviceKey));
+        return filterCategoryData(convertURLTOEntity,category,CommonConstants.INTERFACE_KEY, Tool.getInterface(serviceKey),CommonConstants.GROUP_KEY,Tool.getGroup(serviceKey),CommonConstants.VERSION_KEY,Tool.getVersion(serviceKey));
     }
     //通过对某个目录下的数据定义过滤器，过滤出复核条件的数据
     protected<T extends BasicModel> List<T>  filterCategoryData(ConvertURL2Entity<T> convertURLTOEntity,String category,String... params){

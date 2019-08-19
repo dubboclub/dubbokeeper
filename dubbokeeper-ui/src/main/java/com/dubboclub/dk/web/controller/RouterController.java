@@ -1,6 +1,6 @@
 package com.dubboclub.dk.web.controller;
 
-import com.alibaba.dubbo.common.Constants;
+import org.apache.dubbo.common.constants.CommonConstants;
 import com.dubboclub.dk.admin.model.Provider;
 import com.dubboclub.dk.admin.model.Route;
 import com.dubboclub.dk.admin.service.ProviderService;
@@ -47,7 +47,7 @@ public class RouterController {
     @RequestMapping("batch-{type}.htm")
     public @ResponseBody BasicResponse batchDelete(@RequestParam("ids")String ids,@PathVariable("type") String type){
         BasicResponse response = new BasicResponse();
-        String[] idArray = Constants.COMMA_SPLIT_PATTERN.split(ids);
+        String[] idArray = CommonConstants.COMMA_SPLIT_PATTERN.split(ids);
         if("delete".equals(type)){
             for(String id:idArray){
                 routeService.deleteRoute(Long.parseLong(id));

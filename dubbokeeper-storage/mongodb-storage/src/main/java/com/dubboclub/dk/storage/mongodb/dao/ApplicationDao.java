@@ -1,8 +1,6 @@
 package com.dubboclub.dk.storage.mongodb.dao;
 
 import com.dubboclub.dk.storage.model.ApplicationInfo;
-import com.dubboclub.dk.storage.model.Statistics;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

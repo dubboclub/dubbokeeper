@@ -1,8 +1,9 @@
 package com.dubboclub.dk.admin.service.impl;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.monitor.MonitorService;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+import org.apache.dubbo.monitor.MonitorService;
 import com.dubboclub.dk.admin.model.Application;
 import com.dubboclub.dk.admin.model.Consumer;
 import com.dubboclub.dk.admin.model.Node;
@@ -28,15 +29,15 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
 
     @Override
     public List<Application> getApplications() {
-        ConcurrentMap<String, Map<Long, URL>> providers = getServiceByCategory(Constants.PROVIDERS_CATEGORY);
-        ConcurrentMap<String, Map<Long, URL>> consumers = getServiceByCategory(Constants.CONSUMERS_CATEGORY);
+        ConcurrentMap<String, Map<Long, URL>> providers = getServiceByCategory(RegistryConstants.PROVIDERS_CATEGORY);
+        ConcurrentMap<String, Map<Long, URL>> consumers = getServiceByCategory(RegistryConstants.CONSUMERS_CATEGORY);
         List<Application> applications = new ArrayList<Application>();
         if(providers!=null){
             for(Map.Entry<String, Map<Long, URL>> oneService:providers.entrySet()){
                 Map<Long, URL> urls = oneService.getValue();
                 for(Map.Entry<Long,URL> url:urls.entrySet()){
                     Application application = new Application();
-                    application.setApplication(url.getValue().getParameter(Constants.APPLICATION_KEY));
+                    application.setApplication(url.getValue().getParameter(CommonConstants.APPLICATION_KEY));
                     application.setUsername(url.getValue().getParameter("owner"));
                     application.setType(Application.PROVIDER);
                     if(!applications.contains(application)){
@@ -51,11 +52,11 @@ public class ApplicationServiceImpl extends AbstractService implements Applicati
                 //某个服务的所有地址，一个服务可能会被多个应用消费
                 Map<Long, URL> urls = oneService.getValue();
                 for(Map.Entry<Long,URL> url:urls.entrySet()){
-                    if(url.getValue().getParameter(Constants.INTERFACE_KEY).equals(MonitorService.class.getName())){
+                    if(url.getValue().getParameter(CommonConstants.INTERFACE_KEY).equals(MonitorService.class.getName())){
                         continue;
                     }
                     Application application = new Application();
-                    application.setApplication(url.getValue().getParameter(Constants.APPLICATION_KEY));
+                    application.setApplication(url.getValue().getParameter(CommonConstants.APPLICATION_KEY));
                     application.setUsername(url.getValue().getParameter("owner"));
                     if(!applications.contains(application)){
                         application.setType(Application.CONSUMER);

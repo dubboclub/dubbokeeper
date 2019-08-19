@@ -207,7 +207,7 @@ serviceProvider.controller("serviceReadme",function($scope,$http,$routeParams,$q
                     				default: [
 	                    		        'log4j/log4j/1.2.17',
 										'commons-logging/commons-logging/1.2',
-										'com.alibaba/dubbo/2.5.3',
+										'org.apache.dubbo/dubbo/2.7.3',
 										'org.javassist/javassist/3.15.0-GA',
 										'io.netty/netty/3.7.0.Final',
 										'org.slf4j/slf4j-api/1.7.7',

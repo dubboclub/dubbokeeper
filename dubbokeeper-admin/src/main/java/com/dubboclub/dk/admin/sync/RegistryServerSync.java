@@ -15,14 +15,16 @@
  */
 package com.dubboclub.dk.admin.sync;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.logger.Logger;
-import com.alibaba.dubbo.common.logger.LoggerFactory;
-import com.alibaba.dubbo.common.utils.NetUtils;
-import com.alibaba.dubbo.common.utils.StringUtils;
-import com.alibaba.dubbo.registry.NotifyListener;
-import com.alibaba.dubbo.registry.RegistryService;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+import org.apache.dubbo.common.logger.Logger;
+import org.apache.dubbo.common.logger.LoggerFactory;
+import org.apache.dubbo.common.utils.NetUtils;
+import org.apache.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.registry.Constants;
+import org.apache.dubbo.registry.NotifyListener;
+import org.apache.dubbo.registry.RegistryService;
 import com.dubboclub.dk.admin.sync.util.SyncUtils;
 import com.dubboclub.dk.admin.sync.util.Tool;
 import org.springframework.beans.factory.DisposableBean;
@@ -43,16 +45,16 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
     private static final Logger logger = LoggerFactory.getLogger(RegistryServerSync.class);
 
     private static final URL SUBSCRIBE = new URL(Constants.ADMIN_PROTOCOL, NetUtils.getLocalHost(), 0, "",
-                                            Constants.INTERFACE_KEY, Constants.ANY_VALUE, 
-                                            Constants.GROUP_KEY, Constants.ANY_VALUE, 
-                                            Constants.VERSION_KEY, Constants.ANY_VALUE,
-                                            Constants.CLASSIFIER_KEY, Constants.ANY_VALUE,
-                                            Constants.CATEGORY_KEY, Constants.PROVIDERS_CATEGORY + "," 
-                                                    + Constants.CONSUMERS_CATEGORY + ","
-                                                    + Constants.ROUTERS_CATEGORY + ","
-                                                    + Constants.CONFIGURATORS_CATEGORY,
-                                            Constants.ENABLED_KEY, Constants.ANY_VALUE,
-                                            Constants.CHECK_KEY, String.valueOf(false));
+                                            CommonConstants.INTERFACE_KEY, CommonConstants.ANY_VALUE,
+                                            CommonConstants.GROUP_KEY, CommonConstants.ANY_VALUE,
+                                            CommonConstants.VERSION_KEY, CommonConstants.ANY_VALUE,
+                                            CommonConstants.CLASSIFIER_KEY, CommonConstants.ANY_VALUE,
+                                            RegistryConstants.CATEGORY_KEY, RegistryConstants.PROVIDERS_CATEGORY + ","
+                                                    + RegistryConstants.CONSUMERS_CATEGORY + ","
+                                                    + RegistryConstants.ROUTERS_CATEGORY + ","
+                                                    + RegistryConstants.CONFIGURATORS_CATEGORY,
+                                            CommonConstants.ENABLED_KEY, CommonConstants.ANY_VALUE,
+                                            org.apache.dubbo.remoting.Constants.CHECK_KEY, String.valueOf(false));
 
     private static final AtomicLong ID = new AtomicLong();
 
@@ -103,21 +105,21 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
         }
         final Map<String, Map<String, Map<Long, URL>>> categories = new HashMap<String, Map<String, Map<Long, URL>>>();
         for(URL url : urls) {
-        	String category = url.getParameter(Constants.CATEGORY_KEY, Constants.PROVIDERS_CATEGORY);
-            if(Constants.EMPTY_PROTOCOL.equalsIgnoreCase(url.getProtocol())) { // 注意：empty协议的group和version为*
+        	String category = url.getParameter(RegistryConstants.CATEGORY_KEY, RegistryConstants.PROVIDERS_CATEGORY);
+            if(RegistryConstants.EMPTY_PROTOCOL.equalsIgnoreCase(url.getProtocol())) { // 注意：empty协议的group和version为*
             	ConcurrentMap<String, Map<Long, URL>> services = registryCache.get(category);
             	if(services != null) {
-            		String group = url.getParameter(Constants.GROUP_KEY);
-            		String version = url.getParameter(Constants.VERSION_KEY);
+            		String group = url.getParameter(CommonConstants.GROUP_KEY);
+            		String version = url.getParameter(CommonConstants.VERSION_KEY);
             		// 注意：empty协议的group和version为*
-            		if (! Constants.ANY_VALUE.equals(group) && ! Constants.ANY_VALUE.equals(version)) {
+            		if (! CommonConstants.ANY_VALUE.equals(group) && ! CommonConstants.ANY_VALUE.equals(version)) {
             			services.remove(url.getServiceKey());
             		} else {
 	                	for (Map.Entry<String, Map<Long, URL>> serviceEntry : services.entrySet()) {
 	                		String service = serviceEntry.getKey();
 	                		if (Tool.getInterface(service).equals(url.getServiceInterface())
-	                				&& (Constants.ANY_VALUE.equals(group) || StringUtils.isEquals(group, Tool.getGroup(service)))
-	                				&& (Constants.ANY_VALUE.equals(version) || StringUtils.isEquals(version, Tool.getVersion(service)))) {
+	                				&& (CommonConstants.ANY_VALUE.equals(group) || StringUtils.isEquals(group, Tool.getGroup(service)))
+	                				&& (CommonConstants.ANY_VALUE.equals(version) || StringUtils.isEquals(version, Tool.getVersion(service)))) {
 	                			services.remove(service);
 	                		}
 	                	}

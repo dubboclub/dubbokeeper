@@ -15,9 +15,11 @@
  */
 package com.dubboclub.dk.admin.model;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import org.apache.commons.lang.StringUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+import org.apache.dubbo.registry.Constants;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -229,12 +231,13 @@ public class Route  extends BasicModel{
             version = path.substring(i + 1);
             path = path.substring(0, i);
         }
-	    return URL.valueOf(Constants.ROUTE_PROTOCOL + "://" + Constants.ANYHOST_VALUE + "/" + path 
-	            + "?" + Constants.CATEGORY_KEY + "=" + Constants.ROUTERS_CATEGORY 
+	    return URL.valueOf(RegistryConstants.ROUTE_PROTOCOL + "://" + CommonConstants.ANYHOST_VALUE + "/" + path
+	            + "?" + RegistryConstants.CATEGORY_KEY + "=" + RegistryConstants.ROUTERS_CATEGORY
 	            + "&router=condition&runtime=false&enabled=" + isEnabled() + "&priority=" + getPriority() + "&force=" + isForce() + "&dynamic=false"
-	            + "&name=" + getName() + "&" + Constants.RULE_KEY + "=" + URL.encode(StringUtils.isEmpty(rule)?(getMatchRule() + " => " + getFilterRule()):rule)
-	            + (group == null ? "" : "&" + Constants.GROUP_KEY + "=" + group)
-	            + (version == null ? "" : "&" + Constants.VERSION_KEY + "=" + version)+"&"+Constants.ROUTER_KEY+"="+type+(getScriptType()==null?"":"&"+Constants.TYPE_KEY+"="+getScriptType()));
+	            + "&name=" + getName() + "&" + org.apache.dubbo.rpc.cluster.Constants.RULE_KEY + "=" + URL.encode(
+            StringUtils.isEmpty(rule)?(getMatchRule() + " => " + getFilterRule()):rule)
+	            + (group == null ? "" : "&" + CommonConstants.GROUP_KEY + "=" + group)
+	            + (version == null ? "" : "&" + CommonConstants.VERSION_KEY + "=" + version)+"&"+org.apache.dubbo.rpc.cluster.Constants.RULE_KEY+"="+type+(getScriptType()==null?"":"&"+ org.apache.dubbo.rpc.cluster.Constants.TYPE_KEY+"="+getScriptType()));
 	}
 
 }

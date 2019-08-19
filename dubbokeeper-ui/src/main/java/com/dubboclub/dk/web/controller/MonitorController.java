@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.extension.ExtensionLoader;
-import com.alibaba.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.extension.ExtensionLoader;
+import org.apache.dubbo.common.utils.StringUtils;
 import com.dubboclub.dk.admin.model.Provider;
 import com.dubboclub.dk.admin.service.ProviderService;
 import com.dubboclub.dk.storage.StatisticsStorage;
@@ -68,9 +68,9 @@ public class MonitorController {
         if(providers.size()>0){
             Provider provider = providers.get(0);
             Map<String,String> params = StringUtils.parseQueryString(provider.getParameters());
-            String methodStr = params.get(Constants.METHODS_KEY);
+            String methodStr = params.get(CommonConstants.METHODS_KEY);
             if(!StringUtils.isEmpty(methodStr)){
-                String[] methodArray = Constants.COMMA_SPLIT_PATTERN.split(methodStr);
+                String[] methodArray = CommonConstants.COMMA_SPLIT_PATTERN.split(methodStr);
                 for(String method:methodArray){
                     methods.add(method);
                 }
@@ -87,9 +87,9 @@ public class MonitorController {
         if(providers.size()>0){
             Provider provider = providers.get(0);
             Map<String,String> params = StringUtils.parseQueryString(provider.getParameters());
-            String methodStr = params.get(Constants.METHODS_KEY);
+            String methodStr = params.get(CommonConstants.METHODS_KEY);
             if(!StringUtils.isEmpty(methodStr)){
-                String[] methodArray = Constants.COMMA_SPLIT_PATTERN.split(methodStr);
+                String[] methodArray = CommonConstants.COMMA_SPLIT_PATTERN.split(methodStr);
                 for(String method:methodArray){
                     methods.add(method);
                 }

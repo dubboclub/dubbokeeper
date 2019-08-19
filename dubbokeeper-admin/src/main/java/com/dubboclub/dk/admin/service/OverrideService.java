@@ -1,6 +1,6 @@
 package com.dubboclub.dk.admin.service;
 
-import com.alibaba.dubbo.common.URL;
+import org.apache.dubbo.common.URL;
 import com.dubboclub.dk.admin.model.Override;
 import com.dubboclub.dk.admin.model.Provider;
 

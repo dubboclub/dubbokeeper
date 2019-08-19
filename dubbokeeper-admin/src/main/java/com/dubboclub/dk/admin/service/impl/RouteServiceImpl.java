@@ -1,7 +1,9 @@
 package com.dubboclub.dk.admin.service.impl;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+
 import com.dubboclub.dk.admin.model.Route;
 import com.dubboclub.dk.admin.service.AbstractService;
 import com.dubboclub.dk.admin.service.RouteService;
@@ -23,12 +25,12 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
 
     @Override
     public void deleteRoute(Long id) {
-        delete(id, Constants.ROUTERS_CATEGORY);
+        delete(id, RegistryConstants.ROUTERS_CATEGORY);
     }
 
     @Override
     public void updateRoute(Route route) {
-        URL oldUrl = getOneById(Constants.ROUTERS_CATEGORY,route.getId());
+        URL oldUrl = getOneById(RegistryConstants.ROUTERS_CATEGORY,route.getId());
         update(oldUrl,route.toUrl());
     }
 
@@ -44,12 +46,12 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
                     return null;
                 }
             }
-        }, Constants.ROUTERS_CATEGORY, Constants.VERSION_KEY, Tool.getVersion(serviceKey),Constants.GROUP_KEY,Tool.getGroup(serviceKey));
+        }, RegistryConstants.ROUTERS_CATEGORY, CommonConstants.VERSION_KEY, Tool.getVersion(serviceKey),CommonConstants.GROUP_KEY,Tool.getGroup(serviceKey));
     }
 
     @Override
     public Route getRoute(Long id) {
-        return SyncUtils.url2Route(new Pair<Long, URL>(id,getOneById(Constants.ROUTERS_CATEGORY,id)));
+        return SyncUtils.url2Route(new Pair<Long, URL>(id,getOneById(RegistryConstants.ROUTERS_CATEGORY,id)));
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.*;
 import com.dubboclub.dk.admin.service.OverrideService;
 import com.dubboclub.dk.web.model.BasicResponse;
 import org.apache.commons.lang.StringUtils;
+import org.apache.dubbo.rpc.cluster.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.utils.ConfigUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.utils.ConfigUtils;
 import com.dubboclub.dk.admin.model.Provider;
 import com.dubboclub.dk.admin.service.ProviderService;
 import com.dubboclub.dk.admin.sync.util.Tool;
@@ -77,7 +78,7 @@ public class ProviderController {
         Provider provider =providerService.getProviderById(id);
         provider.setParameters(parameters);
         Map<String,String> params = Tool.convertParametersMap(provider.getParameters());
-        provider.setEnabled(Boolean.parseBoolean(params.get(Constants.ENABLED_KEY)));
+        provider.setEnabled(Boolean.parseBoolean(params.get(CommonConstants.ENABLED_KEY)));
         provider.setWeight(Integer.parseInt(params.get(Constants.WEIGHT_KEY)));
         providerService.updateProvider(provider);
         return basicResponse;

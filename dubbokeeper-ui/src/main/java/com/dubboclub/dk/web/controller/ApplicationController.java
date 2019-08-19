@@ -1,7 +1,7 @@
 package com.dubboclub.dk.web.controller;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
 import com.dubboclub.dk.admin.model.Application;
 import com.dubboclub.dk.admin.model.Consumer;
 import com.dubboclub.dk.admin.model.Node;
@@ -72,10 +72,10 @@ public class ApplicationController {
             provideInfo.setGroup(provider.getGroup());
             provideInfo.setId(provider.getId());
             List<Provider> providerList  = providerService.listProviderByConditions(
-                    Constants.INTERFACE_KEY,
+                    CommonConstants.INTERFACE_KEY,
                     provideInfo.getService(),
-                    Constants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()),
-                    Constants.VERSION_KEY,
+                    CommonConstants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()),
+                    CommonConstants.VERSION_KEY,
                     Tool.getVersion(provider.getServiceKey()));
             for(Provider item:providerList){
                 URL url = URL.valueOf(item.getUrl());
@@ -107,7 +107,7 @@ public class ApplicationController {
     @RequestMapping("/{id}/consumer-apps.htm")
     public @ResponseBody List<Application> getConsumerAppByService(@PathVariable("id")long id ){
         Provider provider = providerService.getProviderById(id);
-        List<Consumer> consumers = consumerService.listConsumerByConditions(Constants.INTERFACE_KEY,Tool.getInterface(provider.getServiceKey()),Constants.VERSION_KEY,Tool.getVersion(provider.getServiceKey()),Constants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()));
+        List<Consumer> consumers = consumerService.listConsumerByConditions(CommonConstants.INTERFACE_KEY,Tool.getInterface(provider.getServiceKey()),CommonConstants.VERSION_KEY,Tool.getVersion(provider.getServiceKey()),CommonConstants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()));
         List<Application> applicationList = new ArrayList<Application>();
         List<String> containMark = new ArrayList<String>();
         for(Consumer consumer:consumers){
@@ -161,7 +161,7 @@ public class ApplicationController {
             provideInfo.setVersion(provider.getVersion());
             provideInfo.setGroup(provider.getGroup());
             provideInfo.setId(provider.getId());
-            List<Provider> providerList  = providerService.listProviderByConditions(Constants.INTERFACE_KEY,provideInfo.getService(),Constants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()),Constants.VERSION_KEY,Tool.getVersion(provider.getServiceKey()));
+            List<Provider> providerList  = providerService.listProviderByConditions(CommonConstants.INTERFACE_KEY,provideInfo.getService(),CommonConstants.GROUP_KEY,Tool.getGroup(provider.getServiceKey()),CommonConstants.VERSION_KEY,Tool.getVersion(provider.getServiceKey()));
             for(Provider item:providerList){
                 URL url = URL.valueOf(item.getUrl());
                 protocolBuffer.append(url.getProtocol()).append(":").append(url.getPort()).append(",");
@@ -190,11 +190,11 @@ public class ApplicationController {
             AppConsumeInfo consumeInfo = new AppConsumeInfo();
             consumeInfo.setService(Tool.getInterface(consumer.getServiceKey()));
             consumeInfo.setServiceKey(URLEncoder.encode(URLEncoder.encode(consumer.getServiceKey(),"UTF-8"),"utf-8"));
-            List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumer.getServiceKey()),Constants.GROUP_KEY,Tool.getGroup(consumer.getServiceKey()),Constants.VERSION_KEY,Tool.getVersion(consumer.getServiceKey()));
+            List<Provider> providers = providerService.listProviderByConditions(CommonConstants.INTERFACE_KEY,Tool.getInterface(consumer.getServiceKey()),CommonConstants.GROUP_KEY,Tool.getGroup(consumer.getServiceKey()),CommonConstants.VERSION_KEY,Tool.getVersion(consumer.getServiceKey()));
             consumeInfo.setGroup(consumer.getGroup());
             consumeInfo.setVersion(consumer.getVersion());
             Map<String,String> params = Tool.convertParametersMap(consumer.getParameters());
-            String accessProtocol = params.get(Constants.PROTOCOL_KEY);
+            String accessProtocol = params.get(CommonConstants.PROTOCOL_KEY);
             
             consumeInfo.setAccessProtocol(accessProtocol);
             if(providers.size()>0){
@@ -253,7 +253,7 @@ public class ApplicationController {
                 continue;
             }
             containMark.add(consumerEntity.getServiceKey());
-            List<Provider> providers = providerService.listProviderByConditions(Constants.INTERFACE_KEY,Tool.getInterface(consumerEntity.getServiceKey()),Constants.VERSION_KEY,Tool.getVersion(consumerEntity.getServiceKey()),Constants.GROUP_KEY,Tool.getGroup(consumerEntity.getServiceKey()),Constants.APPLICATION_KEY,provider);
+            List<Provider> providers = providerService.listProviderByConditions(CommonConstants.INTERFACE_KEY,Tool.getInterface(consumerEntity.getServiceKey()),CommonConstants.VERSION_KEY,Tool.getVersion(consumerEntity.getServiceKey()),CommonConstants.GROUP_KEY,Tool.getGroup(consumerEntity.getServiceKey()),CommonConstants.APPLICATION_KEY,provider);
             if(providers.size()>0){
                 AppProvideInfo provideInfo = new AppProvideInfo();
                 Provider providerEntity = providers.get(0);

@@ -1,8 +1,9 @@
 package com.dubboclub.dk.web.model;
 
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.rpc.cluster.Constants;
 
 import java.util.Map;
 
@@ -37,14 +38,14 @@ public class LoadBalanceOverrideInfo extends OverrideInfo {
         if(!org.apache.commons.lang.StringUtils.isEmpty(override.getParams())){
             Map<String,String> parameters = StringUtils.parseQueryString(override.getParams());
             loadBalance=parameters.get(Constants.LOADBALANCE_KEY);
-            methods=parameters.get(Constants.METHODS_KEY)==null? Constants.ANY_VALUE:parameters.get(Constants.METHODS_KEY);
+            methods=parameters.get(CommonConstants.METHODS_KEY)==null? CommonConstants.ANY_VALUE:parameters.get(CommonConstants.METHODS_KEY);
             if(org.apache.commons.lang.StringUtils.isEmpty(loadBalance)){
                 return null;
             }
         }
         LoadBalanceOverrideInfo overrideInfo = new LoadBalanceOverrideInfo();
         overrideInfo.setAddress(override.getAddress());
-        overrideInfo.setApplication(override.getApplication()==null?Constants.ANY_VALUE:override.getApplication());
+        overrideInfo.setApplication(override.getApplication()==null?CommonConstants.ANY_VALUE:override.getApplication());
         overrideInfo.setEnable(override.isEnabled());
         overrideInfo.setId(override.getId());
         overrideInfo.setParameters(override.getParams());

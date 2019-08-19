@@ -1,6 +1,5 @@
 package com.dubboclub.dk.storage.mysql;
 
-import com.alibaba.fastjson.JSON;
 import com.dubboclub.dk.storage.model.ApplicationInfo;
 import com.dubboclub.dk.storage.model.MethodMonitorOverview;
 import com.dubboclub.dk.storage.model.Statistics;

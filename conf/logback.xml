@@ -49,7 +49,7 @@
     </appender>
     <!--dubbo-->
     <logger
-            name="com.alibaba.dubbo"
+            name="org.apache.dubbo"
             level="DEBUG">
         <appender-ref ref="dubboRolling" />
     </logger>

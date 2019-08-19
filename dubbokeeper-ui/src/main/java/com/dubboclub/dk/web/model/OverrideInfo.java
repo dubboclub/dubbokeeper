@@ -1,6 +1,6 @@
 package com.dubboclub.dk.web.model;
 
-import com.alibaba.dubbo.common.Constants;
+import org.apache.dubbo.common.constants.CommonConstants;
 import com.dubboclub.dk.admin.model.Override;
 import org.apache.commons.lang.StringUtils;
 
@@ -26,15 +26,15 @@ public class OverrideInfo {
         Override override = new Override();
         override.setParams(parameters);
         override.setEnabled(enable);
-        override.setApplication(StringUtils.isEmpty(application) ? Constants.ANY_VALUE : application);
-        override.setAddress(StringUtils.isEmpty(address) ? Constants.ANYHOST_VALUE : address);
+        override.setApplication(StringUtils.isEmpty(application) ? CommonConstants.ANY_VALUE : application);
+        override.setAddress(StringUtils.isEmpty(address) ? CommonConstants.ANYHOST_VALUE : address);
         return override;
     }
 
     public static OverrideInfo valueOf(Override override){
         OverrideInfo overrideInfo = new OverrideInfo();
         overrideInfo.setAddress(override.getAddress());
-        overrideInfo.setApplication(override.getApplication()==null? Constants.ANY_VALUE:override.getApplication());
+        overrideInfo.setApplication(override.getApplication()==null? CommonConstants.ANY_VALUE:override.getApplication());
         overrideInfo.setEnable(override.isEnabled());
         overrideInfo.setId(override.getId());
         overrideInfo.setParameters(override.getParams());

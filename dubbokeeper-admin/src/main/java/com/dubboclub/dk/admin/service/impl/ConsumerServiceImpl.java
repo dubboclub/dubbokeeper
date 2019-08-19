@@ -1,7 +1,9 @@
 package com.dubboclub.dk.admin.service.impl;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+
 import com.dubboclub.dk.admin.model.Consumer;
 import com.dubboclub.dk.admin.service.AbstractService;
 import com.dubboclub.dk.admin.service.ConsumerService;
@@ -22,7 +24,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
             public Consumer convert(Pair<Long, URL> pair) {
                 return SyncUtils.url2Consumer(pair);
             }
-        },Constants.CONSUMERS_CATEGORY,Constants.APPLICATION_KEY,appName);
+        }, RegistryConstants.CONSUMERS_CATEGORY,CommonConstants.APPLICATION_KEY,appName);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
             public Consumer convert(Pair<Long, URL> pair) {
                 return SyncUtils.url2Consumer(pair);
             }
-        },Constants.CONSUMERS_CATEGORY,Constants.INTERFACE_KEY,service);
+        },RegistryConstants.CONSUMERS_CATEGORY,CommonConstants.INTERFACE_KEY,service);
     }
 
     @Override
@@ -42,6 +44,6 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
             public Consumer convert(Pair<Long, URL> pair) {
                 return SyncUtils.url2Consumer(pair);
             }
-        },Constants.CONSUMERS_CATEGORY,conditions);
+        },RegistryConstants.CONSUMERS_CATEGORY,conditions);
     }
 }

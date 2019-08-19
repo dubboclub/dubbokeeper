@@ -1,9 +1,10 @@
 package com.dubboclub.dk.admin.service.impl;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.StringUtils;
-import com.alibaba.dubbo.rpc.cluster.Configurator;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+import org.apache.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.rpc.cluster.Configurator;
 import com.dubboclub.dk.admin.model.Override;
 import com.dubboclub.dk.admin.service.AbstractService;
 import com.dubboclub.dk.admin.service.OverrideService;
@@ -26,7 +27,7 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
 
     public List<com.dubboclub.dk.admin.model.Override> listByProvider(Provider provider) {
         List<Override> overrides = new ArrayList<Override>();
-        ConcurrentMap<String, Map<Long, URL>> serviceUrls = getServiceByCategory(Constants.CONFIGURATORS_CATEGORY);
+        ConcurrentMap<String, Map<Long, URL>> serviceUrls = getServiceByCategory(RegistryConstants.CONFIGURATORS_CATEGORY);
         if (serviceUrls == null || serviceUrls.size() <= 0) {
             return overrides;
         }
@@ -35,14 +36,14 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
         for (Map<Long, URL> urlMap : urlMaps) {
             for (Map.Entry<Long, URL> urlEntry : urlMap.entrySet()) {
                 URL url = urlEntry.getValue();
-                if (Constants.ANYHOST_VALUE.equals(url.getHost())
+                if (CommonConstants.ANYHOST_VALUE.equals(url.getHost())
                         || providerUrl.getHost().equals(url.getHost())) {
-                    String configApplication = url.getParameter(Constants.APPLICATION_KEY, url.getUsername());
+                    String configApplication = url.getParameter(CommonConstants.APPLICATION_KEY, url.getUsername());
                     String currentApplication = StringUtils.isEmpty(provider.getApplication()) ? provider.getUsername() : provider.getApplication();
-                    if (configApplication == null || Constants.ANY_VALUE.equals(configApplication)
+                    if (configApplication == null || CommonConstants.ANY_VALUE.equals(configApplication)
                             || configApplication.equals(currentApplication)) {
                         if ((url.getPort() == 0 || URL.valueOf(provider.getUrl()).getPort() == url.getPort())) {
-                            if (url.getPath().equals(Tool.getInterface(provider.getServiceKey())) && StringUtils.isEquals(url.getParameter(Constants.GROUP_KEY), providerUrl.getParameter(Constants.GROUP_KEY))&& StringUtils.isEquals(url.getParameter(Constants.VERSION_KEY), providerUrl.getParameter(Constants.VERSION_KEY))) {
+                            if (url.getPath().equals(Tool.getInterface(provider.getServiceKey())) && StringUtils.isEquals(url.getParameter(CommonConstants.GROUP_KEY), providerUrl.getParameter(CommonConstants.GROUP_KEY))&& StringUtils.isEquals(url.getParameter(CommonConstants.VERSION_KEY), providerUrl.getParameter(CommonConstants.VERSION_KEY))) {
                                 overrides.add(SyncUtils.url2Override(new Pair<Long, URL>(urlEntry.getKey(), url)));
                             }
                         }
@@ -55,7 +56,7 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
 
     public List<Override> listByServiceKey(String serviceKey) {
         List<Override> overrides = new ArrayList<Override>();
-        ConcurrentMap<String, Map<Long, URL>> serviceUrls = getServiceByCategory(Constants.CONFIGURATORS_CATEGORY);
+        ConcurrentMap<String, Map<Long, URL>> serviceUrls = getServiceByCategory(RegistryConstants.CONFIGURATORS_CATEGORY);
         if (serviceUrls == null || serviceUrls.size() <= 0) {
             return overrides;
         }
@@ -66,7 +67,7 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
         for (Map<Long, URL> urlMap : urlMaps) {
             for (Map.Entry<Long, URL> urlEntry : urlMap.entrySet()) {
                 URL url = urlEntry.getValue();
-                if(url.getPath().equals(interfaceName)&&StringUtils.isEquals(group,url.getParameter(Constants.GROUP_KEY))&&StringUtils.isEquals(version,url.getParameter(Constants.VERSION_KEY))){
+                if(url.getPath().equals(interfaceName)&&StringUtils.isEquals(group,url.getParameter(CommonConstants.GROUP_KEY))&&StringUtils.isEquals(version,url.getParameter(CommonConstants.VERSION_KEY))){
                     overrides.add(SyncUtils.url2Override(new Pair<Long, URL>(urlEntry.getKey(), url)));
                 }
             }
@@ -83,7 +84,7 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
 
     @java.lang.Override
     public Override getById(Long id) {
-        URL url = getOneById(Constants.CONFIGURATORS_CATEGORY, id);
+        URL url = getOneById(RegistryConstants.CONFIGURATORS_CATEGORY, id);
         if (url == null) {
             throw new IllegalStateException("data had changed!");
         }
@@ -97,7 +98,7 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
 
     @java.lang.Override
     public void delete(Long id) {
-        URL url = getOneById(Constants.CONFIGURATORS_CATEGORY, id);
+        URL url = getOneById(RegistryConstants.CONFIGURATORS_CATEGORY, id);
         if (url == null) {
             throw new IllegalStateException("data had changed!");
         }
@@ -119,8 +120,8 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
             if (configurator != null) {
                 url = configurator.configure(url);
             }
-            if(overrideUrl.getParameters().containsKey(Constants.DISABLED_KEY)){
-                url = url.addParameter(Constants.ENABLED_KEY,!Boolean.parseBoolean(overrideUrl.getParameter(Constants.DISABLED_KEY)));
+            if(overrideUrl.getParameters().containsKey(CommonConstants.DISABLED_KEY)){
+                url = url.addParameter(CommonConstants.ENABLED_KEY,!Boolean.parseBoolean(overrideUrl.getParameter(CommonConstants.DISABLED_KEY)));
             }
         }
         return SyncUtils.url2Provider(new Pair<Long, URL>(provider.getId(), url));
@@ -136,8 +137,8 @@ public class OverrideServiceImpl extends AbstractService implements OverrideServ
             if (configurator != null) {
                 url = configurator.configure(url);
             }
-            if(overrideUrl.getParameters().containsKey(Constants.DISABLED_KEY)){
-                url = url.addParameter(Constants.ENABLED_KEY,!Boolean.parseBoolean(overrideUrl.getParameter(Constants.DISABLED_KEY)));
+            if(overrideUrl.getParameters().containsKey(CommonConstants.DISABLED_KEY)){
+                url = url.addParameter(CommonConstants.ENABLED_KEY,!Boolean.parseBoolean(overrideUrl.getParameter(CommonConstants.DISABLED_KEY)));
             }
         }
         return url;

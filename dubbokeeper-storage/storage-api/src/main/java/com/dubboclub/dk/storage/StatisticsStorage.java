@@ -1,6 +1,5 @@
 package com.dubboclub.dk.storage;
 
-import com.alibaba.dubbo.common.extension.SPI;
 import com.dubboclub.dk.storage.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

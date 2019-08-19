@@ -140,7 +140,7 @@
             if (the_word.charAt(0) == "#") return null
 
             if (types.indexOf(the_word) > -1) return "def"
-            if (commonConstants.indexOf(the_word) > -1) return "atom"
+            if (commonCommonConstants.indexOf(the_word) > -1) return "atom"
             if (numbers.indexOf(the_word) > -1) return "number"
 
             if ((numbers.indexOf(the_word.charAt(0) + "") > -1 ||

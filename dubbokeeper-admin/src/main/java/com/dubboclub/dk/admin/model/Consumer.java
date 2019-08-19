@@ -15,9 +15,11 @@
  */
 package com.dubboclub.dk.admin.model;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+import org.apache.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.registry.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -237,14 +239,14 @@ public class Consumer extends BasicModel {
             path = path.substring(0, i);
         }
         Map<String, String> param = StringUtils.parseQueryString(parameters);
-        param.put(Constants.CATEGORY_KEY, Constants.CONSUMERS_CATEGORY);
+        param.put(RegistryConstants.CATEGORY_KEY, RegistryConstants.CONSUMERS_CATEGORY);
         if (group != null) {
-            param.put(Constants.GROUP_KEY, group);
+            param.put(CommonConstants.GROUP_KEY, group);
         }
         if (version != null) {
-            param.put(Constants.VERSION_KEY, version);
+            param.put(CommonConstants.VERSION_KEY, version);
         }
-        return URL.valueOf(Constants.CONSUMER_PROTOCOL + "://" + address + "/" + path 
+        return URL.valueOf(Constants.CONSUMER_PROTOCOL + "://" + address + "/" + path
                 + "?" + StringUtils.toQueryString(param));
     }
 

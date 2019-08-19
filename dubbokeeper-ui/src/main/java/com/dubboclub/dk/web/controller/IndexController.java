@@ -1,6 +1,6 @@
 package com.dubboclub.dk.web.controller;
 
-import com.alibaba.dubbo.common.URL;
+import org.apache.dubbo.common.URL;
 import com.dubboclub.dk.admin.model.Application;
 import com.dubboclub.dk.admin.model.Consumer;
 import com.dubboclub.dk.admin.model.Provider;

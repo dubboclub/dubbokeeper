@@ -15,12 +15,15 @@
  */
 package com.dubboclub.dk.admin.sync.util;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.extension.ExtensionLoader;
-import com.alibaba.dubbo.common.utils.StringUtils;
-import com.alibaba.dubbo.rpc.cluster.Configurator;
-import com.alibaba.dubbo.rpc.cluster.ConfiguratorFactory;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.RegistryConstants;
+import org.apache.dubbo.common.extension.ExtensionLoader;
+import org.apache.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.rpc.cluster.Configurator;
+import org.apache.dubbo.rpc.cluster.ConfiguratorFactory;
+import org.apache.dubbo.rpc.cluster.Constants;
+
 import com.dubboclub.dk.admin.model.Override;
 import com.dubboclub.dk.admin.model.*;
 
@@ -45,12 +48,12 @@ public class SyncUtils {
         String inf = url.getServiceInterface();
         if (inf == null) return null;
         StringBuilder buf = new StringBuilder();
-        String group = url.getParameter(Constants.GROUP_KEY);
+        String group = url.getParameter(CommonConstants.GROUP_KEY);
         if (group != null&& group.length() > 0) {
             buf.append(group).append("/");
         }
         buf.append(inf);
-        String version = url.getParameter(Constants.VERSION_KEY);
+        String version = url.getParameter(CommonConstants.VERSION_KEY);
         if (version != null&& version.length() > 0) {
             buf.append(":").append(version);
         }
@@ -61,18 +64,18 @@ public class SyncUtils {
         URL url = URL.valueOf(provider.getUrl());
         url=url.addParameterString(provider.getParameters());
         url = url.addParameter(Constants.WEIGHT_KEY,provider.getWeight());
-        url=url.addParameter(Constants.ENABLED_KEY,provider.isEnabled());
-        url=url.addParameter(Constants.DYNAMIC_KEY,provider.isDynamic());
+        url=url.addParameter(CommonConstants.ENABLED_KEY,provider.isEnabled());
+        url=url.addParameter(RegistryConstants.DYNAMIC_KEY,provider.isDynamic());
         return url;
     }
 
     public static Configurator toConfigurators(URL url){
-        if (Constants.EMPTY_PROTOCOL.equals(url.getProtocol())) {
+        if (RegistryConstants.EMPTY_PROTOCOL.equals(url.getProtocol())) {
             return null;
         }
         Map<String,String> override = new HashMap<String, String>(url.getParameters());
         //override 上的anyhost可能是自动添加的，不能影响改变url判断
-        override.remove(Constants.ANYHOST_KEY);
+        override.remove(CommonConstants.ANYHOST_KEY);
         if (override.size() == 0){
             return null;
         }
@@ -95,20 +98,20 @@ public class SyncUtils {
         p.setId(id);
         p.setServiceKey(generateServiceKey(url));
         p.setAddress(url.getAddress());
-        p.setApplication(url.getParameter(Constants.APPLICATION_KEY));
+        p.setApplication(url.getParameter(CommonConstants.APPLICATION_KEY));
         p.setUrl(url.toIdentityString());
         p.setParameters(url.toParameterString());
 
         p.setDynamic(url.getParameter("dynamic", true));
-        p.setEnabled(url.getParameter(Constants.ENABLED_KEY, true));
+        p.setEnabled(url.getParameter(CommonConstants.ENABLED_KEY, true));
         if(!url.getParameters().containsKey(Constants.WEIGHT_KEY)){
             p.setWeight(Constants.DEFAULT_WEIGHT);
         }else{
             p.setWeight("null".equals(url.getParameter(Constants.WEIGHT_KEY))?Constants.DEFAULT_WEIGHT:Integer.parseInt(url.getParameter(Constants.WEIGHT_KEY)));
         }
         p.setUsername(url.getParameter("owner"));
-        p.setGroup(url.getParameter(Constants.GROUP_KEY));
-        p.setVersion(url.getParameter(Constants.VERSION_KEY));
+        p.setGroup(url.getParameter(CommonConstants.GROUP_KEY));
+        p.setVersion(url.getParameter(CommonConstants.VERSION_KEY));
         return p;
     }
     
@@ -135,11 +138,11 @@ public class SyncUtils {
         c.setId(id);
         c.setServiceKey(generateServiceKey(url));
         c.setAddress(url.getHost());
-        c.setApplication(url.getParameter(Constants.APPLICATION_KEY));
+        c.setApplication(url.getParameter(CommonConstants.APPLICATION_KEY));
         c.setParameters(url.toParameterString());
         c.setUsername(url.getParameter("owner"));
-        c.setGroup(url.getParameter(Constants.GROUP_KEY));
-        c.setVersion(url.getParameter(Constants.VERSION_KEY));
+        c.setGroup(url.getParameter(CommonConstants.GROUP_KEY));
+        c.setVersion(url.getParameter(CommonConstants.VERSION_KEY));
         return c;
     }
     
@@ -168,7 +171,7 @@ public class SyncUtils {
         r.setName(url.getParameter("name"));
         r.setService(generateServiceKey(url));
         r.setPriority(url.getParameter(Constants.PRIORITY_KEY, 0));
-        r.setEnabled(url.getParameter(Constants.ENABLED_KEY, true));
+        r.setEnabled(url.getParameter(CommonConstants.ENABLED_KEY, true));
         r.setForce(url.getParameter(Constants.FORCE_KEY, false));
         r.setType(url.getParameter(Constants.ROUTER_KEY));
         r.setRule(url.getParameterAndDecoded(Constants.RULE_KEY));
@@ -202,24 +205,24 @@ public class SyncUtils {
         Map<String, String> parameters = new HashMap<String, String>(url.getParameters());
 
         o.setService(generateServiceKey(url));
-        parameters.remove(Constants.INTERFACE_KEY);
-        parameters.remove(Constants.GROUP_KEY);
-        parameters.remove(Constants.VERSION_KEY);
-        parameters.remove(Constants.APPLICATION_KEY);
-        parameters.remove(Constants.CATEGORY_KEY);
-        parameters.remove(Constants.DYNAMIC_KEY);
-        parameters.remove(Constants.ENABLED_KEY);
+        parameters.remove(CommonConstants.INTERFACE_KEY);
+        parameters.remove(CommonConstants.GROUP_KEY);
+        parameters.remove(CommonConstants.VERSION_KEY);
+        parameters.remove(CommonConstants.APPLICATION_KEY);
+        parameters.remove(RegistryConstants.CATEGORY_KEY);
+        parameters.remove(RegistryConstants.DYNAMIC_KEY);
+        parameters.remove(CommonConstants.ENABLED_KEY);
 
-        o.setEnabled(url.getParameter(Constants.ENABLED_KEY, true));
+        o.setEnabled(url.getParameter(CommonConstants.ENABLED_KEY, true));
 
         String host = url.getHost();
-        boolean anyhost = url.getParameter(Constants.ANYHOST_VALUE, false);
+        boolean anyhost = url.getParameter(CommonConstants.ANYHOST_VALUE, false);
         if(!anyhost || !"0.0.0.0".equals(host)) {
             o.setAddress(url.getAddress());
         }
 
-        o.setApplication(url.getParameter(Constants.APPLICATION_KEY, url.getUsername()));
-        parameters.remove(Constants.VERSION_KEY);
+        o.setApplication(url.getParameter(CommonConstants.APPLICATION_KEY, url.getUsername()));
+        parameters.remove(CommonConstants.VERSION_KEY);
 
         o.setParams(StringUtils.toQueryString(parameters));
 
