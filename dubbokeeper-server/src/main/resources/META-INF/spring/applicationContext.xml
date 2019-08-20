@@ -12,7 +12,7 @@
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<value>
-				classpath*:/*.properties
+				classpath*:/monitor*.properties
 			</value>
 		</property>
 	</bean>

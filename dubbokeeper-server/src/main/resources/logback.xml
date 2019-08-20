@@ -6,9 +6,9 @@
     <timestamp key="byDate" datePattern="yyyyMMdd" />
 
     <appender name="dubboRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/dubbo-framework/DUBBO.log</file>
+        <file>${LOG_HOME}/dk-monitor/DUBBO.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/dubbo-framework/DUBBO-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/dk-monitor/DUBBO-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <MaxFileSize>100MB</MaxFileSize>
@@ -20,9 +20,9 @@
         </encoder>
     </appender>
     <appender name="dkRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/dubbokeeper/DubboKeeper.log</file>
+        <file>${LOG_HOME}/dk-monitor/DubboKeeper.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/dubbokeeper/DubboKeeper-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/dk-monitor/DubboKeeper-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <MaxFileSize>100MB</MaxFileSize>
@@ -34,9 +34,9 @@
         </encoder>
     </appender>
     <appender name="writeRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/dubbokeeper/Monitor-writer.log</file>
+        <file>${LOG_HOME}/dk-monitor/Monitor-writer.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/dubbokeeper/Monitor-writer-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/dk-monitor/Monitor-writer-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <MaxFileSize>100MB</MaxFileSize>

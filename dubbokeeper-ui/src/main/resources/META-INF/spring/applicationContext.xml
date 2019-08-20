@@ -12,7 +12,7 @@
     <bean class="com.dubboclub.dk.web.properties.DubboKeeperConfigurer">
         <property name="locations">
             <value>
-                classpath*:/dubbo.properties
+                classpath*:/application-ui.properties
             </value>
         </property>
     </bean>

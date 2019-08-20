@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
-    <property resource="dubbo.properties" />
     <substitutionProperty name="PROJECT_NAME" value="dubbokeeper"/>
     <substitutionProperty name="LOG_HOME" value="${monitor.log.home}"/>
 
@@ -8,9 +7,9 @@
 
     <!-- web log -->
     <appender name="dubboRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/DUBBO.log</file>
+        <file>${LOG_HOME}/dk-ui/DUBBO.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${DUBBO_LOG_HOME}/DUBBO-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <fileNamePattern>${DUBBO_LOG_HOME}/dk-ui/DUBBO-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <MaxFileSize>100MB</MaxFileSize>
@@ -23,9 +22,9 @@
     </appender>
     <!-- web log -->
     <appender name="dkRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/DubboKeeper.log</file>
+        <file>${LOG_HOME}/dk-ui/DubboKeeper.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${DUBBO_LOG_HOME}/DubboKeeper-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <fileNamePattern>${DUBBO_LOG_HOME}/dk-ui/DubboKeeper-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxHistory>30</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <MaxFileSize>100MB</MaxFileSize>

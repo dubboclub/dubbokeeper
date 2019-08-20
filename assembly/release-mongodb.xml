@@ -9,8 +9,11 @@
     <fileSets>
         <fileSet>
             <includes>
-                <include>bin/*mongodb.*</include>
+                <include>bin/*-mongodb.*</include>
+                <include>bin/start-ui.*</include>
+                <include>bin/start-java.*</include>
                 <include>bin/setting.*</include>
+                <include>conf/application*.properties</include>
                 <include>conf/*mongodb.properties</include>
                 <include>conf/logback.xml</include>
             </includes>
@@ -20,13 +23,17 @@
         <moduleSet>
             <includes>
                 <include>com.dubboclub.dk:dubbokeeper-server</include>
+                <include>com.dubboclub.dk:dubbokeeper-ui</include>
             </includes>
             <binaries>
                 <outputDirectory>lib/</outputDirectory>
                 <unpack>false</unpack>
                 <dependencySets>
                     <dependencySet>
-                        <outputDirectory>lib/</outputDirectory>
+                        <includes>
+                            <include>com.dubboclub.dk:dubbokeeper-server</include>
+                            <include>com.dubboclub.dk:dubbokeeper-ui</include>
+                        </includes>
                     </dependencySet>
                 </dependencySets>
             </binaries>

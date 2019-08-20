@@ -1,6 +1,13 @@
 spring:
   application:
     name: dk-ui
+  mvc:
+    view:
+      prefix: '/WEB-INF/jsp/'
+      suffix: '.jsp'
+    contentnegotiation:
+      media-types:
+        json: application/json
 
 server:
   servlet:
