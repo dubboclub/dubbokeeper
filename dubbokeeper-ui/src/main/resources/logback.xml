@@ -45,7 +45,7 @@
     <!--dubbo-->
     <logger
             name="org.apache.dubbo"
-            level="DEBUG">
+            level="INFO">
         <appender-ref ref="dubboRolling" />
     </logger>
     <!--dubbo-->
@@ -54,7 +54,7 @@
             level="DEBUG">
         <appender-ref ref="dkRolling" />
     </logger>
-    <root level="DEBUG">
+    <root level="INFO">
              <appender-ref ref="STDOUT" />
    </root>
 </configuration>

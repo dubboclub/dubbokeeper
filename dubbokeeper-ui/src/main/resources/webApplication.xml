@@ -14,7 +14,7 @@
 
     <context:component-scan base-package="com.dubboclub.dk.web"/>
 
-    <mvc:view-controller path="/" view-name="redirect:/index.htm" />
+    <mvc:view-controller path="/" view-name="redirect:/index.htm"/>
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
        <property name="contentNegotiationManager">
            <!--过滤当前应用能够支持的请求类型-->
@@ -32,7 +32,7 @@
             <list>
                 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
                     <property name= "viewClass"   value ="org.springframework.web.servlet.view.JstlView" />
-                    <property name="prefix" value="WEB-INF/jsp/"/>
+                    <property name="prefix" value="/WEB-INF/jsp/"/>
                     <property name="suffix" value=".jsp"/>
                 </bean>
             </list>

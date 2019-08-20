@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: dk-ui
+
+server:
+  servlet:
+    context-path: '/'
+  port: 22880
