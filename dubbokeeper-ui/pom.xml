@@ -73,21 +73,6 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!--<dependency>-->
-      <!--<groupId>javax.servlet</groupId>-->
-      <!--<artifactId>javax.servlet-api</artifactId>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>javax.servlet.jsp</groupId>-->
-      <!--<artifactId>javax.servlet.jsp-api</artifactId>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>javax.servlet.jsp.jstl</groupId>-->
-      <!--<artifactId>javax.servlet.jsp.jstl-api</artifactId>-->
-    <!--</dependency>-->
-
     <dependency>
       <groupId>taglibs</groupId>
       <artifactId>standard</artifactId>
@@ -143,9 +128,17 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.3</version>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webResources>
+            <resource>
+              <directory>src/main/resources/META-INF/resources</directory>
+            </resource>
+          </webResources>
+          <packagingExcludes>WEB-INF/classes/META-INF/resources/**</packagingExcludes>
         </configuration>
       </plugin>
     </plugins>

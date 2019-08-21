@@ -7,6 +7,7 @@ import com.dubboclub.dk.admin.model.Provider;
 import com.dubboclub.dk.admin.service.ApplicationService;
 import com.dubboclub.dk.admin.service.ConsumerService;
 import com.dubboclub.dk.admin.service.ProviderService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -114,8 +115,8 @@ public class IndexController {
         }
         return statistics;
     }
-    @RequestMapping("/loadAppsDependencies.htm")
-    public Map<String,List<Map<String,Object>>> loadAppsDependencies(){
+    @RequestMapping(value = "/loadAppsDependencies.htm")
+    public @ResponseBody Map<String,List<Map<String,Object>>> loadAppsDependencies(){
         Map<String,List<Map<String,Object>>> statistics=new HashMap<String, List<Map<String, Object>>>();
         List<Application> applications =  applicationService.getApplications();
         List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
@@ -157,7 +158,4 @@ public class IndexController {
         containedNodes.clear();
         return statistics;
     }
-    
-    
-    
 }
