@@ -9,11 +9,12 @@
     <dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}"/>
 
     <bean class="com.dubboclub.dk.web.utils.ContextHolder" />
-    <bean class="com.dubboclub.dk.web.properties.DubboKeeperConfigurer">
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
-            <value>
-                classpath*:/application-ui.properties
-            </value>
+            <list>
+                <value>classpath*:/application-ui.properties</value>
+                <value>file:${dubbo.properties.file}*</value>
+            </list>
         </property>
     </bean>
 

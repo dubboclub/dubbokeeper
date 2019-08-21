@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly>
-    <id>dubbokeeper-server</id>
+    <id>assembly</id>
     <baseDirectory>/</baseDirectory>
     <formats>
         <format>dir</format>

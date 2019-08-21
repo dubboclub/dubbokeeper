@@ -16,9 +16,9 @@ import com.dubboclub.dk.storage.model.MethodMonitorOverview;
 import com.dubboclub.dk.storage.model.ServiceInfo;
 import com.dubboclub.dk.storage.model.StatisticsOverview;
 import com.dubboclub.dk.web.model.MethodStatistics;
-import com.dubboclub.dk.web.utils.ConfigUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,13 +35,16 @@ public class MonitorController {
     @Autowired
     private ProviderService providerService;
 
+    @Value("${monitor.collect.interval:6000}")
+    private String monitorCollectInterval;
+
     private static final long ONE_DAY=24*60*60*1000;
 
     private static final long ONE_HOUR=60*60*1000;
 
     @RequestMapping("/load-interval.htm")
     public @ResponseBody Integer queryInterval(){
-        return Integer.parseInt(ConfigUtils.getProperty("monitor.collect.interval"));
+        return Integer.parseInt(monitorCollectInterval);
     }
 
     @RequestMapping("/{application}/{service}/{method}/now.htm")

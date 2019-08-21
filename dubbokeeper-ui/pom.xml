@@ -39,11 +39,6 @@
       <artifactId>validation-api</artifactId>
     </dependency>
 
-    <!--<dependency>-->
-      <!--<groupId>org.hibernate.validator</groupId>-->
-      <!--<artifactId>hibernate-validator</artifactId>-->
-    <!--</dependency>-->
-
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
@@ -78,20 +73,20 @@
       <version>${project.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>javax.servlet</groupId>-->
+      <!--<artifactId>javax.servlet-api</artifactId>-->
+    <!--</dependency>-->
 
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>javax.servlet.jsp-api</artifactId>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>javax.servlet.jsp</groupId>-->
+      <!--<artifactId>javax.servlet.jsp-api</artifactId>-->
+    <!--</dependency>-->
 
-    <dependency>
-      <groupId>javax.servlet.jsp.jstl</groupId>
-      <artifactId>javax.servlet.jsp.jstl-api</artifactId>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>javax.servlet.jsp.jstl</groupId>-->
+      <!--<artifactId>javax.servlet.jsp.jstl-api</artifactId>-->
+    <!--</dependency>-->
 
     <dependency>
       <groupId>taglibs</groupId>
