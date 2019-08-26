@@ -5,7 +5,11 @@ CONFDIR="${DK_HOME}/../conf"
 LOG_HOME="${DK_HOME}/../logs"
 
 BOOT_JAR="`ls ${DK_HOME}/../lib/$1`"
+JAR_NAME="`basename ${BOOT_JAR}`"
 DUBBO_PROPERTIES="$2"
+
+LOG_FILE="${LOG_HOME}/${JAR_NAME%.*}.out"
+MAX_RETRIES=20
 
 if [ -z $JAVA_HOME ]; then
 	JAVA=java
@@ -13,17 +17,23 @@ else
 	JAVA="$JAVA_HOME/bin/java"
 fi
 
-echo "Start `basename ${BOOT_JAR}` ..."
-nohup "$JAVA" "-Dmonitor.log.home=${LOG_HOME}" "-Ddubbo.properties.file=${CONFDIR}/${DUBBO_PROPERTIES}" -jar "${BOOT_JAR}" &
+echo "Start $JAR_NAME ..."
+nohup $JAVA -Dmonitor.log.home="${LOG_HOME}" \
+  -Ddubbo.properties.file="${CONFDIR}/${DUBBO_PROPERTIES}" \
+  -jar ${BOOT_JAR} > "$LOG_FILE" 2>&1 &
 
+echo "LOG_HOME: $LOG_HOME"
+PID=""
 CNT=0
-while [ $CNT -lt 1 ]; do
+while [ -z "$PID" -a $CNT -lt $MAX_RETRIES ]; do
+  CNT=$((CNT+1))
   echo -e ".\c"
   sleep 1
-  CNT=`ps -ef | grep java | grep "$BOOT_JAR" | awk '{print $2}' | wc -l`
+  PID="`jps | grep $JAR_NAME | awk '{print $1}'`"
 done
 
-echo "OK!"
-PIDS=`ps -ef | grep java | grep "$BOOT_JAR" | awk '{print $2}'`
-echo "PID: $PIDS"
-echo "LOG_HOME: $LOG_HOME"
+if [ -n "$PID" ]; then
+  echo "OK! $JAR_NAME STARTED. PID: $PID"
+else
+  echo "FAILED to start $JAR_NAME. Please check $LOG_FILE"
+fi
