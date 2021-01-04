@@ -36,7 +36,7 @@
         <zookeeper.version>3.3.3</zookeeper.version>
         <logback.version>1.1.2</logback.version>
         <disruptor.version>3.3.4</disruptor.version>
-        <junit.version>4.11</junit.version>
+        <junit.version>4.13.1</junit.version>
         <standard.version>1.1.2</standard.version>
         <jstl.version>1.1.2</jstl.version>
         <jetty-all.version>8.1.0.RC5</jetty-all.version>
