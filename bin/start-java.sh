@@ -17,7 +17,7 @@ fi
 mkdir -p $LOG_HOME
 
 echo "Start $JAR_NAME ..."
-$JAVA \
+$JAVA $JVM_OPTIONS \
   -Dmonitor.log.home="${LOG_HOME}" \
   -DDUBBO_LOG_HOME="${LOG_HOME}" \
   -Ddubbo.properties.file="${CONFDIR}/${DUBBO_PROPERTIES}" \
