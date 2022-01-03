@@ -13,7 +13,7 @@
         <property name="locations">
             <list>
                 <value>classpath*:/application-ui.properties</value>
-                <value>file:${dubbo.properties.file}*</value>
+                <value>file:${dubbo.properties.file:application*.properties}*</value>
             </list>
         </property>
     </bean>

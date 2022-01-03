@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.dubboclub.dk.monitor.DubboKeeperMonitorService;
 import com.dubboclub.dk.storage.StatisticsStorage;
 import com.dubboclub.dk.storage.model.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;

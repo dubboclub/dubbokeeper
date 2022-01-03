@@ -17,91 +17,45 @@
   <packaging>pom</packaging>
 
   <properties>
-    <dubbo.version>2.7.3</dubbo.version>
-    <spring.version>5.1.9.RELEASE</spring.version>
-    <servlet_version>2.5</servlet_version>
-    <lucene_version>5.3.0</lucene_version>
-    <findbugs.excludeFilterFile>findbugs-exclude.xml</findbugs.excludeFilterFile>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.io.version>2.2</common.io.version>
-    <dubbo.plus.netty4.version>0.0.6</dubbo.plus.netty4.version>
-    <jackson.version>2.9.9</jackson.version>
-    <commons.lang.version>2.6</commons.lang.version>
-    <fastjson.version>1.1.41</fastjson.version>
-    <zk.version>0.1</zk.version>
-    <zookeeper.version>3.4.13</zookeeper.version>
-    <logback.version>1.2.3</logback.version>
+    <java.version>1.8</java.version>
+
+    <dubbo.version>2.7.15</dubbo.version>
+    <zkclient.version>0.11</zkclient.version>
+    <zookeeper.version>3.6.3</zookeeper.version>
+    <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
+
     <disruptor.version>3.3.4</disruptor.version>
-    <mysql-connector-java.version>5.1.25</mysql-connector-java.version>
-    <spring-boot.version>2.1.7.RELEASE</spring-boot.version>
-    <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
-    <validation-api.version>2.0.1.Final</validation-api.version>
-    <tomcat-embed.version>9.0.22</tomcat-embed.version>
-    <snakeyaml.version>1.23</snakeyaml.version>
-    <jsp.jstl.api.version>1.2.1</jsp.jstl.api.version>
-    <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
-    <javax.servlet.jsp-api.version>2.3.3</javax.servlet.jsp-api.version>
+    <lucene_version>5.3.0</lucene_version>
+    <fastjson.version>1.2.79</fastjson.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.yaml</groupId>
-        <artifactId>snakeyaml</artifactId>
-        <version>${snakeyaml.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter</artifactId>
+        <artifactId>spring-boot-dependencies</artifactId>
         <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-core</artifactId>
-        <version>${tomcat-embed.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-jasper</artifactId>
-        <version>${tomcat-embed.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>${validation-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${hibernate-validator.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.lmax</groupId>
-        <artifactId>disruptor</artifactId>
-        <version>${disruptor.version}</version>
-      </dependency>
+
       <dependency>
         <groupId>org.apache.dubbo</groupId>
         <artifactId>dubbo-dependencies-zookeeper</artifactId>
         <version>${dubbo.version}</version>
         <type>pom</type>
-        <scope>import</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
-      <!--logback-->
+
       <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-core</artifactId>
-        <version>${logback.version}</version>
+        <groupId>org.apache.dubbo</groupId>
+        <artifactId>dubbo-spring-boot-starter</artifactId>
+        <version>${dubbo.version}</version>
       </dependency>
 
       <dependency>
@@ -110,161 +64,45 @@
         <version>${dubbo.version}</version>
         <exclusions>
           <exclusion>
-            <artifactId>spring</artifactId>
-            <groupId>org.springframework</groupId>
-          </exclusion>
-          <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.jboss.netty</groupId>
-            <artifactId>netty</artifactId>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>net.dubboclub</groupId>
-        <artifactId>netty4</artifactId>
-        <version>${dubbo.plus.netty4.version}</version>
-      </dependency>
-
-      <!--commons-->
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>${common.io.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${commons.lang.version}</version>
-      </dependency>
-
-      <!--json-->
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-annotations</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>fastjson</artifactId>
-        <version>${fastjson.version}</version>
       </dependency>
 
       <!--zookeeper-->
       <dependency>
-        <groupId>com.github.sgroschupf</groupId>
+        <groupId>com.101tec</groupId>
         <artifactId>zkclient</artifactId>
-        <version>${zk.version}</version>
+        <version>${zkclient.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.zookeeper</groupId>
         <artifactId>zookeeper</artifactId>
         <version>${zookeeper.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
-      <!--spring-->
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-web</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-beans</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-tx</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context-support</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-expression</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-aop</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>${mysql-connector-java.version}</version>
-      </dependency>
-
-      <!--test-->
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>3.0.1</version>
-        <scope>provided</scope>
-      </dependency>
+      <!--others-->
       <dependency>
         <groupId>taglibs</groupId>
         <artifactId>standard</artifactId>
         <version>1.1.2</version>
       </dependency>
       <dependency>
-        <groupId>javax.servlet.jsp.jstl</groupId>
-        <artifactId>javax.servlet.jsp.jstl-api</artifactId>
-        <version>${jsp.jstl.api.version}</version>
+        <groupId>com.lmax</groupId>
+        <artifactId>disruptor</artifactId>
+        <version>${disruptor.version}</version>
       </dependency>
       <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>${javax.servlet-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.servlet.jsp</groupId>
-        <artifactId>javax.servlet.jsp-api</artifactId>
-        <version>${javax.servlet.jsp-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
-        <scope>test</scope>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>${fastjson.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -292,8 +130,8 @@
             <fork>true</fork>
             <meminitial>256m</meminitial>
             <maxmem>256m</maxmem>
-            <source>1.7</source>
-            <target>1.7</target>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
             <parameters>true</parameters>
           </configuration>
         </plugin>
@@ -325,7 +163,6 @@
         <configuration>
           <descriptors>
             <descriptor>${release.file}</descriptor>
-            <!--<descriptor>assembly/release-ui.xml</descriptor>-->
           </descriptors>
         </configuration>
       </plugin>

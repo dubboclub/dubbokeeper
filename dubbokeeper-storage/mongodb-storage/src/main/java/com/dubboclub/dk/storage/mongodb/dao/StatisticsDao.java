@@ -86,7 +86,7 @@ public class StatisticsDao {
         );
         query.addCriteria(Criteria.where("method").is(method));
         query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-        query.with(new Sort(Sort.Direction.DESC,column)).limit(1);
+        query.with(Sort.by(column).descending()).limit(1);
 
         Statistics statistics = mongoTemplate.findOne(query,Statistics.class,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
@@ -106,7 +106,7 @@ public class StatisticsDao {
     public List<Statistics> findApplicationOverview(String application,String item,long startTime, long endTime){
         Query query = new Query();
         query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-        query.with(new Sort(Sort.Direction.DESC,item)).limit(200);
+        query.with(Sort.by(item).descending()).limit(200);
 
         List<Statistics>  statisticses = mongoTemplate.find(query,Statistics.class,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
@@ -127,7 +127,7 @@ public class StatisticsDao {
         Query query = new Query();
         query.addCriteria(Criteria.where("serviceInterface").is(service));
         query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-        query.with(new Sort(Sort.Direction.DESC,item)).limit(200);
+        query.with(Sort.by(item).descending()).limit(200);
 
         List<Statistics>  statisticses = mongoTemplate.find(query,Statistics.class,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
@@ -169,7 +169,7 @@ public class StatisticsDao {
             query.addCriteria(Criteria.where("serviceInterface").is(service));
         }
         query.addCriteria(Criteria.where("timestamp").gte(startTime).lte(endTime));
-        query.with(new Sort(Sort.Direction.DESC,item));
+        query.with(Sort.by(item).descending());
 
         Statistics statistics = mongoTemplate.findOne(query,Statistics.class,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));

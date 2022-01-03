@@ -3,7 +3,6 @@ package com.dubboclub.dk.web.model;
 
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.utils.StringUtils;
-import org.apache.dubbo.rpc.cluster.Constants;
 
 import java.util.Map;
 
@@ -35,11 +34,11 @@ public class LoadBalanceOverrideInfo extends OverrideInfo {
     public static LoadBalanceOverrideInfo valueOf(com.dubboclub.dk.admin.model.Override override){
         String loadBalance = null;
         String methods = null;
-        if(!org.apache.commons.lang.StringUtils.isEmpty(override.getParams())){
+        if(!org.apache.commons.lang3.StringUtils.isEmpty(override.getParams())){
             Map<String,String> parameters = StringUtils.parseQueryString(override.getParams());
-            loadBalance=parameters.get(Constants.LOADBALANCE_KEY);
+            loadBalance=parameters.get(CommonConstants.LOADBALANCE_KEY);
             methods=parameters.get(CommonConstants.METHODS_KEY)==null? CommonConstants.ANY_VALUE:parameters.get(CommonConstants.METHODS_KEY);
-            if(org.apache.commons.lang.StringUtils.isEmpty(loadBalance)){
+            if(org.apache.commons.lang3.StringUtils.isEmpty(loadBalance)){
                 return null;
             }
         }

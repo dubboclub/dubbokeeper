@@ -22,7 +22,7 @@ dubbo.protocol.port=20884
 #被监控端同步监控数据周期时间，可不配置，默认是一分钟同步一次
 monitor.collect.interval=100
 #use netty4
-dubbo.provider.transporter=netty4
+#dubbo.provider.transporter=netty4
 #监控数据持久化周期,默认是一分钟,单位是秒
 monitor.write.interval=6000
 

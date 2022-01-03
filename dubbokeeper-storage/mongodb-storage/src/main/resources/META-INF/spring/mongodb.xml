@@ -6,13 +6,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd
-        http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
+        http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-3.0.xsd">
 
-        <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage" ref="mongoDBStatisticsStorage" timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
+        <dubbo:service interface="com.dubboclub.dk.storage.StatisticsStorage"
+                       ref="mongoDBStatisticsStorage"
+                       timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
 
-        <mongo:mongo id="mongo"  host="${dubbo.monitor.mongodb.url}" port="${dubbo.monitor.mongodb.port}"/>
-        <mongo:db-factory id="mongoDbFactory" dbname="${dubbo.monitor.mongodb.dbname}" mongo-ref="mongo"
-                          username="${dubbo.monitor.mongodb.username}" password="${dubbo.monitor.mongodb.password}" />
+        <mongo:mongo-client id="mongo"
+                     host="${dubbo.monitor.mongodb.url}"
+                     port="${dubbo.monitor.mongodb.port}"
+                     credential="${dubbo.monitor.mongodb.username}:${dubbo.monitor.mongodb.password}@${dubbo.monitor.mongodb.dbname}"/>
+
+        <mongo:db-factory id="mongoDbFactory"
+                          dbname="${dubbo.monitor.mongodb.dbname}"
+                          mongo-client-ref="mongo"/>
 
         <bean id="statisticsDao" class="com.dubboclub.dk.storage.mongodb.dao.StatisticsDao">
                 <property name="mongoTemplate" ref="mongoTemplate"/>

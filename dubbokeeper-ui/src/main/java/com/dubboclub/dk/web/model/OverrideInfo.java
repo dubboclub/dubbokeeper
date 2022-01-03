@@ -2,7 +2,7 @@ package com.dubboclub.dk.web.model;
 
 import org.apache.dubbo.common.constants.CommonConstants;
 import com.dubboclub.dk.admin.model.Override;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by bieber on 2015/6/21.

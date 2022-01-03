@@ -2,7 +2,7 @@ package com.dubboclub.dk.storage.mongodb;
 
 import com.dubboclub.dk.storage.StatisticsStorage;
 import com.dubboclub.dk.storage.model.*;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -125,7 +125,7 @@ public class MongoDBStatisticsStorageTest {
         );
         query.addCriteria(Criteria.where("method").is(method));
         query.addCriteria(Criteria.where("timestamp").gte(DateUtils.addHours(new Date(),-5).getTime()).lte(new Date().getTime()));
-        query.with(new Sort(Sort.Direction.DESC,colName)).limit(1);
+        query.with(Sort.by(colName).descending()).limit(1);
 
         Statistics statisticses = mongoTemplate.findOne(query,Statistics.class,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));
@@ -201,7 +201,7 @@ public class MongoDBStatisticsStorageTest {
         long e = new Date().getTime();
         Query query = new Query();
         query.addCriteria(Criteria.where("timestamp").gte(s).lte(e));
-        query.with(new Sort(Sort.Direction.DESC,"concurrent"));
+        query.with(Sort.by("concurrent").descending());
         LOGGER.info(query.toString());
         Statistics statistics = mongoTemplate.findOne(query,Statistics.class,
                 String.format("%s_%s",STATISTICS_COLLECTIONS,application.toLowerCase()));

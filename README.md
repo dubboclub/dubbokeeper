@@ -63,7 +63,7 @@ dubbo.application.owner=bieber
 dubbo.registry.address=zookeeper://localhost:2181
 
 #use netty4
-dubbo.reference.client=netty4
+#dubbo.reference.client=netty4
 
 #peeper config
 #监控的zookeeper连接列表，多个通过‘,’(英文逗号)隔开。

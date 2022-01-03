@@ -6,14 +6,14 @@
 	<dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<dubbo:provider transporter="${dubbo.provider.transporter}" />
-	<dubbo:protocol transporter="${dubbo.provider.transporter}" port="${dubbo.protocol.port}" />
+	<!--dubbo:provider transporter="${dubbo.provider.transporter}" /-->
+	<dubbo:protocol port="${dubbo.protocol.port}" />
 
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
 				<value>classpath*:/monitor*.properties</value>
-				<value>file:${dubbo.properties.file}*</value>
+				<value>file:${dubbo.properties.file:monitor*.properties}</value>
 			</list>
 		</property>
 	</bean>
