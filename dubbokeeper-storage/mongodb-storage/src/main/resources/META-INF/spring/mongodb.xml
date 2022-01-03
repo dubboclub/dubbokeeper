@@ -13,7 +13,7 @@
                        timeout="${dubbo.monitor.mongodb.storage.timeout}"/>
 
         <mongo:mongo-client id="mongo"
-                     host="${dubbo.monitor.mongodb.url}"
+                     host="${dubbo.monitor.mongodb.host}"
                      port="${dubbo.monitor.mongodb.port}"
                      credential="${dubbo.monitor.mongodb.username}:${dubbo.monitor.mongodb.password}@${dubbo.monitor.mongodb.dbname}"/>
 
