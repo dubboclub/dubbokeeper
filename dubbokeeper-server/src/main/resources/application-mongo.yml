@@ -1,0 +1,10 @@
+dubbo:
+  monitor:
+    mongodb:
+      host: localhost
+      port: 27017
+      dbname: dubbokeeper
+      username: dubbokeeper
+      password: 123456
+      storage:
+        timeout: 10000

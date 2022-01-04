@@ -9,6 +9,7 @@ import com.dubboclub.dk.web.model.BasicResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.rpc.cluster.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.apache.dubbo.common.constants.CommonConstants;
-import org.apache.dubbo.common.utils.ConfigUtils;
 import com.dubboclub.dk.admin.model.Provider;
 import com.dubboclub.dk.admin.service.ProviderService;
 import com.dubboclub.dk.admin.sync.util.Tool;
@@ -54,12 +54,15 @@ public class ProviderController {
         }
         return providerList;
     }
-    
+
+    @Value("${dubbo.registry.address}")
+    private String registryAddress;
+
     @RequestMapping("/{serviceKey}/service-readme.htm")
     public @ResponseBody Map<String,Object> seriveReadMe(@PathVariable("serviceKey") String serviceKey) throws UnsupportedEncodingException {
     	Map<String,Object> re = new HashMap<String, Object>();
     	re.put("providers", providerService.listProviderByServiceKey(URLDecoder.decode(serviceKey,"UTF-8")));
-    	re.put("registry", ConfigUtils.getProperty("dubbo.registry.address"));
+    	re.put("registry", registryAddress);
     	return re;
     }
 

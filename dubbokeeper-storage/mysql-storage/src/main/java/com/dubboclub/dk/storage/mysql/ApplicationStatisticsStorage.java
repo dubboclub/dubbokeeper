@@ -1,6 +1,5 @@
 package com.dubboclub.dk.storage.mysql;
 
-import org.apache.dubbo.common.utils.ConfigUtils;
 import com.dubboclub.dk.storage.AbstractApplicationStatisticsStorage;
 import com.dubboclub.dk.storage.model.ApplicationInfo;
 import com.dubboclub.dk.storage.model.Statistics;
@@ -16,10 +15,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @date: 2015/12/28.

@@ -1,7 +1,6 @@
 package com.dubboclub.dk.web.controller;
 
 import org.apache.dubbo.common.constants.CommonConstants;
-import org.apache.dubbo.common.utils.ConfigUtils;
 import com.dubboclub.dk.web.model.SpyZooResponse;
 import com.dubboclub.dk.web.model.SpyZooNode;
 
@@ -12,6 +11,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,13 +34,21 @@ public class ZooPeeperController implements InitializingBean{
     
     private static final Logger logger = LoggerFactory.getLogger(ZooPeeperController.class);
 
+    @Value("${peeper.zookeepers}")
+    private String zookeepers;
+
+    @Value("${peeper.zookeeper.session.timeout:60000}")
+    private int zookeeperSessionTimeout;
+
+    @Value("${spy.zookeeper.session.timeout:60000}")
+    private int spySessionTimeout;
+
     @Override
     public void afterPropertiesSet() throws Exception {
-        String zookeepers = ConfigUtils.getProperty("peeper.zookeepers");
         if(!StringUtils.isEmpty(zookeepers)){
             String[] zookeeperArray = CommonConstants.COMMA_SPLIT_PATTERN.split(zookeepers);
             for(String zk:zookeeperArray){
-                ZooKeeper zooKeeper  = new ZooKeeper(zk, Integer.parseInt(ConfigUtils.getProperty("peeper.zookeeper.session.timeout","60000")), new ZkWatcher(zk));
+                ZooKeeper zooKeeper  = new ZooKeeper(zk, zookeeperSessionTimeout, new ZkWatcher(zk));
                 ZK_CLIENT_MAP.put(zk, zooKeeper);
             }
         }
@@ -106,7 +114,7 @@ public class ZooPeeperController implements InitializingBean{
                             //do nothing
                         }
                     }
-                    ZK_CLIENT_MAP.put(host,new ZooKeeper(host,Integer.parseInt(ConfigUtils.getProperty("spy.zookeeper.session.timeout","60000")),this));
+                    ZK_CLIENT_MAP.put(host,new ZooKeeper(host, spySessionTimeout,this));
                 } catch (IOException e) {
                     logger.error("failed to reconnect zookeeper server",e);
                 }

@@ -1,6 +1,8 @@
 spring:
   application:
-    name: dk-ui
+    name: monitor-ui
+  profiles:
+    active: ui
   mvc:
     view:
       prefix: '/WEB-INF/jsp/'
@@ -13,3 +15,12 @@ server:
   servlet:
     context-path: '/'
   port: 22880
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+    owner: bieber
+  registry:
+    address: zookeeper://localhost:2181
+  protocol:
+    name: dubbo

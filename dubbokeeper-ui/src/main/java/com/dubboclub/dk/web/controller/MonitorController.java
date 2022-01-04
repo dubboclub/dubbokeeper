@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.dubbo.common.constants.CommonConstants;
-import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.apache.dubbo.common.utils.StringUtils;
 import com.dubboclub.dk.admin.model.Provider;
 import com.dubboclub.dk.admin.service.ProviderService;
@@ -16,6 +15,8 @@ import com.dubboclub.dk.storage.model.MethodMonitorOverview;
 import com.dubboclub.dk.storage.model.ServiceInfo;
 import com.dubboclub.dk.storage.model.StatisticsOverview;
 import com.dubboclub.dk.web.model.MethodStatistics;
+
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/monitor")
 public class MonitorController {
 
-    @Autowired
-    @Qualifier("statisticsStorage")
+    @DubboReference(check = false)
     private StatisticsStorage statisticsStorage ;
 
     @Autowired

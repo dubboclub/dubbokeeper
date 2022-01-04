@@ -1,6 +1,5 @@
 package com.dubboclub.dk.storage.mongodb;
 
-import org.apache.dubbo.common.utils.ConfigUtils;
 import com.dubboclub.dk.storage.AbstractApplicationStatisticsStorage;
 import com.dubboclub.dk.storage.model.ApplicationInfo;
 import com.dubboclub.dk.storage.model.Statistics;

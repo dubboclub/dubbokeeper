@@ -1,3 +1,23 @@
 spring:
   application:
     name: dk-monitor
+  profiles:
+    active: mongo
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+    owner: bieber
+  registry:
+    address: zookeeper://localhost:2181
+  protocol:
+    name: dubbo
+    port: 22884
+
+monitor:
+  collect:
+    interval: 10000
+  write:
+    interval: 60
+  log:
+    home: /data/monitor-log
