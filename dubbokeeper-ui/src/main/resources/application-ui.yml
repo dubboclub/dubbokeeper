@@ -11,3 +11,5 @@ monitor:
     home: /data/monitor-log
   collect:
     interval: 6000
+  service:
+    name: dubbo://dk-monitor:22884

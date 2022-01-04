@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/monitor")
 public class MonitorController {
 
-    @DubboReference(check = false)
+    @DubboReference(check = false, url = "${monitor.service.name}")
     private StatisticsStorage statisticsStorage ;
 
     @Autowired
