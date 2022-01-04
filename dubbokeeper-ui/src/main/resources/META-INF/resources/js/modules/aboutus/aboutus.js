@@ -7,13 +7,12 @@ aboutus.config(function($routeProvider){
 });
 aboutus.controller('aboutus',function($scope,$httpWrapper,$menu){
     $menu.switchBarOnly("aboutus");
-    window.location.href="trace/index/index.html";
-    /*$httpWrapper.get({
+    $httpWrapper.get({
         url:"templates/aboutus/aboutus.md",
         success:function(mdText){
             var converter = new showdown.Converter();
             var html = converter.makeHtml(Mustache.render(mdText, {}));
             $(".aboutus").html(html);
         }
-    });*/
+    });
 });
