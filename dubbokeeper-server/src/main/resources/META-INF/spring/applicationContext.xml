@@ -9,7 +9,7 @@
 	<!--dubbo:provider transporter="${dubbo.provider.transporter}" /-->
 	<dubbo:protocol port="${dubbo.protocol.port}" />
 
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="locations">
 			<list>
 				<value>classpath*:/monitor*.properties</value>
