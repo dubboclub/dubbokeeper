@@ -1,16 +1,17 @@
 PROFILE?=mongodb
 REGISTRY?=registry:5000/cloudecho
 APP_VERSION?=latest
-REPO?=dubbokeeper
+DOCKER_PROJECTS?=dubbokeeper-ui dubbokeeper-server
 
 default: package
 
 package:
-	mvn -U -DskipTests -P$(PROFILE) clean package assembly:assembly
+	mvn -U -DskipTests -P$(PROFILE) clean package
 
 image:
-	docker build -t $(REGISTRY)/$(REPO):$(APP_VERSION) .
+	$(foreach P, $(DOCKER_PROJECTS), \
+	docker build -t $(REGISTRY)/$P:$(APP_VERSION) $P ;)
 
 push: package image
-	#cat ~/.docker/pass | docker login --username=cloudecho --password-stdin
-	docker push $(REGISTRY)/$(REPO):$(APP_VERSION)
+	$(foreach P, $(DOCKER_PROJECTS), \
+	docker push $(REGISTRY)/$P:$(APP_VERSION) ;)

@@ -156,39 +156,6 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.5.3</version>
-        <configuration>
-          <descriptors>
-            <descriptor>${release.file}</descriptor>
-          </descriptors>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>lucene</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <release.file>assembly/release-lucene.xml</release.file>
-      </properties>
-    </profile>
-    <profile>
-      <id>mysql</id>
-      <properties>
-        <release.file>assembly/release-mysql.xml</release.file>
-      </properties>
-    </profile>
-    <profile>
-      <id>mongodb</id>
-      <properties>
-        <release.file>assembly/release-mongodb.xml</release.file>
-      </properties>
-    </profile>
-  </profiles>
+
 </project>
