@@ -1,5 +1,5 @@
 PROFILE?=mongodb
-REGISTRY?=registry:5000/cloudecho
+REGISTRY?=cloudecho
 APP_VERSION?=latest
 DOCKER_PROJECTS?=dubbokeeper-ui dubbokeeper-server
 
