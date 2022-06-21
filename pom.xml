@@ -34,7 +34,7 @@
         <fastjson.version>1.2.83</fastjson.version>
         <zk.version>0.1</zk.version>
         <zookeeper.version>3.3.3</zookeeper.version>
-        <logback.version>1.1.2</logback.version>
+        <logback.version>1.2.0</logback.version>
         <disruptor.version>3.3.4</disruptor.version>
         <junit.version>4.11</junit.version>
         <standard.version>1.1.2</standard.version>
