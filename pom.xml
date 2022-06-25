@@ -50,7 +50,7 @@
         <mybatis-spring.version>1.3.0</mybatis-spring.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <commons-dbutils.version>1.6</commons-dbutils.version>
-        <spring-data-mongodb.version>1.8.1.RELEASE</spring-data-mongodb.version>
+        <spring-data-mongodb.version>3.3.5</spring-data-mongodb.version>
         <lucene-core.version>8.7.0</lucene-core.version>
     </properties>
 
