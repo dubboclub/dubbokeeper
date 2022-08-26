@@ -132,7 +132,7 @@ public class MongoDBStatisticsStorage implements StatisticsStorage,InitializingB
         Statistics failureCount=statisticsDao.queryMaxItemByService(application,null,"failureCount",start,end);
         applicationInfo.setMaxFault(failureCount==null ? 0:failureCount.getFailureCount());
         Statistics successCount=statisticsDao.queryMaxItemByService(application,null,"successCount",start,end);
-        applicationInfo.setMaxSuccess(successCount==null ? 0:successCount.getFailureCount());
+        applicationInfo.setMaxSuccess(successCount==null ? 0:successCount.getSuccessCount());
         stopWatch.stop();
         LOGGER.info(String.format("Method:%s Time:%s Param:%s,%s,%s","queryApplicationInfo",
                 stopWatch.getTime(),
